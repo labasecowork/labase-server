@@ -1,0 +1,21 @@
+// Este es tu archivo de esquema de Prisma,
+// puedes aprender más sobre él en la documentación: https://pris.ly/d/prisma-schema
+// ¿Buscas formas de acelerar tus consultas o escalar fácilmente con tus funciones serverless o edge?
+// Prueba Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// npx prisma migrate reset 
+// npx prisma migrate dev --init
+// npx prisma generate
+// npx prisma studio 
+//
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  //url       = env("DATABASE_URL_PROD")
+  //directUrl = env("DIRECT_URL_PROD")
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
+}

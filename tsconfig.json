@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",                      /* Genera JavaScript moderno compatible con Node 18+ */
+    "module": "ESNext",                      /* Usa módulos ECMAScript (import/export) */
+    "moduleResolution": "Node",              /* Resuelve imports al estilo Node.js */
+    "outDir": "./dist",                      /* Carpeta de salida del código compilado */
+    "rootDir": "./src",                      /* Carpeta raíz del código fuente */
+
+    "esModuleInterop": true,                 /* Permite importar módulos CommonJS como 'import x from "x"' */
+    "forceConsistentCasingInFileNames": true, /* Fuerza que los imports respeten mayúsculas/minúsculas */
+    "isolatedModules": true,                 /* Cada archivo puede compilarse por separado */
+
+    "strict": true,                          /* Activa todas las comprobaciones estrictas */
+    "noUnusedLocals": true,                  /* Error si declaras variables que no usas */
+    "noUnusedParameters": true,              /* Error si declaras parámetros que no se usan */
+    "noImplicitReturns": true,               /* Error si alguna rama de la función no devuelve valor */
+    "noFallthroughCasesInSwitch": true,      /* Error si un 'case' en switch cae al siguiente sin 'break' */
+
+    "allowJs": true,                         /* Permite que archivos .js sean parte del proyecto */
+    "skipLibCheck": true                     /* No revisa los tipos internos de node_modules (compilación más rápida) */
+  },
+
+  "include": ["src/**/*"],
+
+  "exclude": ["node_modules", "dist"]
+}
