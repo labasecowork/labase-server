@@ -6,6 +6,7 @@ import swaggerDocument from "./docs/swagger";
 import routes from "./routes";
 import http from "http";
 import { initSocket } from "./config/socket";
+import { redisClient } from "./config/redis";
 import { APP_URL, PORT } from "./config/env";
 import { displayWelcomeMessage } from "./utils";
 import { customMorganFormat } from "./utils/cli";
@@ -40,6 +41,7 @@ app.get("/ping", (_, res) => res.send("pong"));
 
 // Start server
 const main = async () => {
+  await redisClient.connect();
   server.listen(PORT, () => {
     displayWelcomeMessage(appUrl);
   });

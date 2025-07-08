@@ -2,6 +2,9 @@ import { config } from "dotenv";
 
 config();
 
+// REDIS
+export const REDIS_URL = process.env.REDIS_URL;
+
 // API KEYS GEMINI
 export const API_KEY_GEMINI = process.env.API_KEY_GEMINI;
 
