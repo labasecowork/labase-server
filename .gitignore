@@ -1,0 +1,38 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+*.log
+
+# Entornos y credenciales
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+.cursorrules
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+prisma/migrations/
+
+# PostgreSQL (si usas volúmenes locales)
+pgdata/
+*.sql
+*.dump
+
+# TypeScript
+*.tsbuildinfo
+*.d.ts
+dist/
+
+# Cache y dependencias del editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
