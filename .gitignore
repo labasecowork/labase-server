@@ -1,0 +1,34 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Entornos y credenciales
+.env
+.env.*
+.cursorrules
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+prisma/migrations/
+
+# PostgreSQL
+pgdata/
+*.sql
+*.dump
+
+# TypeScript
+*.tsbuildinfo
+*.d.ts
+dist/
+
+# Cache del editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace

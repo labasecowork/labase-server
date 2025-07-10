@@ -46,7 +46,7 @@ git checkout -b <type>/<module>/<short-description-kebab>
 ```
 
 Example:
-
+  
 ```
 feature/auth/login-with-email
 ```
