@@ -1,44 +1,46 @@
-//src/middlewares/authenticate_token/index.ts
+// src/middlewares/authenticate_token/index.ts
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../../config/env";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { JWT_SECRET } from "../../config/env";             // ajusta alias
+import { AppError } from "../../utils/errors";
 
 export interface AuthenticatedRequest extends Request {
-  user?: { id: number; email?: string; role: "client" | "lawyer" };
+  user?: { id: string; email?: string; user_type: "admin" | "client" };
 }
 
 interface TokenPayload {
-  id: number;
+  id: string;
+  user_type: "admin" | "client";
+  //admin_role?: "superadmin" | "manager"
   email?: string;
-  user_type: "client" | "lawyer";
 }
 
 export function authenticateToken(
   req: AuthenticatedRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction
-): void {
+) {
   const authHeader = req.headers.authorization;
-
   if (!authHeader?.startsWith("Bearer ")) {
-    res.status(401).json({ error: "Falta el header de autorización." });
-    return;
+    return next(new AppError("Missing authorization header", 401));
   }
 
   const token = authHeader.split(" ")[1];
-  const secret = JWT_SECRET || "clave_por_defecto";
+  if (!JWT_SECRET) {
+    return next(new AppError("JWT secret not configured", 500));
+  }
 
   try {
-    const payload = jwt.verify(token, secret) as TokenPayload;
+    const payload = jwt.verify(token, JWT_SECRET) as JwtPayload & TokenPayload;
 
     req.user = {
       id: payload.id,
       email: payload.email,
-      role: payload.user_type,
+      user_type: payload.user_type,
     };
 
-    next();
-  } catch (error) {
-    res.status(401).json({ error: "Token inválido o expirado." });
+    return next();
+  } catch {
+    return next(new AppError("Invalid or expired token", 401));
   }
 }

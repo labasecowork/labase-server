@@ -17,9 +17,6 @@ export const getAuthenticatedUser = async (req: AuthenticatedRequest) => {
       email: true,
       profile_image: true,
       user_type: true,
-      status: true,
-      clientDetails: true,
-      lawyerDetails: true,
     },
   });
 };
