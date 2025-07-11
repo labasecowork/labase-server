@@ -17,7 +17,6 @@ This approach ensures clear separation of concerns, high scalability, and mainta
 - **Zod** (data validation)
 - **Axios** (HTTP client)
 - **Socket.IO** (real-time events)
-- **QR Code Generator** (`qrcode`)
 - **Bcrypt** (password hashing)
 - **Swagger** (interactive API documentation)
 - **Redis** (caching and session storage)
