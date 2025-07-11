@@ -1,3 +1,4 @@
+//src/config/env.index
 import { config } from "dotenv";
 
 config();
@@ -28,6 +29,10 @@ export const SOCKET_URL = process.env.SOCKET_URL;
 
 // JWT
 export const JWT_SECRET = process.env.JWT_SECRET;
+
+//QR CODE
+export const QR_CODE_ALPHABET = process.env.QR_CODE_ALPHABET ?? "1234567890abcdef";
+export const QR_CODE_LENGTH = Number(process.env.QR_CODE_LENGTH ?? 10);
 
 // EMAIL
 export const EMAIL_USER = process.env.EMAIL_USER;
