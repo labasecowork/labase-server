@@ -55,7 +55,6 @@ export class LoginGoogleUseCase {
           firstName: user.first_name,
           lastName: user.last_name,
           email: user.email,
-          profileImage: user.profile_image,
         },
         token,
         isNewUser,

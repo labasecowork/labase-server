@@ -10,7 +10,6 @@ export interface LoginGoogleResponseDTO {
     firstName: string;
     lastName: string;
     email: string;
-    profileImage?: string | null;
   };
   token: string;
   isNewUser: boolean;

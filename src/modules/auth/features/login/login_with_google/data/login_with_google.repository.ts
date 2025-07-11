@@ -26,7 +26,6 @@ export class LoginGoogleRepositoryImpl implements LoginGoogleRepository {
         status: true,
         creation_timestamp: true,
         user_type: true,
-        profile_image: true,
       },
     });
 
@@ -40,7 +39,6 @@ export class LoginGoogleRepositoryImpl implements LoginGoogleRepository {
           userData.status,
           userData.creation_timestamp ?? undefined,
           userData.user_type,
-          userData.profile_image
         )
       : null;
   }
@@ -72,7 +70,6 @@ export class LoginGoogleRepositoryImpl implements LoginGoogleRepository {
       newUser.status,
       newUser.creation_timestamp ?? undefined,
       newUser.user_type,
-      newUser.profile_image
     );
   }
 }
