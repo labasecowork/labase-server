@@ -19,7 +19,6 @@ export class LoginRepositoryImpl implements LoginRepository {
         status: true,
         creation_timestamp: true,
         user_type: true,
-        profile_image: true,
       },
     });
 
@@ -33,7 +32,6 @@ export class LoginRepositoryImpl implements LoginRepository {
           userData.status,
           userData.creation_timestamp ?? undefined,
           userData.user_type,
-          userData.profile_image
         )
       : null;
   }

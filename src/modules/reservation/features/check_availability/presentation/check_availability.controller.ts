@@ -15,7 +15,7 @@ export class CheckAvailabilityController {
 
   async handle(req: Request, res: Response) {
     try {
-      const dto = CheckAvailabilitySchema.parse(req.query);
+      const dto = CheckAvailabilitySchema.parse(req.body);
       const result = await this.service.execute(dto);
       return res.status(HttpStatusCodes.OK.code).json(
         buildHttpResponse(

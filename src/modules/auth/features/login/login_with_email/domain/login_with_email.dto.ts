@@ -10,7 +10,6 @@ export interface LoginResponseDTO {
     firstName: string;
     lastName: string;
     email: string;
-    profileImage?: string | null;
   };
   token: string;
 }

@@ -9,7 +9,7 @@ import {
 } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { ZodError } from "zod";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user/authenticated_user";
+import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class CreateSpaceController {
