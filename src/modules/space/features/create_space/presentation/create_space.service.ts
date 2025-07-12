@@ -15,24 +15,29 @@ export class CreateSpaceService {
   constructor(private readonly repo = new CreateSpaceRepository()) {}
 
   async execute(dto: CreateSpaceDTO, user: CurrentUser) {
-    if (user.role !== "admin")
+    if (user.role !== "admin") {
       throw new AppError(
         SPACE_MESSAGES.FORBIDDEN,
         HttpStatusCodes.FORBIDDEN.code
       );
+    }
 
     const created = await this.repo.create({
-      name: dto.name,
-      description: dto.description,
-      type: dto.type,
-      access: dto.access,
-      capacityMin: dto.capacityMin,
-      capacityMax: dto.capacityMax,
-      allowByUnit: dto.allowByUnit,
-      allowFullRoom: dto.allowFullRoom,
-
+      name:         dto.name,
+      description:  dto.description,
+      type:         dto.type,
+      access:       dto.access,
+      capacityMin:  dto.capacityMin,
+      capacityMax:  dto.capacityMax,
+      allowByUnit:  dto.allowByUnit,
+      allowFullRoom:dto.allowFullRoom,
+      disabled:     false,
       prices: {
-        create: dto.prices.map((p) => ({ duration: p.unit, amount: p.value })),
+        create: dto.prices.map((p) => ({
+          duration: p.unit,
+          mode:     p.mode,
+          amount:   p.value,
+        })),
       },
       spaceBenefits: dto.benefitIds?.length
         ? {
@@ -43,6 +48,9 @@ export class CreateSpaceService {
         : undefined,
     });
 
-    return { message: SPACE_MESSAGES.CREATED_SUCCESS, space_id: created.id };
+    return {
+      message:   SPACE_MESSAGES.CREATED_SUCCESS,
+      space_id:  created.id,
+    };
   }
 }

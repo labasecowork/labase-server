@@ -1,5 +1,6 @@
-// src/modules/space/features/create_space/domain/dtos/create_space.schema.ts
+// src/modules/space/features/create_space/domain/create_space.schema.ts
 import { z } from "zod";
+import { DurationUnit, PriceMode } from "@prisma/client";
 
 export const CreateSpaceSchema = z
   .object({
@@ -23,17 +24,18 @@ export const CreateSpaceSchema = z
     prices: z
       .array(
         z.object({
-          unit: z.enum(["HOUR", "DAY", "WEEK"]),
+          unit:  z.nativeEnum(DurationUnit),
+          mode:  z.nativeEnum(PriceMode),
           value: z.number().positive(),
         })
       )
       .min(1, "Debe proveer al menos un precio"),
-      benefitIds: z
-        .array(z.string().uuid())
-        .optional()
-        .default([]),
-  })
 
+    benefitIds: z
+      .array(z.string().uuid())
+      .optional()
+      .default([]),
+  })
   .superRefine((data, ctx) => {
     if (data.capacityMax < data.capacityMin) {
       ctx.addIssue({
