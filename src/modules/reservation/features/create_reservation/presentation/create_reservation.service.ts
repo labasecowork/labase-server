@@ -1,4 +1,5 @@
 // src/modules/reservation/features/create_reservation/presentation/create_reservation.service.ts
+import { differenceInHours, differenceInDays, differenceInWeeks, differenceInMonths } from "date-fns";
 import { CreateReservationDTO } from "../domain/create_reservation.dto";
 import { CreateReservationRepository } from "../data/create_reservation.repository";
 import { AppError } from "../../../../../utils/errors";
@@ -29,7 +30,6 @@ export class CreateReservationService {
         HttpStatusCodes.BAD_REQUEST.code
       );
     }
-
     if (dto.fullRoom && !space.allowFullRoom) {
       throw new AppError(
         RESERVATION_MESSAGES.FULL_ROOM_FORBIDDEN,
@@ -43,34 +43,84 @@ export class CreateReservationService {
       );
     }
 
-    const overlap = await this.repo.findOverlaps(
-      dto.spaceId,
-      dto.startTime,
-      dto.endTime
-    );
-    if (overlap) {
-      throw new AppError(
-        RESERVATION_MESSAGES.TIME_OVERLAP,
-        HttpStatusCodes.CONFLICT.code
+    if (dto.fullRoom) {
+      const overlap = await this.repo.findOverlaps(
+        dto.spaceId, dto.startTime, dto.endTime
       );
+      if (overlap) {
+        throw new AppError(
+          RESERVATION_MESSAGES.TIME_OVERLAP,
+          HttpStatusCodes.CONFLICT.code
+        );
+      }
+    } else {
+      const booked = await this.repo.sumPeople(
+        dto.spaceId, dto.startTime, dto.endTime
+      );
+      if (booked + dto.people > space.capacityMax) {
+        throw new AppError("NO_CAPACITY_LEFT", HttpStatusCodes.CONFLICT.code);
+      }
+    }
+
+    const mode = dto.fullRoom ? "GROUP" : "INDIVIDUAL";
+    const prices = (space.prices as Array<{
+      duration: "HOUR" | "DAY" | "WEEK" | "MONTH";
+      amount: number;
+      mode: "INDIVIDUAL" | "GROUP";
+    }>).filter(p => p.mode === mode);
+
+    const months = differenceInMonths(dto.endTime, dto.startTime);
+    const weeks  = differenceInWeeks(dto.endTime, dto.startTime);
+    const days   = differenceInDays(dto.endTime, dto.startTime);
+    const hours  = differenceInHours(dto.endTime, dto.startTime);
+
+    const findRate = (unit: typeof prices[number]["duration"]) =>
+      prices.find(p => p.duration === unit)?.amount ?? null;
+
+    let unitCount: number;
+    if (months >= 1 && findRate("MONTH") !== null) {
+      unitCount = months;
+    } else if (weeks >= 1 && findRate("WEEK") !== null) {
+      unitCount = weeks;
+    } else if (days >= 1 && findRate("DAY") !== null) {
+      unitCount = days;
+    } else if (findRate("HOUR") !== null) {
+      unitCount = hours;
+    } else {
+      throw new AppError("PRICE_NOT_DEFINED", HttpStatusCodes.BAD_REQUEST.code);
+    }
+
+    const rate = findRate(
+      months >= 1 ? "MONTH" :
+      weeks  >= 1 ? "WEEK"  :
+      days   >= 1 ? "DAY"   :
+                   "HOUR"
+    )!;
+
+    let price: number;
+    if (mode === "INDIVIDUAL") {
+      price = unitCount * rate * dto.people;
+    } else {
+      price = unitCount * rate;
     }
 
     const codeQr = generateQrCode();
-
     const created = await this.repo.create({
-      space: { connect: { id: dto.spaceId } },
-      user: { connect: { id: user.id } },
+      space:     { connect: { id: dto.spaceId } },
+      user:      { connect: { id: user.id } },
       startTime: dto.startTime,
-      endTime: dto.endTime,
-      people: dto.people,
-      fullRoom: dto.fullRoom,
+      endTime:   dto.endTime,
+      people:    dto.people,
+      fullRoom:  dto.fullRoom,
       codeQr,
+      price,
     });
 
     return {
-      message: RESERVATION_MESSAGES.CREATED_SUCCESS,
-      reservation_id: created.id,
-      codeQr: created.codeQr,
+      message:         RESERVATION_MESSAGES.CREATED_SUCCESS,
+      reservation_id:  created.id,
+      codeQr:          created.codeQr,
+      price,
     };
   }
 }

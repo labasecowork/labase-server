@@ -10,97 +10,49 @@ const controller = new CreateReservationController();
  * @openapi
  * /api/v1/reservations:
  *   post:
- *     tags:
- *       - Reservation
+ *     tags: [Reservation]
  *     summary: Crear una nueva reserva
- *     description: Permite a un cliente o administrador crear una reserva para un espacio disponible.
- *     security:
- *       - bearerAuth: []
+ *     description: |
+ *       Calcula el precio automáticamente según:
+ *       - **modo INDIVIDUAL**: tarifa por unidad × duración × número de personas  
+ *       - **modo GROUP**: tarifa grupal × duración  
+ *       La tarifa y la duración se toman de la configuración del espacio.
+ *     security: [{ bearerAuth: [] }]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - spaceId
- *               - startTime
- *               - endTime
- *               - people
+ *             required: [spaceId, startTime, endTime, people]
  *             properties:
- *               spaceId:
- *                 type: string
- *                 format: uuid
- *                 example: "be1f7f87-1dd7-4324-93d1-8e66b35588ba"
- *               startTime:
- *                 type: string
- *                 format: date-time
- *                 example: "2025-07-12T15:00:00.000Z"
- *               endTime:
- *                 type: string
- *                 format: date-time
- *                 example: "2025-07-12T16:00:00.000Z"
- *               people:
- *                 type: integer
- *                 example: 8
- *               fullRoom:
- *                 type: boolean
- *                 example: true
+ *               spaceId:   { type: string, format: uuid }
+ *               startTime: { type: string, format: date-time }
+ *               endTime:   { type: string, format: date-time }
+ *               people:    { type: integer, example: 3 }
+ *               fullRoom:  { type: boolean, example: false }
  *     responses:
  *       201:
- *         description: Reserva creada correctamente
+ *         description: Reserva creada correctamente con precio total calculado
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 status:
- *                   type: integer
- *                   example: 201
- *                 message:
- *                   type: string
- *                   example: Created
- *                 description:
- *                   type: string
- *                   example: Reservation created successfully
+ *                 status:      { type: integer, example: 201 }
+ *                 message:     { type: string,  example: Created }
+ *                 description: { type: string,  example: Reservation created successfully }
  *                 data:
  *                   type: object
  *                   properties:
- *                     reservation_id:
- *                       type: string
- *                       format: uuid
- *                       example: "45f408e4-782b-4af3-b8b3-07db4d63c162"
- *                     codeQr:
- *                       type: string
- *                       example: "F9A3B1D2"
- *                     user:
- *                       type: object
- *                       properties:
- *                         id:
- *                           type: string
- *                           format: uuid
- *                           example: "22222222-2222-2222-2222-222222222222"
- *                         first_name:
- *                           type: string
- *                           example: "Ana"
- *                         last_name:
- *                           type: string
- *                           example: "Gonzales"
- *                         email:
- *                           type: string
- *                           format: email
- *                           example: "admin@labase.com"
- *                         user_type:
- *                           type: string
- *                           enum: [client, admin]
- *       400:
- *         description: Error de validación o datos fuera de rango
- *       404:
- *         description: Espacio no encontrado
- *       409:
- *         description: Solapamiento de horarios
- *       500:
- *         description: Error interno del servidor
+ *                     reservation_id: { type: string, format: uuid }
+ *                     codeQr:         { type: string, example: "A1B2C3D4" }
+ *                     price:          { type: number, example: 150 }
+ *                     user:           { $ref: "#/components/schemas/UserInfo" }
+ *       400: { description: Error de validación o datos fuera de rango }
+ *       404: { description: Espacio no encontrado }
+ *       409: { description: Solapamiento de horarios o sin capacidad restante }
+ *       500: { description: Error interno del servidor }
  */
 
 router.post("/", authenticateToken, asyncHandler(controller.handle.bind(controller)));

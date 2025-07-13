@@ -6,6 +6,7 @@ import { CreateSpaceController } from "./create_space.controller";
 
 const router = Router();
 const controller = new CreateSpaceController();
+// src/modules/space/features/create_space/presentation/routes/create_space.routes.ts
 /**
  * @openapi
  * /api/v1/space/create:
@@ -62,12 +63,17 @@ const controller = new CreateSpaceController();
  *                   type: object
  *                   required:
  *                     - unit
+ *                     - mode
  *                     - value
  *                   properties:
  *                     unit:
  *                       type: string
- *                       enum: [HOUR, DAY, WEEK]
+ *                       enum: [HOUR, DAY, WEEK, MONTH]
  *                       example: "HOUR"
+ *                     mode:
+ *                       type: string
+ *                       enum: [INDIVIDUAL, GROUP]
+ *                       example: "INDIVIDUAL"
  *                     value:
  *                       type: number
  *                       example: 25.00

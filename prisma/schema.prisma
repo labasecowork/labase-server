@@ -13,8 +13,6 @@
 
   datasource db {
     provider  = "postgresql"
-    //url       = env("DATABASE_URL_PROD")
-    //directUrl = env("DIRECT_URL_PROD")
     url       = env("DATABASE_URL")
     directUrl = env("DATABASE_URL")
   }
@@ -58,6 +56,11 @@
     DAY
     WEEK
     MONTH
+  }
+  
+  enum PriceMode {
+    INDIVIDUAL  // Precio por sitio / unidad
+    GROUP       // Precio por reserva de sala completa
   }
 
   model Users {
@@ -110,9 +113,9 @@
     access         AccessType                                 // Acceso público o privado
     capacityMin    Int                                        // Mínimo de personas por reserva
     capacityMax    Int                                        // Máximo de personas permitidas en el espacio
-    allowByUnit    Boolean                                    // ¿Permite reservas individuales (por sitio)?
-    allowFullRoom  Boolean
-    disabled       Boolean     @default(false)                                     // ¿Permite reservar todo el espacio?
+    allowByUnit    Boolean                                    // ¿Se permiten reservas “por unidad” (sitio individual).
+    allowFullRoom  Boolean                                    // permite reservar toda la sala de una sola vez.
+    disabled       Boolean     @default(false)                 // ¿Deshabilitado?                   
     createdAt      DateTime    @default(now())                // Fecha de creación del espacio
 
     spaceBenefits  SpaceBenefit []
@@ -146,11 +149,12 @@
     id          String        @id @default(uuid())            // ID del registro de precio
     spaceId     String                                       // FK al espacio asociado
     duration    DurationUnit                                // Tipo de duración (hora, día, semana)
+    mode        PriceMode  
     amount      Float                                        // Monto en moneda local
 
     space       Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade) // Relación con Space
 
-    @@unique([spaceId, duration])  // Un solo precio por duración por espacio
+    @@unique([spaceId, duration, mode])
     @@map("prices")
   }
 
@@ -162,7 +166,8 @@
     endTime    DateTime                                    // Fecha y hora de fin de la reserva
     people     Int                                         // Número total de personas
     fullRoom   Boolean                                     // ¿Se reservó todo el espacio?
-    codeQr     String     @unique
+    codeQr     String     @unique                          // Codigo QR
+    price      Decimal                                     // Precio a cobrar
     createdAt  DateTime   @default(now())                  // Timestamp de creación
 
     user       Users      @relation("UserReservations", fields: [userId], references: [id], onDelete: Cascade)

@@ -3,10 +3,7 @@ import { Response } from "express";
 import { CreateReservationService } from "./create_reservation.service";
 import { CreateReservationSchema } from "../domain/create_reservation.schema";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
-import {
-  handleServerError,
-  handleZodError,
-} from "../../../../../utils/error_handler";
+import { handleServerError, handleZodError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { ZodError } from "zod";
 import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
@@ -31,6 +28,7 @@ export class CreateReservationController {
             {
               reservation_id: result.reservation_id,
               codeQr: result.codeQr,
+              price: result.price,
               user,
             }
           )
