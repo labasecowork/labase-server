@@ -1,209 +1,208 @@
-  // Este es tu archivo de esquema de Prisma,
-  // puedes aprender más sobre él en la documentación: https://pris.ly/d/prisma-schema
-  // ¿Buscas formas de acelerar tus consultas o escalar fácilmente con tus funciones serverless o edge?
-  // Prueba Prisma Accelerate: https://pris.ly/cli/accelerate-init
-  // npx prisma migrate reset 
-  // npx prisma migrate dev --init
-  // npx prisma generate
-  // npx prisma studio 
+// Este es tu archivo de esquema de Prisma,
+// puedes aprender más sobre él en la documentación: https://pris.ly/d/prisma-schema
+// ¿Buscas formas de acelerar tus consultas o escalar fácilmente con tus funciones serverless o edge?
+// Prueba Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// npx prisma migrate reset 
+// npx prisma migrate dev --init
+// npx prisma generate
+// npx prisma studio 
 
-  generator client {
-    provider = "prisma-client-js"
-  }
+generator client {
+  provider = "prisma-client-js"
+}
 
-  datasource db {
-    provider  = "postgresql"
-    url       = env("DATABASE_URL")
-    directUrl = env("DATABASE_URL")
-  }
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_PROD")
+  directUrl = env("DATABASE_URL_PROD")
+}
 
-  enum user_type {
-    admin     // Usuario administrador (superadmin o manager)
-    client    // Usuario cliente que reserva espacios
-  }
+enum user_type {
+  admin // Usuario administrador (superadmin o manager)
+  client // Usuario cliente que reserva espacios
+}
 
-  enum admin_role {
-    superadmin  // Rol con permisos totales (crea otros superadmins y managers)
-    manager     // Rol con permisos limitados (solo puede crear managers)
-  }
+enum admin_role {
+  superadmin // Rol con permisos totales (crea otros superadmins y managers)
+  manager // Rol con permisos limitados (solo puede crear managers)
+}
 
-  enum user_status {
-    active      // Usuario activo
-    suspended   // Usuario suspendido
-    pending     // Usuario pendiente de verificación o activación
-  }
+enum user_status {
+  active // Usuario activo
+  suspended // Usuario suspendido
+  pending // Usuario pendiente de verificación o activación
+}
 
-  enum notification_type {
-    INFO
-    SUCCESS
-    ERROR
-    ALERT
-  }
+enum notification_type {
+  INFO
+  SUCCESS
+  ERROR
+  ALERT
+}
 
-  enum SpaceType {
-    UNIT          // Unidad individual (privada)
-    SHARED_SITE   // Sitio individual en espacio compartido
-    FULL_ROOM     // Reserva de todo el espacio (sala completa)
-  }
+enum SpaceType {
+  UNIT // Unidad individual (privada)
+  SHARED_SITE // Sitio individual en espacio compartido
+  FULL_ROOM // Reserva de todo el espacio (sala completa)
+}
 
-  enum AccessType {
-    PUBLIC    // Visible y reservable por cualquier cliente
-    PRIVATE   // Reservable solo por admin o bajo condiciones especiales
-  }
+enum AccessType {
+  PUBLIC // Visible y reservable por cualquier cliente
+  PRIVATE // Reservable solo por admin o bajo condiciones especiales
+}
 
-  enum DurationUnit {
-    HOUR
-    DAY
-    WEEK
-    MONTH
-  }
-  
-  enum PriceMode {
-    INDIVIDUAL  // Precio por sitio / unidad
-    GROUP       // Precio por reserva de sala completa
-  }
+enum DurationUnit {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+}
 
-  model Users {
-    id                 String      @id @default(uuid())            // Identificador único del usuario
-    first_name         String                                     // Nombre del usuario
-    last_name          String                                     // Apellido del usuario
-    email              String      @unique                        // Correo electrónico único
-    password           String                                     // Contraseña hasheada
-    user_type          user_type?                                 // Tipo de usuario (admin o client)
-    profile_image      String?                                    // Imagen de perfil del usuario
-    phone              String?                                    // Número telefónico del usuario
-    birth_date         DateTime?   @db.Date                       // Fecha de nacimiento
-    gender             String?                                    // Género del usuario
-    status             user_status                                // Estado actual del usuario
-    creation_timestamp DateTime?   @default(now())                // Fecha de creación del registro
+enum PriceMode {
+  INDIVIDUAL // Precio por sitio / unidad
+  GROUP // Precio por reserva de sala completa
+}
 
-    adminDetails           AdminDetails?                          // Relación uno a uno si es admin
-    userDetails            UserDetails?                           // Relación uno a uno para detalles generales
-    receivedNotifications  Notification[] @relation("ReceivedNotifications") // Notificaciones recibidas
-    sentNotifications      Notification[] @relation("SentNotifications")     // Notificaciones enviadas
-    reservations           Reservation[]  @relation("UserReservations")      // Reservas realizadas por el usuario
+model Users {
+  id                 String      @id @default(uuid()) // Identificador único del usuario
+  first_name         String // Nombre del usuario
+  last_name          String // Apellido del usuario
+  email              String      @unique // Correo electrónico único
+  password           String // Contraseña hasheada
+  user_type          user_type? // Tipo de usuario (admin o client)
+  profile_image      String? // Imagen de perfil del usuario
+  phone              String? // Número telefónico del usuario
+  birth_date         DateTime?   @db.Date // Fecha de nacimiento
+  gender             String? // Género del usuario
+  status             user_status // Estado actual del usuario
+  creation_timestamp DateTime?   @default(now()) // Fecha de creación del registro
 
-    @@map("users")
-  }
+  adminDetails          AdminDetails? // Relación uno a uno si es admin
+  userDetails           UserDetails? // Relación uno a uno para detalles generales
+  receivedNotifications Notification[] @relation("ReceivedNotifications") // Notificaciones recibidas
+  sentNotifications     Notification[] @relation("SentNotifications") // Notificaciones enviadas
+  reservations          Reservation[]  @relation("UserReservations") // Reservas realizadas por el usuario
 
-  model AdminDetails {
-    admin_id String   @id                                      // ID del admin (igual al ID en Users)
-    role     admin_role                                        // Rol del administrador
-    notes    String?                                           // Notas administrativas adicionales
+  @@map("users")
+}
 
-    user Users @relation(fields: [admin_id], references: [id], onDelete: Cascade) // Relación con Users
+model AdminDetails {
+  admin_id String     @id // ID del admin (igual al ID en Users)
+  role     admin_role // Rol del administrador
+  notes    String? // Notas administrativas adicionales
 
-    @@map("admin_details")
-  }
+  user Users @relation(fields: [admin_id], references: [id], onDelete: Cascade) // Relación con Users
 
-  model UserDetails {
-    user_id String   @id                                      // ID del usuario
-    status  user_status                                       // Estado del usuario (repetido para claridad o control local)
+  @@map("admin_details")
+}
 
-    user Users @relation(fields: [user_id], references: [id], onDelete: Cascade) // Relación con Users
+model UserDetails {
+  user_id String      @id // ID del usuario
+  status  user_status // Estado del usuario (repetido para claridad o control local)
 
-    @@map("user_details")
-  }
+  user Users @relation(fields: [user_id], references: [id], onDelete: Cascade) // Relación con Users
 
-  model Space {
-    id             String      @id @default(uuid())           // ID del espacio
-    name           String                                     // Nombre del espacio (ej: Hangar, Unidad)
-    description    String?                                    // Descripción opcional
-    type           SpaceType                                  // Tipo de espacio (privado, compartido, etc.)
-    access         AccessType                                 // Acceso público o privado
-    capacityMin    Int                                        // Mínimo de personas por reserva
-    capacityMax    Int                                        // Máximo de personas permitidas en el espacio
-    allowByUnit    Boolean                                    // ¿Se permiten reservas “por unidad” (sitio individual).
-    allowFullRoom  Boolean                                    // permite reservar toda la sala de una sola vez.
-    disabled       Boolean     @default(false)                 // ¿Deshabilitado?                   
-    createdAt      DateTime    @default(now())                // Fecha de creación del espacio
+  @@map("user_details")
+}
 
-    spaceBenefits  SpaceBenefit []
-    prices         Price[]                                   // Relación: precios por duración
-    reservations   Reservation[]                             // Relación: reservas registradas para este espacio
+model Space {
+  id            String     @id @default(uuid()) // ID del espacio
+  name          String // Nombre del espacio (ej: Hangar, Unidad)
+  description   String? // Descripción opcional
+  type          SpaceType // Tipo de espacio (privado, compartido, etc.)
+  access        AccessType // Acceso público o privado
+  capacityMin   Int // Mínimo de personas por reserva
+  capacityMax   Int // Máximo de personas permitidas en el espacio
+  allowByUnit   Boolean // ¿Se permiten reservas “por unidad” (sitio individual).
+  allowFullRoom Boolean // permite reservar toda la sala de una sola vez.
+  disabled      Boolean    @default(false) // ¿Deshabilitado?                   
+  createdAt     DateTime   @default(now()) // Fecha de creación del espacio
 
-    @@map("spaces")
-  }
+  spaceBenefits SpaceBenefit[]
+  prices        Price[] // Relación: precios por duración
+  reservations  Reservation[] // Relación: reservas registradas para este espacio
 
-  model Benefit {
-    id          String   @id @default(uuid())
-    name        String   @unique
-    description String?
+  @@map("spaces")
+}
 
-    spaces      SpaceBenefit[]   
-    @@map("benefits")
-  }
+model Benefit {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
 
-  model SpaceBenefit {
-    spaceId   String
-    benefitId String
+  spaces SpaceBenefit[]
 
-    space     Space    @relation(fields: [spaceId],   references: [id], onDelete: Cascade)
-    benefit   Benefit  @relation(fields: [benefitId], references: [id], onDelete: Cascade)
+  @@map("benefits")
+}
 
-    @@id([spaceId, benefitId])
-    @@map("space_benefits")
-  }
+model SpaceBenefit {
+  spaceId   String
+  benefitId String
 
-  model Price {
-    id          String        @id @default(uuid())            // ID del registro de precio
-    spaceId     String                                       // FK al espacio asociado
-    duration    DurationUnit                                // Tipo de duración (hora, día, semana)
-    mode        PriceMode  
-    amount      Float                                        // Monto en moneda local
+  space   Space   @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  benefit Benefit @relation(fields: [benefitId], references: [id], onDelete: Cascade)
 
-    space       Space         @relation(fields: [spaceId], references: [id], onDelete: Cascade) // Relación con Space
+  @@id([spaceId, benefitId])
+  @@map("space_benefits")
+}
 
-    @@unique([spaceId, duration, mode])
-    @@map("prices")
-  }
+model Price {
+  id       String       @id @default(uuid()) // ID del registro de precio
+  spaceId  String // FK al espacio asociado
+  duration DurationUnit // Tipo de duración (hora, día, semana)
+  mode     PriceMode
+  amount   Float // Monto en moneda local
 
-  model Reservation {
-    id         String     @id @default(uuid())                // ID de la reserva
-    userId     String                                       // FK al usuario que reservó
-    spaceId    String                                       // FK al espacio reservado
-    startTime  DateTime                                    // Fecha y hora de inicio de la reserva
-    endTime    DateTime                                    // Fecha y hora de fin de la reserva
-    people     Int                                         // Número total de personas
-    fullRoom   Boolean                                     // ¿Se reservó todo el espacio?
-    codeQr     String     @unique                          // Codigo QR
-    price      Decimal                                     // Precio a cobrar
-    createdAt  DateTime   @default(now())                  // Timestamp de creación
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade) // Relación con Space
 
-    user       Users      @relation("UserReservations", fields: [userId], references: [id], onDelete: Cascade)
-    space      Space      @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  @@unique([spaceId, duration, mode])
+  @@map("prices")
+}
 
-    slots      ReservationSlot[]                           // Relación a los slots individuales (opcional)
+model Reservation {
+  id        String   @id @default(uuid()) // ID de la reserva
+  userId    String // FK al usuario que reservó
+  spaceId   String // FK al espacio reservado
+  startTime DateTime // Fecha y hora de inicio de la reserva
+  endTime   DateTime // Fecha y hora de fin de la reserva
+  people    Int // Número total de personas
+  fullRoom  Boolean // ¿Se reservó todo el espacio?
+  codeQr    String   @unique // Codigo QR
+  price     Decimal // Precio a cobrar
+  createdAt DateTime @default(now()) // Timestamp de creación
 
-    @@index([spaceId, startTime, endTime])                 // Index para verificar conflictos
-    @@map("reservations")
-  }
+  user  Users @relation("UserReservations", fields: [userId], references: [id], onDelete: Cascade)
+  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
-  model ReservationSlot {
-    id             String   @id @default(uuid())            // ID del slot individual
-    reservationId  String                                 // FK a la reserva principal
-    slotNumber     Int                                    // Número de sitio asignado (1 a N)
+  slots ReservationSlot[] // Relación a los slots individuales (opcional)
 
-    reservation    Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  @@index([spaceId, startTime, endTime]) // Index para verificar conflictos
+  @@map("reservations")
+}
 
-    @@unique([reservationId, slotNumber])                 // Un sitio por reserva
-    @@map("reservation_slots")
-  }
+model ReservationSlot {
+  id            String @id @default(uuid()) // ID del slot individual
+  reservationId String // FK a la reserva principal
+  slotNumber    Int // Número de sitio asignado (1 a N)
 
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 
+  @@unique([reservationId, slotNumber]) // Un sitio por reserva
+  @@map("reservation_slots")
+}
 
-  model Notification {
-    id          String     @id @default(uuid())              // ID de la notificación
-    receiverId  String                                    // FK del usuario receptor
-    senderId    String?                                   // FK del emisor (opcional)
-    title       String                                   // Título del mensaje
-    description String                                   // Cuerpo del mensaje
-    type        notification_type                        // Tipo de notificación
-    createdAt   DateTime   @default(now())               // Timestamp de envío
-    url         String?                                  // Enlace relacionado (opcional)
+model Notification {
+  id          String            @id @default(uuid()) // ID de la notificación
+  receiverId  String // FK del usuario receptor
+  senderId    String? // FK del emisor (opcional)
+  title       String // Título del mensaje
+  description String // Cuerpo del mensaje
+  type        notification_type // Tipo de notificación
+  createdAt   DateTime          @default(now()) // Timestamp de envío
+  url         String? // Enlace relacionado (opcional)
 
-    receiver Users  @relation("ReceivedNotifications", fields: [receiverId], references: [id])
-    sender   Users? @relation("SentNotifications", fields: [senderId], references: [id])
+  receiver Users  @relation("ReceivedNotifications", fields: [receiverId], references: [id])
+  sender   Users? @relation("SentNotifications", fields: [senderId], references: [id])
 
-    @@map("notifications")
-  }
+  @@map("notifications")
+}

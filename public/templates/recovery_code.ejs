@@ -3,22 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
-      rel="stylesheet"
-    />
-    <title>Recuperación de cuenta - Arxatec</title>
+    <title>Recuperación de cuenta - Labase</title>
   </head>
-  <body style="font-family: 'DM Sans', Arial, sans-serif">
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
-
-      @font-face {
-        font-family: "DM Sans";
-        src: url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
-      }
-    </style>
-
+  <body>
     <div
       style="
         width: 100%;
@@ -26,20 +13,19 @@
         margin: 1rem auto;
         background-color: #fff;
         padding: 1rem;
-        border-radius: 0.5rem;
       "
     >
       <img
         src="https://www.arxatec.net/assets/logo.png"
         alt="logo"
-        width="120"
+        style="height: 50px; object-fit: contain"
       />
+
       <h1
         style="
           font-size: 1rem;
-          color: #111827;
+          color: #1c1917;
           font-weight: 900;
-          font-family: 'DM Sans', Arial, sans-serif;
           text-align: left;
           margin-top: 1rem;
         "
@@ -47,24 +33,17 @@
         Código de verificación
       </h1>
 
-      <p
-        style="
-          font-size: 0.8rem;
-          color: #4b5563;
-          font-family: 'DM Sans', Arial, sans-serif;
-        "
-      >
-        Para recuperar tu cuenta en Arxatec, utiliza el siguiente código de
-        verificación. No lo compartas. Es exclusivo para completar el proceso de
-        recuperación de forma segura.
+      <p style="font-size: 0.8rem; color: #78716c">
+        Para recuperar tu cuenta en La Base Cowork, utiliza el siguiente código
+        de verificación. No lo compartas. Es exclusivo para completar el proceso
+        de recuperación de forma segura.
       </p>
       <b
         style="
           font-size: 2rem;
-          color: #4b5563;
+          color: #292524;
           letter-spacing: 0.2rem;
           font-weight: 900;
-          font-family: 'DM Sans', Arial, sans-serif;
           text-align: center;
           display: block;
           margin-top: 1rem;
@@ -74,16 +53,15 @@
       </b>
 
       <a
-        href="https://arxatec-platform.vercel.app/verify-reset?code=<%= code %>"
+        href="https://labase-platform.vercel.app/verify-reset?code=<%= code %>"
         style="
           text-decoration: none;
           margin: 1.5rem 0rem;
-          background-color: #2563eb;
+          background-color: #78716c;
           padding: 0.8rem 1rem;
           color: #fff;
-          font-family: 'DM Sans', Arial, sans-serif;
           font-weight: 600;
-          border-radius: 0.3rem;
+          border-radius: 10rem;
           display: block;
           font-size: 0.8rem;
           text-align: center;
@@ -92,29 +70,20 @@
         Verificar código y continuar
       </a>
 
-      <p
-        style="
-          font-size: 0.8rem;
-          margin-top: 0.2rem;
-          color: #4b5563;
-          font-family: 'DM Sans', Arial, sans-serif;
-        "
-      >
+      <p style="font-size: 0.8rem; margin-top: 0.2rem; color: #78716c">
         Si no solicitaste esta recuperación, ignora este mensaje.
       </p>
 
       <div
         style="
-          border-top: 1px solid #d1d5db;
+          border-top: 1px solid #e7e5e4;
           margin-top: 32px;
           padding-top: 10px;
           font-size: 12px;
-          color: #9ca3af;
+          color: #a3a3a3;
         "
       >
-        <p style="font-family: 'DM Sans', Arial, sans-serif">
-          Este es un mensaje automático del sistema de Arxatec.
-        </p>
+        <p>Este es un mensaje automático del sistema de La Base Cowork.</p>
       </div>
     </div>
   </body>

@@ -1,4 +1,3 @@
-// src/utils/authenticated_user
 import { AuthenticatedRequest } from "../../middlewares/authenticate_token";
 import { PrismaClient } from "@prisma/client";
 import { LoggedUser } from "../../modules/user/features/edit_profile/presentation/edit_profile.service";
@@ -6,7 +5,7 @@ import { LoggedUser } from "../../modules/user/features/edit_profile/presentatio
 const prisma = new PrismaClient();
 
 export const getAuthenticatedUser = async (
-  req: AuthenticatedRequest,
+  req: AuthenticatedRequest
 ): Promise<LoggedUser> => {
   const id = req.user?.id;
   if (!id) throw new Error("Usuario no autenticado");
