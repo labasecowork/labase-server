@@ -6,7 +6,6 @@ import { CreateSpaceController } from "./create_space.controller";
 
 const router = Router();
 const controller = new CreateSpaceController();
-// src/modules/space/features/create_space/presentation/routes/create_space.routes.ts
 /**
  * @openapi
  * /api/v1/space/create:

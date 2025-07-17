@@ -1,11 +1,17 @@
- // src/modules/reservation/features/create_reservation/presentation/create_reservation.service.ts
-import { differenceInHours, differenceInDays, differenceInWeeks, differenceInMonths } from "date-fns";
+// src/modules/reservation/features/create_reservation/presentation/create_reservation.service.ts
+import {
+  differenceInHours,
+  differenceInDays,
+  differenceInWeeks,
+  differenceInMonths,
+} from "date-fns";
 import { CreateReservationDTO } from "../domain/create_reservation.dto";
 import { CreateReservationRepository } from "../data/create_reservation.repository";
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { RESERVATION_MESSAGES } from "../../../../../constants/messages/reservation";
 import { generateQrCode } from "../../../../../utils/generate_qr_code";
+import { io } from "../../../../../config/socket";
 
 interface CurrentUser {
   id: string;
@@ -45,7 +51,9 @@ export class CreateReservationService {
 
     if (dto.fullRoom) {
       const overlap = await this.repo.findOverlaps(
-        dto.spaceId, dto.startTime, dto.endTime
+        dto.spaceId,
+        dto.startTime,
+        dto.endTime
       );
       if (overlap) {
         throw new AppError(
@@ -55,7 +63,9 @@ export class CreateReservationService {
       }
     } else {
       const booked = await this.repo.sumPeople(
-        dto.spaceId, dto.startTime, dto.endTime
+        dto.spaceId,
+        dto.startTime,
+        dto.endTime
       );
       if (booked + dto.people > space.capacityMax) {
         throw new AppError("NO_CAPACITY_LEFT", HttpStatusCodes.CONFLICT.code);
@@ -63,19 +73,21 @@ export class CreateReservationService {
     }
 
     const mode = dto.fullRoom ? "GROUP" : "INDIVIDUAL";
-    const prices = (space.prices as Array<{
-      duration: "HOUR" | "DAY" | "WEEK" | "MONTH";
-      amount: number;
-      mode: "INDIVIDUAL" | "GROUP";
-    }>).filter(p => p.mode === mode);
+    const prices = (
+      space.prices as Array<{
+        duration: "HOUR" | "DAY" | "WEEK" | "MONTH";
+        amount: number;
+        mode: "INDIVIDUAL" | "GROUP";
+      }>
+    ).filter((p) => p.mode === mode);
 
     const months = differenceInMonths(dto.endTime, dto.startTime);
-    const weeks  = differenceInWeeks(dto.endTime, dto.startTime);
-    const days   = differenceInDays(dto.endTime, dto.startTime);
-    const hours  = differenceInHours(dto.endTime, dto.startTime);
+    const weeks = differenceInWeeks(dto.endTime, dto.startTime);
+    const days = differenceInDays(dto.endTime, dto.startTime);
+    const hours = differenceInHours(dto.endTime, dto.startTime);
 
-    const findRate = (unit: typeof prices[number]["duration"]) =>
-      prices.find(p => p.duration === unit)?.amount ?? null;
+    const findRate = (unit: (typeof prices)[number]["duration"]) =>
+      prices.find((p) => p.duration === unit)?.amount ?? null;
 
     let unitCount: number;
     if (months >= 1 && findRate("MONTH") !== null) {
@@ -91,10 +103,7 @@ export class CreateReservationService {
     }
 
     const rate = findRate(
-      months >= 1 ? "MONTH" :
-      weeks  >= 1 ? "WEEK"  :
-      days   >= 1 ? "DAY"   :
-                   "HOUR"
+      months >= 1 ? "MONTH" : weeks >= 1 ? "WEEK" : days >= 1 ? "DAY" : "HOUR"
     )!;
 
     let price: number;
@@ -106,20 +115,26 @@ export class CreateReservationService {
 
     const codeQr = generateQrCode();
     const created = await this.repo.create({
-      space:     { connect: { id: dto.spaceId } },
-      user:      { connect: { id: user.id } },
+      space: { connect: { id: dto.spaceId } },
+      user: { connect: { id: user.id } },
       startTime: dto.startTime,
-      endTime:   dto.endTime,
-      people:    dto.people,
-      fullRoom:  dto.fullRoom,
+      endTime: dto.endTime,
+      people: dto.people,
+      fullRoom: dto.fullRoom,
       codeQr,
       price,
     });
-
+    io.emit("RESERVATION_CREATED", {
+      reservationId: created.id,
+      userId: user.id,
+      startTime: dto.startTime,
+      endTime: dto.endTime,
+      spaceId: dto.spaceId,
+    });
     return {
-      message:         RESERVATION_MESSAGES.CREATED_SUCCESS,
-      reservation_id:  created.id,
-      codeQr:          created.codeQr,
+      message: RESERVATION_MESSAGES.CREATED_SUCCESS,
+      reservation_id: created.id,
+      codeQr: created.codeQr,
       price,
     };
   }

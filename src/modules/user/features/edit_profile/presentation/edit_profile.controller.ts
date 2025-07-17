@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { ZodError } from "zod";
 
 import { EditProfileSchema } from "../domain/edit_profile.schema";
-import { EditProfileService } from "./edit_profile.service";   // ← ruta correcta
+import { EditProfileService } from "./edit_profile.service";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
 import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";

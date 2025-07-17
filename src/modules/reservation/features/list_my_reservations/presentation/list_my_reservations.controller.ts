@@ -1,6 +1,6 @@
 // src/modules/reservation/features/list_my_reservations/presentation/list_my_reservations.controller.ts
 import { Response } from "express";
-import { ListMyReservationsService } from "./list_my_reservations.service"; // ruta corregida (../services)
+import { ListMyReservationsService } from "./list_my_reservations.service";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
 import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
