@@ -13,8 +13,10 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL_PROD")
-  directUrl = env("DATABASE_URL_PROD")
+  // url       = env("DATABASE_URL_PROD")
+  // directUrl = env("DIRECT_URL_PROD")
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL")
 }
 
 enum user_type {
@@ -189,6 +191,15 @@ model ReservationSlot {
 
   @@unique([reservationId, slotNumber]) // Un sitio por reserva
   @@map("reservation_slots")
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("newsletter_subscribers")
 }
 
 model Notification {

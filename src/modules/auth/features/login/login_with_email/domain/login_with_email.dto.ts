@@ -10,6 +10,8 @@ export interface LoginResponseDTO {
     firstName: string;
     lastName: string;
     email: string;
+    userType: string | null;
+    role?: string | null;
   };
   token: string;
 }

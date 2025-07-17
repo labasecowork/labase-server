@@ -18,11 +18,17 @@ export class LoginUseCase {
 
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
-      throw new AppError("Invalid credentials", HttpStatusCodes.UNAUTHORIZED.code);
+      throw new AppError(
+        "Invalid credentials",
+        HttpStatusCodes.UNAUTHORIZED.code
+      );
     }
 
     if (!user.isVerified()) {
-      throw new AppError("User is not verified", HttpStatusCodes.UNAUTHORIZED.code);
+      throw new AppError(
+        "User is not verified",
+        HttpStatusCodes.UNAUTHORIZED.code
+      );
     }
 
     let adminRole: string | undefined = undefined;
@@ -30,7 +36,7 @@ export class LoginUseCase {
     if (user.user_type === "admin") {
       const adminData = await prisma.adminDetails.findUnique({
         where: { admin_id: user.id },
-        select: { role: true }
+        select: { role: true },
       });
 
       if (adminData) {
@@ -41,7 +47,7 @@ export class LoginUseCase {
     const token = generateToken({
       id: user.id,
       user_type: user.user_type ?? "client",
-      ...(adminRole ? { role: adminRole } : {})
+      ...(adminRole ? { role: adminRole } : {}),
     });
 
     return {
@@ -50,8 +56,10 @@ export class LoginUseCase {
         firstName: user.first_name,
         lastName: user.last_name,
         email: user.email,
+        userType: user.user_type ?? null,
+        role: adminRole ?? null,
       },
-      token
+      token,
     };
   }
 }
