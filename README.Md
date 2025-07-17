@@ -10,18 +10,26 @@ This approach ensures clear separation of concerns, high scalability, and mainta
 
 ## 🛠 Technologies Used
 
-- **Node.js** (version 18 or higher)
-- **Express** (web framework)
-- **TypeScript** (static typing)
-- **Prisma ORM** (PostgreSQL database mapping)
-- **Zod** (data validation)
-- **Axios** (HTTP client)
-- **Socket.IO** (real-time events)
-- **Bcrypt** (password hashing)
+- **Node.js** (version 18 or higher) 
+- **Express** (web framework) 
+- **TypeScript** (static typing) 
+- **Prisma ORM** (PostgreSQL database mapping) 
+- **Zod** (data validation) 
+- **Axios** (HTTP client) 
+- **Socket.IO** (real-time events) 
+- **Bcrypt** (password hashing) 
 - **Swagger** (interactive API documentation)
-- **Redis** (caching and session storage)
+- **Redis** (caching and session storage) 
 - **AWS S3** (planned for file storage)
-
+- **dayjs** (date/time formatting and manipulation) 
+- **date-fns** (programmatic date handling)
+- **nanoid** (unique ID generation)
+- **uuid** (universally unique identifiers) 
+- **Multer** (file upload handling)
+- **Nodemailer** (email sending)
+- **dotenv** (environment variables loader) 
+- **EJS** (email templating)
+- **Morgan** (HTTP logger middleware)
 ---
 
 ## ⚙️ Requirements

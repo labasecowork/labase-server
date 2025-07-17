@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class ListMyReservationsRepository {
-  list(userId: string, skip: number, take: number) { 
+  list(userId: string, skip: number, take: number) {
     return prisma.reservation.findMany({
       where: { userId },
       orderBy: { startTime: "desc" },

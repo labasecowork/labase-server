@@ -1,7 +1,7 @@
 // src/middlewares/authenticate_token/index.ts
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { JWT_SECRET } from "../../config/env";             // ajusta alias
+import { JWT_SECRET } from "../../config/env";
 import { AppError } from "../../utils/errors";
 
 export interface AuthenticatedRequest extends Request {

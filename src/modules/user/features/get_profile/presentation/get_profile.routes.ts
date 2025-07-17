@@ -98,6 +98,6 @@ const ctrl = new GetProfileController();
  *       500:
  *         description: Internal Server Error
  */
-router.get("/", authenticateToken, asyncHandler(ctrl.handle));
+router.get("/", authenticateToken, asyncHandler(ctrl.handle.bind(ctrl)));
 
 export { router as getProfileRoutes };

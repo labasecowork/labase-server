@@ -1,6 +1,6 @@
 // src/modules/space/features/create_space/presentation/controllers/create_space.controller.ts
 import { Response } from "express";
-import { CreateSpaceService } from "./create_space.service";          // ← ruta corregida
+import { CreateSpaceService } from "./create_space.service";
 import { CreateSpaceSchema } from "../domain/create_space.schema";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
 import {

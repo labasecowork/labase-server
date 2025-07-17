@@ -5,7 +5,7 @@ import { GetReservationsService } from "./get_reservations.service";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
 import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { AppError } from "../../../../../utils/errors";        // ← se mantiene la ruta usada en otros módulos
+import { AppError } from "../../../../../utils/errors";
 import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 
 export class GetReservationsController {
