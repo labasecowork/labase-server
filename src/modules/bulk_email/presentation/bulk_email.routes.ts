@@ -1,6 +1,6 @@
-  // src/modules/email/presentation/email.routes.ts
+  // src/modules/bulk_email/presentation/bulk_email.routes.ts
 import { Router } from "express";
-import { EmailController } from "./email.controller";
+import { EmailController } from "./bulk_email.controller";
 import { authenticateToken } from "../../../middlewares/authenticate_token";
 
 const emailController = new EmailController();
