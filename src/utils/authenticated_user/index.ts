@@ -16,6 +16,10 @@ export const getAuthenticatedUser = async (
       id: true,
       user_type: true,
       status: true,
+      first_name: true,
+      last_name: true,
+      email: true,
+      phone: true,
       adminDetails: { select: { role: true } },
     },
   });

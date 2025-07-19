@@ -16,6 +16,8 @@ import { io } from "../../../../../config/socket";
 interface CurrentUser {
   id: string;
   role: "client" | "admin";
+  first_name: string;
+  last_name: string;
 }
 
 export class CreateReservationService {
@@ -130,6 +132,16 @@ export class CreateReservationService {
       startTime: dto.startTime,
       endTime: dto.endTime,
       spaceId: dto.spaceId,
+      spaceName: space.name,
+      createdAt: created.createdAt,
+      people: created.people,
+      fullRoom: created.fullRoom,
+      codeQr: created.codeQr,
+      price: created.price,
+      user: {
+        name: user.first_name,
+        lastName: user.last_name,
+      },
     });
     return {
       message: RESERVATION_MESSAGES.CREATED_SUCCESS,

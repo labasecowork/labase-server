@@ -12,11 +12,10 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-  
+
 enum user_type {
   admin // Usuario administrador (superadmin o manager)
   client // Usuario cliente que reserva espacios
