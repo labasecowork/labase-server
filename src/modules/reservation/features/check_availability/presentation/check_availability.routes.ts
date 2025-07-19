@@ -64,6 +64,6 @@ const controller = new CheckAvailabilityController();
  *         description: Error interno del servidor
  */
 
-router.post("/", asyncHandler(controller.handle.bind(controller)));
+router.post("/availability", asyncHandler(controller.handle.bind(controller)));
 
 export { router as checkAvailabilityRoutes };

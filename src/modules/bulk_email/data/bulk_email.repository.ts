@@ -1,4 +1,4 @@
-//src/modules/email/data/email.repository.ts
+//src/modules/bulk_email/data/bulk_email.repository.ts
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();

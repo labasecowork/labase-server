@@ -69,6 +69,6 @@ const controller = new ListMyReservationsController();
  *       500:
  *         description: Error interno del servidor
  */
-router.get("/", authenticateToken, asyncHandler(controller.handle.bind(controller)));
+router.get("/reservations", authenticateToken, asyncHandler(controller.handle.bind(controller)));
 
 export { router as listMyReservationsRoutes };

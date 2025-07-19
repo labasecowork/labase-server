@@ -1,6 +1,6 @@
-// src/modules/email/presentation/email.controller.ts
+// src/modules/bulk_email/presentation/bulk_email.controller.ts
 import { Response } from "express";
-import { EmailService } from "./email.service";
+import { EmailService } from "./bulk_email.service";
 import { handleServerError, handleZodError } from "../../../utils/error_handler";
 import { BulkEmailSchema, BulkEmailDTO } from "../domain/dtos/bulk_email.dto";
 import { ZodError } from "zod";

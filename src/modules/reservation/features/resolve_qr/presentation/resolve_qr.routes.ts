@@ -61,6 +61,6 @@ const controller = new ResolveQrController();
  *         description: Error interno del servidor
  */
 
-router.post("/", asyncHandler(controller.handle.bind(controller)));
+router.post("/resolve", asyncHandler(controller.handle.bind(controller)));
 
 export { router as resolveQrRoutes };
