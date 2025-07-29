@@ -1,4 +1,3 @@
-//src/config/email
 import nodemailer from "nodemailer";
 import { EMAIL_PASSWORD, EMAIL_USER, SMTP_HOST, SMTP_PORT } from "../env";
 
