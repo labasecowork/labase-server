@@ -12,13 +12,14 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  url       = env("DATABASE_URL_LOCAL")
+  directUrl = env("DIRECT_URL_LOCAL")
 }
 
 enum user_type {
   admin // Usuario administrador (superadmin o manager)
   client // Usuario cliente que reserva espacios
+  employee // Usuario empleado que trabaja en la empresa
 }
 
 enum admin_role {
@@ -98,6 +99,12 @@ enum ReactionTarget {
   reply // Reacción a una respuesta
 }
 
+enum AttendanceType {
+  ENTRY // Entrada
+  EXIT // Salida
+} 
+
+
 model Users {
   id                 String      @id @default(uuid()) // Identificador único del usuario
   first_name         String // Nombre del usuario
@@ -113,6 +120,7 @@ model Users {
   creation_timestamp DateTime?   @default(now()) // Fecha de creación del registro
 
   adminDetails          AdminDetails? // Relación uno a uno si es admin
+  employeeDetails       EmployeeDetails?
   userDetails           UserDetails? // Relación uno a uno para detalles generales
   receivedNotifications Notification[]       @relation("ReceivedNotifications") // Notificaciones recibidas
   sentNotifications     Notification[]       @relation("SentNotifications") // Notificaciones enviadas
@@ -138,6 +146,26 @@ model UserDetails {
   user Users @relation(fields: [user_id], references: [id], onDelete: Cascade) // Relación con Users
 
   @@map("user_details")
+}
+
+model EmployeeDetails {
+  employee_id String       @id
+  user        Users        @relation(fields: [employee_id], references: [id])
+  attendances Attendance[]
+
+  @@map("employee_details")
+}
+
+model Attendance {
+  id          String         @id @default(uuid())
+  employee_id String
+  type        AttendanceType
+  date        DateTime       @db.Date
+  check_time  DateTime       @db.Time
+
+  employee EmployeeDetails @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@map("attendances")
 }
 
 model Space {
@@ -210,8 +238,8 @@ model Reservation {
   user  Users @relation("UserReservations", fields: [userId], references: [id], onDelete: Cascade)
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
-  slots              ReservationSlot[] // Relación a los slots individuales (opcional)
-  paymentTransactions PaymentTransaction[]      @relation("ReservationPayments")
+  slots               ReservationSlot[] // Relación a los slots individuales (opcional)
+  paymentTransactions PaymentTransaction[] @relation("ReservationPayments")
 
   @@index([spaceId, startTime, endTime]) // Index para verificar conflictos
   @@map("reservations")
@@ -238,17 +266,17 @@ model NewsletterSubscriber {
 }
 
 model PaymentTransaction {
-  id             String   @id @default(uuid())
-  purchaseNumber String   @unique
+  id             String        @id @default(uuid())
+  purchaseNumber String        @unique
   provider       String
   amount         Float
   currency       String
   status         PaymentStatus @default(PENDING)
   rawResponse    Json?
-  createdAt      DateTime @default(now())
+  createdAt      DateTime      @default(now())
 
-  reservationId  String?
-  reservation    Reservation? @relation(fields: [reservationId],references: [id],onDelete: Cascade, name: "ReservationPayments")
+  reservationId String?
+  reservation   Reservation? @relation(fields: [reservationId], references: [id], onDelete: Cascade, name: "ReservationPayments")
 
   userId String?
   user   Users?  @relation("UserPayments", fields: [userId], references: [id])
@@ -271,6 +299,7 @@ model Notification {
 
   @@map("notifications")
 }
+
 
 model ArticleCategories {
   id          String   @id @default(uuid())
@@ -301,3 +330,4 @@ model Articles {
   @@map("articles")
   @@index([status])
 }
+

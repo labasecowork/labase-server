@@ -19,12 +19,14 @@ export const handleServerError = (
 ) => {
   // ─────────── Zod ───────────
   if (error instanceof ZodError) {
+    console.error("ZodError", error);
     const zodError = handleZodError(error, req);
     return res.status(zodError.status).json(zodError);
   }
 
   // ─────────── Dominio ───────────
   if (error instanceof AppError) {
+    console.error("AppError", error);
     return res
       .status(error.statusCode)
       .json(buildHttpResponse(error.statusCode, error.message, req.path));
@@ -35,16 +37,18 @@ export const handleServerError = (
     error instanceof Prisma.PrismaClientValidationError ||
     (error instanceof Error && error.name === "PrismaClientValidationError")
   ) {
-    console.error(error);
-    return res.status(400).json(
-      buildHttpResponse(
-        400,
-        "Bad Request",
-        req.path,
-        undefined,
-        error.message
-      )
-    );
+    console.error("PrismaClientValidationError", error);
+    return res
+      .status(400)
+      .json(
+        buildHttpResponse(
+          400,
+          "Bad Request",
+          req.path,
+          undefined,
+          error.message
+        )
+      );
   }
 
   // ─────────── Prisma Known Request ───────────
@@ -52,20 +56,22 @@ export const handleServerError = (
     error instanceof Prisma.PrismaClientKnownRequestError ||
     (error instanceof Error && error.name === "PrismaClientKnownRequestError")
   ) {
-    console.error(error);
-    return res.status(400).json(
-      buildHttpResponse(
-        400,
-        (error as Prisma.PrismaClientKnownRequestError).code,
-        req.path,
-        undefined,
-        JSON.stringify((error as any).meta, null, 2)
-      )
-    );
+    console.error("PrismaClientKnownRequestError", error);
+    return res
+      .status(400)
+      .json(
+        buildHttpResponse(
+          400,
+          (error as Prisma.PrismaClientKnownRequestError).code,
+          req.path,
+          undefined,
+          JSON.stringify((error as any).meta, null, 2)
+        )
+      );
   }
 
   // ─────────── Fallback 500 ───────────
-  console.error(error);
+  console.error("Fallback 500", error);
   return res
     .status(HttpStatusCodes.INTERNAL_SERVER_ERROR.code)
     .json(

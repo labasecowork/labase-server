@@ -4,6 +4,7 @@ import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./docs/swagger";
 import routes from "./routes";
+// import https from "https";
 import http from "http";
 import { initSocket } from "./config/socket";
 import { redisClient } from "./config/redis";
@@ -11,7 +12,14 @@ import { APP_URL, PORT } from "./config/env";
 import { displayWelcomeMessage } from "./utils";
 import { customMorganFormat } from "./utils/cli";
 import { multerErrorHandler } from "./middlewares/multer_error_handler/multer_error_handler";
+/*import fs from "fs";
+import path from "path";
 
+const __dirname = getDirname(import.meta.url);
+ const httpsOptions: https.ServerOptions = {
+  key: fs.readFileSync(path.join(__dirname, "./cert/192.168.1.6-key.pem")),
+  cert: fs.readFileSync(path.join(__dirname, "./cert/192.168.1.6.pem")),
+}; */
 const app = express();
 const server = http.createServer(app);
 

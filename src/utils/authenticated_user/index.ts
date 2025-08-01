@@ -1,14 +1,19 @@
+import prisma from "../../config/prisma_client";
 import { AuthenticatedRequest } from "../../middlewares/authenticate_token";
-import { PrismaClient } from "@prisma/client";
 import { LoggedUser } from "../../modules/user/features/edit_profile/presentation/edit_profile.service";
-
-const prisma = new PrismaClient();
+import { AppError } from "../errors";
+import { HttpStatusCodes } from "../../constants/http_status_codes";
 
 export const getAuthenticatedUser = async (
   req: AuthenticatedRequest
 ): Promise<LoggedUser> => {
   const id = req.user?.id;
-  if (!id) throw new Error("Usuario no autenticado");
+  if (!id) {
+    throw new AppError(
+      "Token de autenticación no válido o no proporcionado",
+      HttpStatusCodes.UNAUTHORIZED.code
+    );
+  }
 
   const user = await prisma.users.findUniqueOrThrow({
     where: { id },
@@ -21,7 +26,10 @@ export const getAuthenticatedUser = async (
   });
 
   if (!user.user_type) {
-    throw new Error("User type not set in DB");
+    throw new AppError(
+      "Tipo de usuario no configurado en la base de datos",
+      HttpStatusCodes.INTERNAL_SERVER_ERROR.code
+    );
   }
   return {
     ...user,

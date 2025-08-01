@@ -14,14 +14,16 @@ export const uploadTest = async (req: Request, res: Response) => {
 
     const { key, url } = await uploadFile(req.file, "public");
 
-    return res.status(HttpStatusCodes.CREATED.code).json(
-      buildHttpResponse(
-        HttpStatusCodes.CREATED.code,
-        "✅ Archivo subido correctamente",
-        req.path,
-        { key, url }
-      )
-    );
+    return res
+      .status(HttpStatusCodes.CREATED.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.CREATED.code,
+          "✅ Archivo subido correctamente",
+          req.path,
+          { key, url }
+        )
+      );
   } catch (error) {
     return handleServerError(res, req, error);
   }

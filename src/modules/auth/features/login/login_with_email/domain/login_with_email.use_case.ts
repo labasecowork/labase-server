@@ -44,9 +44,22 @@ export class LoginUseCase {
       }
     }
 
+    let role = "";
+
+    console.log("user.user_type", user);
+    if (user.user_type === "admin") {
+      role = adminRole ?? "";
+    } else if (user.user_type === "employee") {
+      role = "employee";
+    } else if (user.user_type === "client") {
+      role = "client";
+    } else {
+      role = "client";
+    }
+
     const token = generateToken({
       id: user.id,
-      user_type: user.user_type ?? "client",
+      user_type: role,
       ...(adminRole ? { role: adminRole } : {}),
     });
 
