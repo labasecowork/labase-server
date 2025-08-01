@@ -1,4 +1,6 @@
-  //src/infrastructure/aws/index.ts
+
+//src/infrastructure/aws/index.ts
+
   import {
   S3Client,
   PutObjectCommand,
@@ -19,9 +21,8 @@ import path from "path";
 const s3Client = new S3Client({
   region: AWS_BUCKET_REGION || "us-east-1",
   credentials: {
-    accessKeyId: AWS_KEY_ACCESS || "AKIAV2345678901234567890",
-    secretAccessKey:
-      AWS_KEY_ACCESS_SECRET || "1234567890123456789012345678901234567890",
+     accessKeyId: AWS_KEY_ACCESS!,
+    secretAccessKey: AWS_KEY_ACCESS_SECRET!,
   },
 });
 
@@ -91,4 +92,6 @@ export async function deleteFile(key: string) {
     Key: key,
   });
   return await s3Client.send(command);
+
 }
+
