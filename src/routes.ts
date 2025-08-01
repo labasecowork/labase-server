@@ -11,10 +11,14 @@ import emailRoutes from "./modules/bulk_email/presentation/bulk_email.routes";
 import calendarRouter from "./modules/calendar/index";
 import testingRouter from "./modules/testing_aws";
 import {paymentRoutes} from "./modules/payment"
+import articleRoutes from "./modules/article/presentation/routes/article.routes";
+import articleCategoryRouter from "./modules/article/presentation/routes/article_category.routes";
 
 const router = Router();
 const API_VERSION = "/api/v1";
 
+router.use(`${API_VERSION}/articles/categories`, articleCategoryRouter);
+router.use(`${API_VERSION}/articles`, articleRoutes);
 router.use(`${API_VERSION}/chatbot`,     botRoutes);
 router.use(`${API_VERSION}/auth`,        authRouter);
 router.use(`${API_VERSION}/users`,       userRouter);

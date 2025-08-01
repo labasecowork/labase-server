@@ -76,6 +76,28 @@ enum PaymentStatus {
   FAILED // Pago rechazado o fallido
 }
 
+enum article_status {
+  pending
+  accepted
+  rejected
+}
+
+enum community_user_type {
+  moderator // Moderador de la comunidad
+  member // Miembro de la comunidad
+}
+
+enum ReactionType {
+  like // Me gusta
+  dislike // No me gusta
+}
+
+enum ReactionTarget {
+  publication // Reacción a una publicación
+  comment // Reacción a un comentario
+  reply // Reacción a una respuesta
+}
+
 model Users {
   id                 String      @id @default(uuid()) // Identificador único del usuario
   first_name         String // Nombre del usuario
@@ -96,10 +118,38 @@ model Users {
   sentNotifications     Notification[]       @relation("SentNotifications") // Notificaciones enviadas
   reservations          Reservation[]        @relation("UserReservations") // Reservas realizadas por el usuario
   paymentTransactions   PaymentTransaction[] @relation("UserPayments")
-
+  articles           Articles[] @relation("UserArticles")
   @@map("users")
 }
+model ArticleCategories {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
 
+  articles Articles[]
+
+  @@map("article_categories")
+}
+
+model Articles {
+  id          String @id @default(uuid()) 
+  author_id   String     
+  category_id String 
+  title       String
+  content     String
+  banner      String?
+  resume      String
+  reading_time Int
+  
+  publication_timestamp DateTime?
+  status      article_status @default(pending)
+
+  author          Users             @relation("UserArticles", fields: [author_id], references: [id], onDelete: Cascade)
+  articleCategory ArticleCategories @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@map("articles")
+  @@index([status])
+}
 model AdminDetails {
   admin_id String     @id // ID del admin (igual al ID en Users)
   role     admin_role // Rol del administrador
