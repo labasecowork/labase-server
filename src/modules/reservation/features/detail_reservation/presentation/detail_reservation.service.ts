@@ -9,7 +9,10 @@ export class DetailReservationService {
   async execute(user: LoggedUser, reservationId: string) {
     const reservation = await this.repo.findById(reservationId);
     if (!reservation) {
-      throw new AppError("RESERVATION_NOT_FOUND", HttpStatusCodes.NOT_FOUND.code);
+      throw new AppError(
+        "RESERVATION_NOT_FOUND",
+        HttpStatusCodes.NOT_FOUND.code
+      );
     }
 
     const isOwner = reservation.userId === user.id;
@@ -19,6 +22,14 @@ export class DetailReservationService {
       throw new AppError("FORBIDDEN", HttpStatusCodes.FORBIDDEN.code);
     }
 
-    return reservation;
+    const now = new Date();
+    const status =
+      now < reservation.startTime
+        ? "upcoming"
+        : now > reservation.endTime
+        ? "expired"
+        : "in_progress";
+
+    return { reservation, status };
   }
 }
