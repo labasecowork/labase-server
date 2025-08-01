@@ -1,32 +1,20 @@
-import { Attachment } from "nodemailer/lib/mailer";
+//src/utils/email_sender
 import transporter from "../../config/email";
 import { EMAIL_USER } from "../../config/env";
-import path from "path";
-import { getDirname } from "..";
 
 export async function sendEmail(
   to: string,
   subject: string,
   text: string,
-  html?: string,
-  attachments?: Attachment[]
+  html?: string
 ): Promise<void> {
   try {
-    const __dirname = getDirname(import.meta.url);
     const info = await transporter.sendMail({
       from: EMAIL_USER,
       to,
       subject,
       text,
       html,
-      attachments: [
-        {
-          filename: "logo.png",
-          path: path.join(__dirname, "../../../public/images/logo.png"),
-          cid: "logo",
-        },
-        ...(attachments || []),
-      ],
     });
 
     console.log(`Email sent: ${info.messageId}`);

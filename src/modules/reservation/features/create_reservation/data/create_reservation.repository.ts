@@ -1,5 +1,7 @@
 // src/modules/reservation/features/create_reservation/data/create_reservation.repository.ts
-import { PrismaClient, Prisma } from "@prisma/client";
+
+import { PrismaClient, Prisma, Reservation } from "@prisma/client";
+
 const prisma = new PrismaClient();
 
 export class CreateReservationRepository {
@@ -36,5 +38,21 @@ export class CreateReservationRepository {
 
   create(data: Prisma.ReservationCreateInput) {
     return prisma.reservation.create({ data });
+  }
+
+  async findById(id: string): Promise<Reservation | null> {
+    return prisma.reservation.findUnique({
+      where: { id },
+    });
+  }
+
+  async updateStatus(
+    id: string,
+    status: Reservation["status"]
+  ): Promise<Reservation> {
+    return prisma.reservation.update({
+      where: { id },
+      data: { status },
+    });
   }
 }

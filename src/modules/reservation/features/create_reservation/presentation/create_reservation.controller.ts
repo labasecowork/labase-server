@@ -1,22 +1,30 @@
 // src/modules/reservation/features/create_reservation/presentation/create_reservation.controller.ts
+
 import { Response } from "express";
 import { CreateReservationService } from "./create_reservation.service";
-import { CreateReservationSchema } from "../domain/create_reservation.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { CreateReservationSchema }  from "../domain/create_reservation.schema";
+import { buildHttpResponse }        from "../../../../../utils/build_http_response";
 import { handleServerError, handleZodError } from "../../../../../utils/error_handler";
-import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { ZodError } from "zod";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
-import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
+import { HttpStatusCodes }          from "../../../../../constants/http_status_codes";
+import { ZodError }                 from "zod";
+import { getAuthenticatedUser }     from "../../../../../utils/authenticated_user";
+import { AuthenticatedRequest }     from "../../../../../middlewares/authenticate_token";
+
 
 export class CreateReservationController {
   constructor(private readonly service = new CreateReservationService()) {}
 
   async handle(req: AuthenticatedRequest, res: Response) {
     try {
-      const dto = CreateReservationSchema.parse(req.body);
-      const user = await getAuthenticatedUser(req);
-      const result = await this.service.execute(dto, user as any);
+      const dto     = CreateReservationSchema.parse(req.body);
+      const authUser = await getAuthenticatedUser(req);
+
+      const user = {
+        id:   authUser.id,
+        role: authUser.user_type as "admin" | "client",
+      };
+
+      const result = await this.service.execute(dto, user);
 
       return res
         .status(HttpStatusCodes.CREATED.code)
@@ -27,9 +35,10 @@ export class CreateReservationController {
             req.path,
             {
               reservation_id: result.reservation_id,
-              codeQr: result.codeQr,
-              price: result.price,
-              user,
+              codeQr:         result.codeQr,
+              price:          result.price,
+              status:         result.status,
+              user:           authUser,
             }
           )
         );

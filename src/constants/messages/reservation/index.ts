@@ -6,4 +6,6 @@ export const RESERVATION_MESSAGES = {
   FULL_ROOM_FORBIDDEN: "Full-room reservation is not allowed for this space",
   UNIT_BOOKING_FORBIDDEN: "Unit booking is not allowed for this space",
   TIME_OVERLAP: "There is an overlapping reservation in that time interval",
+  NO_CAPACITY_LEFT:         "No capacity left for the selected time interval",
+  PRICE_NOT_DEFINED:        "Price not defined for the selected duration",
 };

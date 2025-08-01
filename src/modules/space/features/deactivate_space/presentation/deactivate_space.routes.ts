@@ -9,7 +9,7 @@ const ctrl = new DeactivateSpaceController();
 
 /**
  * @openapi
- * /api/v1/space/deactivate/{id}:
+ * /api/v1/space/{id}/deactivate/:
  *   patch:
  *     tags:
  *       - Space
