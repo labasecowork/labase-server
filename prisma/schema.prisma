@@ -1,4 +1,3 @@
-// Este es tu archivo de esquema de Prisma,
 // puedes aprender más sobre él en la documentación: https://pris.ly/d/prisma-schema
 // ¿Buscas formas de acelerar tus consultas o escalar fácilmente con tus funciones serverless o edge?
 // Prueba Prisma Accelerate: https://pris.ly/cli/accelerate-init
@@ -12,8 +11,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum user_type {
@@ -62,6 +62,20 @@ enum PriceMode {
   GROUP // Precio por reserva de sala completa
 }
 
+enum ReservationStatus {
+  PENDING // Reserva creada, pendiente de pago o confirmación
+  CONFIRMED // Pago aprobado / reserva confirmada
+  CANCELLED // Reserva anulada
+}
+
+enum PaymentStatus {
+  PENDING // Flujo iniciado, esperando aprobación
+  READY // Sesión de pago lista (token obtenido)
+  APPROVED // Pago aprobado por el proveedor
+  CANCELED // Pago cancelado por el usuario o proveedor
+  FAILED // Pago rechazado o fallido
+}
+
 model Users {
   id                 String      @id @default(uuid()) // Identificador único del usuario
   first_name         String // Nombre del usuario
@@ -78,9 +92,10 @@ model Users {
 
   adminDetails          AdminDetails? // Relación uno a uno si es admin
   userDetails           UserDetails? // Relación uno a uno para detalles generales
-  receivedNotifications Notification[] @relation("ReceivedNotifications") // Notificaciones recibidas
-  sentNotifications     Notification[] @relation("SentNotifications") // Notificaciones enviadas
-  reservations          Reservation[]  @relation("UserReservations") // Reservas realizadas por el usuario
+  receivedNotifications Notification[]       @relation("ReceivedNotifications") // Notificaciones recibidas
+  sentNotifications     Notification[]       @relation("SentNotifications") // Notificaciones enviadas
+  reservations          Reservation[]        @relation("UserReservations") // Reservas realizadas por el usuario
+  paymentTransactions   PaymentTransaction[] @relation("UserPayments")
 
   @@map("users")
 }
@@ -159,21 +174,23 @@ model Price {
 }
 
 model Reservation {
-  id        String   @id @default(uuid()) // ID de la reserva
+  id        String            @id @default(uuid()) // ID de la reserva
   userId    String // FK al usuario que reservó
   spaceId   String // FK al espacio reservado
   startTime DateTime // Fecha y hora de inicio de la reserva
   endTime   DateTime // Fecha y hora de fin de la reserva
   people    Int // Número total de personas
   fullRoom  Boolean // ¿Se reservó todo el espacio?
-  codeQr    String   @unique // Codigo QR
+  codeQr    String            @unique // Codigo QR
   price     Decimal // Precio a cobrar
-  createdAt DateTime @default(now()) // Timestamp de creación
+  status    ReservationStatus @default(PENDING)
+  createdAt DateTime          @default(now()) // Timestamp de creación
 
   user  Users @relation("UserReservations", fields: [userId], references: [id], onDelete: Cascade)
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
 
-  slots ReservationSlot[] // Relación a los slots individuales (opcional)
+  slots              ReservationSlot[] // Relación a los slots individuales (opcional)
+  paymentTransactions PaymentTransaction[]      @relation("ReservationPayments")
 
   @@index([spaceId, startTime, endTime]) // Index para verificar conflictos
   @@map("reservations")
@@ -199,6 +216,25 @@ model NewsletterSubscriber {
   @@map("newsletter_subscribers")
 }
 
+model PaymentTransaction {
+  id             String   @id @default(uuid())
+  purchaseNumber String   @unique
+  provider       String
+  amount         Float
+  currency       String
+  status         PaymentStatus @default(PENDING)
+  rawResponse    Json?
+  createdAt      DateTime @default(now())
+
+  reservationId  String?
+  reservation    Reservation? @relation(fields: [reservationId],references: [id],onDelete: Cascade, name: "ReservationPayments")
+
+  userId String?
+  user   Users?  @relation("UserPayments", fields: [userId], references: [id])
+
+  @@map("payment_transactions")
+}
+
 model Notification {
   id          String            @id @default(uuid()) // ID de la notificación
   receiverId  String // FK del usuario receptor
@@ -214,3 +250,4 @@ model Notification {
 
   @@map("notifications")
 }
+

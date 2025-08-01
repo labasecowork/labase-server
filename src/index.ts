@@ -23,7 +23,7 @@ const app = express();
 const server = https.createServer(httpsOptions, app);
 
 // App URL fallback
-const appUrl = `${APP_URL}${PORT}` || `http://localhost:${PORT}`;
+const appUrl = `${APP_URL}` || `http://localhost:${PORT}`;
 
 // Initialize sockets
 initSocket(server);

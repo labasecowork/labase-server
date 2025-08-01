@@ -35,4 +35,4 @@ spaceRouter.use("/:id/deactivate", deactivateSpaceRoutes);
  */
 
 export default spaceRouter;
-    
+        
