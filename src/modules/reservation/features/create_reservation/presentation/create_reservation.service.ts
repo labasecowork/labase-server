@@ -12,18 +12,18 @@ import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { RESERVATION_MESSAGES } from "../../../../../constants/messages/reservation";
 import { generateQrCode } from "../../../../../utils/generate_qr_code";
 import { io } from "../../../../../config/socket";
+import { Reservation } from "@prisma/client";
 
 interface CurrentUser {
   id: string;
   role: "client" | "admin";
-  first_name: string;
-  last_name: string;
 }
 
 export class CreateReservationService {
   constructor(private readonly repo = new CreateReservationRepository()) {}
 
   async execute(dto: CreateReservationDTO, user: CurrentUser) {
+
     const space = await this.repo.findSpaceById(dto.spaceId);
     if (!space || space.disabled) {
       throw new AppError(
@@ -70,7 +70,10 @@ export class CreateReservationService {
         dto.endTime
       );
       if (booked + dto.people > space.capacityMax) {
-        throw new AppError("NO_CAPACITY_LEFT", HttpStatusCodes.CONFLICT.code);
+        throw new AppError(
+          RESERVATION_MESSAGES.NO_CAPACITY_LEFT,
+          HttpStatusCodes.CONFLICT.code
+        );
       }
     }
 
@@ -101,19 +104,21 @@ export class CreateReservationService {
     } else if (findRate("HOUR") !== null) {
       unitCount = hours;
     } else {
-      throw new AppError("PRICE_NOT_DEFINED", HttpStatusCodes.BAD_REQUEST.code);
+      throw new AppError(
+        RESERVATION_MESSAGES.PRICE_NOT_DEFINED,
+        HttpStatusCodes.BAD_REQUEST.code
+      );
     }
 
     const rate = findRate(
       months >= 1 ? "MONTH" : weeks >= 1 ? "WEEK" : days >= 1 ? "DAY" : "HOUR"
     )!;
 
-    let price: number;
-    if (mode === "INDIVIDUAL") {
-      price = unitCount * rate * dto.people;
-    } else {
-      price = unitCount * rate;
-    }
+    const price =
+      mode === "INDIVIDUAL" ? unitCount * rate * dto.people : unitCount * rate;
+
+    const status: Reservation["status"] =
+      user.role === "admin" ? "CONFIRMED" : "PENDING";
 
     const codeQr = generateQrCode();
     const created = await this.repo.create({
@@ -125,29 +130,23 @@ export class CreateReservationService {
       fullRoom: dto.fullRoom,
       codeQr,
       price,
+      status,
     });
+
     io.emit("RESERVATION_CREATED", {
       reservationId: created.id,
       userId: user.id,
       startTime: dto.startTime,
       endTime: dto.endTime,
       spaceId: dto.spaceId,
-      spaceName: space.name,
-      createdAt: created.createdAt,
-      people: created.people,
-      fullRoom: created.fullRoom,
-      codeQr: created.codeQr,
-      price: created.price,
-      user: {
-        name: user.first_name,
-        lastName: user.last_name,
-      },
     });
+
     return {
       message: RESERVATION_MESSAGES.CREATED_SUCCESS,
       reservation_id: created.id,
       codeQr: created.codeQr,
       price,
+      status: created.status,
     };
   }
 }

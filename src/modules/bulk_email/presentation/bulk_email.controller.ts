@@ -1,25 +1,23 @@
+// src/modules/bulk_email/presentation/bulk_email.controller.ts
 import { Response } from "express";
 import { EmailService } from "./bulk_email.service";
-import { handleServerError } from "../../../utils/error_handler";
+import { handleServerError, handleZodError } from "../../../utils/error_handler";
 import { BulkEmailSchema, BulkEmailDTO } from "../domain/dtos/bulk_email.dto";
+import { ZodError } from "zod";
 import { HttpStatusCodes } from "../../../constants";
-import { AppError, buildHttpResponse } from "../../../utils";
+import { buildHttpResponse } from "../../../utils";
 import { getAuthenticatedUser } from "../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../middlewares/authenticate_token";
 
 const emailService = new EmailService();
 
 export class EmailController {
-  async sendBulkEmail(
-    req: AuthenticatedRequest,
-    res: Response
-  ): Promise<Response> {
+  async sendBulkEmail(req: AuthenticatedRequest, res: Response): Promise<Response> {
     try {
       const user = await getAuthenticatedUser(req);
-      if (user.user_type !== "admin") {
-        throw new AppError(
-          "Unauthorized, user not admin",
-          HttpStatusCodes.UNAUTHORIZED.code
+      if (!user || user.user_type !== "admin") {
+        return res.status(HttpStatusCodes.FORBIDDEN.code).json(
+          buildHttpResponse(HttpStatusCodes.FORBIDDEN.code, "Only admins can send bulk emails", req.path)
         );
       }
 
@@ -28,10 +26,12 @@ export class EmailController {
 
       return res
         .status(HttpStatusCodes.OK.code)
-        .json(
-          buildHttpResponse(HttpStatusCodes.OK.code, response.message, req.path)
-        );
+        .json(buildHttpResponse(HttpStatusCodes.OK.code, response.message, req.path));
     } catch (error) {
+      if (error instanceof ZodError) {
+        const createdError = handleZodError(error, req);
+        return res.status(createdError.status).json(createdError);
+      }
       return handleServerError(res, req, error);
     }
   }

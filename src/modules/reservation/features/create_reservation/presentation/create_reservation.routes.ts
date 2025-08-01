@@ -6,6 +6,7 @@ import { CreateReservationController } from "./create_reservation.controller";
 
 const router = Router();
 const controller = new CreateReservationController();
+
 /**
  * @openapi
  * /api/v1/reservations:
@@ -17,7 +18,8 @@ const controller = new CreateReservationController();
  *       - **modo INDIVIDUAL**: tarifa por unidad × duración × número de personas  
  *       - **modo GROUP**: tarifa grupal × duración  
  *       La tarifa y la duración se toman de la configuración del espacio.
- *     security: [{ bearerAuth: [] }]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -26,11 +28,21 @@ const controller = new CreateReservationController();
  *             type: object
  *             required: [spaceId, startTime, endTime, people]
  *             properties:
- *               spaceId:   { type: string, format: uuid }
- *               startTime: { type: string, format: date-time }
- *               endTime:   { type: string, format: date-time }
- *               people:    { type: integer, example: 3 }
- *               fullRoom:  { type: boolean, example: false }
+ *               spaceId:
+ *                 type: string
+ *                 format: uuid
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *               people:
+ *                 type: integer
+ *                 example: 3
+ *               fullRoom:
+ *                 type: boolean
+ *                 example: false
  *     responses:
  *       201:
  *         description: Reserva creada correctamente con precio total calculado
@@ -39,22 +51,46 @@ const controller = new CreateReservationController();
  *             schema:
  *               type: object
  *               properties:
- *                 status:      { type: integer, example: 201 }
- *                 message:     { type: string,  example: Created }
- *                 description: { type: string,  example: Reservation created successfully }
+ *                 status:
+ *                   type: integer
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   example: Created
+ *                 description:
+ *                   type: string
+ *                   example: Reservation created successfully
  *                 data:
  *                   type: object
  *                   properties:
- *                     reservation_id: { type: string, format: uuid }
- *                     codeQr:         { type: string, example: "A1B2C3D4" }
- *                     price:          { type: number, example: 150 }
- *                     user:           { $ref: "#/components/schemas/UserInfo" }
- *       400: { description: Error de validación o datos fuera de rango }
- *       404: { description: Espacio no encontrado }
- *       409: { description: Solapamiento de horarios o sin capacidad restante }
- *       500: { description: Error interno del servidor }
+ *                     reservation_id:
+ *                       type: string
+ *                       format: uuid
+ *                     codeQr:
+ *                       type: string
+ *                       example: "A1B2C3D4"
+ *                     price:
+ *                       type: number
+ *                       example: 150
+ *                     status:
+ *                       type: string
+ *                       enum: [PENDING, CONFIRMED, CANCELLED]
+ *                       example: CONFIRMED
+ *                     user:
+ *                       $ref: '#/components/schemas/UserInfo'
+ *       400:
+ *         description: Error de validación o datos fuera de rango
+ *       404:
+ *         description: Espacio no encontrado
+ *       409:
+ *         description: Solapamiento de horarios o sin capacidad restante
+ *       500:
+ *         description: Error interno del servidor
  */
-
-router.post("/", authenticateToken, asyncHandler(controller.handle.bind(controller)));
+router.post(
+  "/",
+  authenticateToken,
+  asyncHandler(controller.handle.bind(controller))
+);
 
 export { router as createReservationRoutes };

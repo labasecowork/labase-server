@@ -2,8 +2,6 @@
 import { EmailRepository } from "../data/bulk_email.repository";
 import { BulkEmailDTO } from "../domain/dtos/bulk_email.dto";
 import { sendEmail } from "../../../utils/email_sender";
-import { AppError } from "../../../utils";
-import { HttpStatusCodes } from "../../../constants";
 
 export class EmailService {
   private emailRepository: EmailRepository;
@@ -17,13 +15,10 @@ export class EmailService {
 
     for (const email of emails) {
       try {
-        await sendEmail(email, data.subject, "LaBase", data.html);
+        await sendEmail(email, data.subject, data.text, data.html);
         console.log(`Email sent to: ${email}`);
       } catch (error) {
-        throw new AppError(
-          "Error sending email",
-          HttpStatusCodes.INTERNAL_SERVER_ERROR.code
-        );
+        console.error(`Error sending to ${email}:`, error);
       }
     }
 
