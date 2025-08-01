@@ -2,35 +2,56 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from "../../config/env";
-import { AppError } from "../../utils/errors";
+import { HttpStatusCodes } from "../../constants/http_status_codes";
+import { buildHttpResponse } from "../../utils/build_http_response";
 
 export interface AuthenticatedRequest extends Request {
-  user?: { id: string; email?: string; user_type: "admin" | "client" };
+  user?: {
+    id: string;
+    email?: string;
+    user_type: "admin" | "client" | "employee";
+  };
 }
 
 interface TokenPayload {
   id: string;
-  user_type: "admin" | "client";
+  user_type: "admin" | "client" | "employee";
   //admin_role?: "superadmin" | "manager"
   email?: string;
 }
 
 export function authenticateToken(
   req: AuthenticatedRequest,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith("Bearer ")) {
-    return next(new AppError("Missing authorization header", 401));
-  }
-
-  const token = authHeader.split(" ")[1];
-  if (!JWT_SECRET) {
-    return next(new AppError("JWT secret not configured", 500));
-  }
-
   try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith("Bearer ")) {
+      return res
+        .status(HttpStatusCodes.UNAUTHORIZED.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.UNAUTHORIZED.code,
+            "Authorization header required",
+            req.path
+          )
+        );
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!JWT_SECRET) {
+      return res
+        .status(HttpStatusCodes.INTERNAL_SERVER_ERROR.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.INTERNAL_SERVER_ERROR.code,
+            "JWT secret not configured",
+            req.path
+          )
+        );
+    }
+
     const payload = jwt.verify(token, JWT_SECRET) as JwtPayload & TokenPayload;
 
     req.user = {
@@ -40,7 +61,15 @@ export function authenticateToken(
     };
 
     return next();
-  } catch {
-    return next(new AppError("Invalid or expired token", 401));
+  } catch (error) {
+    return res
+      .status(HttpStatusCodes.UNAUTHORIZED.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.UNAUTHORIZED.code,
+          "Invalid or expired token",
+          req.path
+        )
+      );
   }
 }

@@ -23,15 +23,17 @@ export class CreateSpaceController {
       if (!userRecord) {
         return res
           .status(HttpStatusCodes.UNAUTHORIZED.code)
-          .json(buildHttpResponse(
-            HttpStatusCodes.UNAUTHORIZED.code,
-            "Usuario no autenticado",
-            req.path
-          ));
+          .json(
+            buildHttpResponse(
+              HttpStatusCodes.UNAUTHORIZED.code,
+              "Usuario no autenticado",
+              req.path
+            )
+          );
       }
 
       const currentUser = {
-        id: userRecord.id,                                  
+        id: userRecord.id,
         role: userRecord.user_type as "client" | "admin",
       } as const;
 
@@ -41,19 +43,17 @@ export class CreateSpaceController {
         ...dto,
       };
 
-      return res.status(HttpStatusCodes.CREATED.code).json(
-        buildHttpResponse(
-          HttpStatusCodes.CREATED.code,
-          result.message,
-          req.path,
-          { space: response, user: userRecord }
-        )
-      );
+      return res
+        .status(HttpStatusCodes.CREATED.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.CREATED.code,
+            result.message,
+            req.path,
+            { space: response, user: userRecord }
+          )
+        );
     } catch (error) {
-      if (error instanceof ZodError) {
-        const err = handleZodError(error, req);
-        return res.status(err.status).json(err);
-      }
       return handleServerError(res, req, error);
     }
   }
