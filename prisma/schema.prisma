@@ -121,35 +121,6 @@ model Users {
   articles           Articles[] @relation("UserArticles")
   @@map("users")
 }
-model ArticleCategories {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-
-  articles Articles[]
-
-  @@map("article_categories")
-}
-
-model Articles {
-  id          String @id @default(uuid()) 
-  author_id   String     
-  category_id String 
-  title       String
-  content     String
-  banner      String?
-  resume      String
-  reading_time Int
-  
-  publication_timestamp DateTime?
-  status      article_status @default(pending)
-
-  author          Users             @relation("UserArticles", fields: [author_id], references: [id], onDelete: Cascade)
-  articleCategory ArticleCategories @relation(fields: [category_id], references: [id], onDelete: Cascade)
-
-  @@map("articles")
-  @@index([status])
-}
 model AdminDetails {
   admin_id String     @id // ID del admin (igual al ID en Users)
   role     admin_role // Rol del administrador
@@ -301,3 +272,32 @@ model Notification {
   @@map("notifications")
 }
 
+model ArticleCategories {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+
+  articles Articles[]
+
+  @@map("article_categories")
+}
+
+model Articles {
+  id          String @id @default(uuid()) 
+  author_id   String     
+  category_id String 
+  title       String
+  content     String
+  banner      String?
+  resume      String
+  reading_time Int
+  
+  publication_timestamp DateTime?
+  status      article_status @default(pending)
+
+  author          Users             @relation("UserArticles", fields: [author_id], references: [id], onDelete: Cascade)
+  articleCategory ArticleCategories @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@map("articles")
+  @@index([status])
+}
