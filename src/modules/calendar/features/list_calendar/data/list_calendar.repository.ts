@@ -1,8 +1,8 @@
 // src/modules/calendar/features/list_calendar/data/list_calendar.repository.ts
 import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -23,15 +23,15 @@ export class ListCalendarRepository {
         ...(userId ? { userId } : {}),
         OR: [
           { startTime: { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() } },
-          { endTime:   { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() } },
+          { endTime: { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() } },
           {
             startTime: { lte: startOfWeek.toDate() },
-            endTime:   { gte: endOfWeek.toDate() },
+            endTime: { gte: endOfWeek.toDate() },
           },
         ],
       },
       include: {
-        user:  { select: { first_name: true, last_name: true } },
+        user: { select: { first_name: true, last_name: true } },
         space: { select: { name: true } },
       },
     });
@@ -47,22 +47,22 @@ export class ListCalendarRepository {
    */
   async getEventsBetween(from?: string, to?: string, userId?: string) {
     const start = from ? dayjs(from) : dayjs().startOf("month");
-    const end   = to   ? dayjs(to)   : dayjs().endOf("month");
+    const end = to ? dayjs(to) : dayjs().endOf("month");
 
     const reservations = await prisma.reservation.findMany({
       where: {
         ...(userId ? { userId } : {}),
         OR: [
           { startTime: { gte: start.toDate(), lte: end.toDate() } },
-          { endTime:   { gte: start.toDate(), lte: end.toDate() } },
+          { endTime: { gte: start.toDate(), lte: end.toDate() } },
           {
             startTime: { lte: start.toDate() },
-            endTime:   { gte: end.toDate() },
+            endTime: { gte: end.toDate() },
           },
         ],
       },
       include: {
-        user:  { select: { first_name: true, last_name: true } },
+        user: { select: { first_name: true, last_name: true } },
         space: { select: { name: true } },
       },
     });
@@ -70,16 +70,18 @@ export class ListCalendarRepository {
     return this._expandByDay(reservations);
   }
 
-  /** 
+  /**
    * Método privado que desglosa cada reserva en eventos diarios.
    */
-  private _expandByDay(reservations: Array<{
-    id: string;
-    startTime: Date;
-    endTime: Date;
-    user: { first_name: string; last_name: string };
-    space: { name: string };
-  }>) {
+  private _expandByDay(
+    reservations: Array<{
+      id: string;
+      startTime: Date;
+      endTime: Date;
+      user: { first_name: string; last_name: string };
+      space: { name: string };
+    }>
+  ) {
     const events: Array<{
       id: string;
       space: string;
@@ -91,7 +93,7 @@ export class ListCalendarRepository {
 
     for (const r of reservations) {
       const start = dayjs(r.startTime);
-      const end   = dayjs(r.endTime);
+      const end = dayjs(r.endTime);
 
       for (
         let date = start.startOf("day");
@@ -99,15 +101,15 @@ export class ListCalendarRepository {
         date = date.add(1, "day")
       ) {
         const sameStartDay = date.isSame(start, "day");
-        const sameEndDay   = date.isSame(end,   "day");
+        const sameEndDay = date.isSame(end, "day");
 
         events.push({
-          id:        r.id,
-          space:     r.space.name,
-          cliente:   `${r.user.first_name} ${r.user.last_name}`,
+          id: r.id,
+          space: r.space.name,
+          cliente: `${r.user.first_name} ${r.user.last_name}`,
           startTime: sameStartDay ? start.format("HH:mm") : "09:00",
-          endTime:   sameEndDay   ? end.format("HH:mm")   : "18:00",
-          day:       (date.day() + 6) % 7, 
+          endTime: sameEndDay ? end.format("HH:mm") : "18:00",
+          day: (date.day() + 6) % 7,
         });
       }
     }
