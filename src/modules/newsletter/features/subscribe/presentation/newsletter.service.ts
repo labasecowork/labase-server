@@ -1,8 +1,8 @@
 import { SubscribeNewsletterDTO } from "../domain/newsletter.dto";
-import { sendEmail } from "../../../utils/email_sender";
+import { sendEmail } from "../../../../../utils/email_sender";
 import { SubscribeNewsletterRepository } from "../data/newsletter.repository";
-import { AppError } from "../../../utils";
-import { MESSAGES, HttpStatusCodes } from "../../../constants";
+import { AppError } from "../../../../../utils";
+import { MESSAGES, HttpStatusCodes } from "../../../../../constants";
 
 export class SubscribeNewsletterService {
   constructor(private readonly repository: SubscribeNewsletterRepository) {}

@@ -1,7 +1,7 @@
 //src/modules/waitlist/presentation/waitlist.routes.ts
 import { Router } from "express";
 import { SubscribeNewsletterController } from "./newsletter.controller";
-import { asyncHandler } from "../../../middlewares";
+import { asyncHandler } from "../../../../../middlewares";
 
 const controller = new SubscribeNewsletterController();
 const router = Router();
@@ -43,4 +43,4 @@ const router = Router();
  */
 router.post("/subscribe", asyncHandler(controller.handle));
 
-export default router;
+export { router as subscribeRoute };
