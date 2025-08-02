@@ -34,14 +34,17 @@ export class NiubizProvider implements PaymentProviderRepository {
     const { data } = await axios.post(
       NIUBIZ_URL_SESSION,
       {
-        channel:        "web",
-        amount:         dto.amount,
+        channel: "web",
+        amount: dto.amount,
         purchaseNumber: dto.purchaseNumber,
-        antifraud:      dto.metadata?.antifraud,
-        dataMap:        dto.metadata?.dataMap,
+        antifraud: dto.metadata?.antifraud,
+        dataMap: dto.metadata?.dataMap,
       },
       {
-        headers: { Authorization: accessToken, "Content-Type": "application/json" },
+        headers: {
+          Authorization: accessToken,
+          "Content-Type": "application/json",
+        },
       }
     );
     return data.sessionKey as string;
@@ -53,8 +56,11 @@ export class NiubizProvider implements PaymentProviderRepository {
   }
 
   /** 4) Validación / autorización de transactionToken */
-  async validateTransaction(data: CreatePaymentDTO): Promise<TransactionResponse> {
-    const { transactionToken, purchaseNumber, amount, currency, dataMap } = data;
+  async validateTransaction(
+    data: CreatePaymentDTO
+  ): Promise<TransactionResponse> {
+    const { transactionToken, purchaseNumber, amount, currency, dataMap } =
+      data;
     if (!transactionToken) {
       throw new AppError(
         "MISSING_TRANSACTION_TOKEN",
@@ -64,11 +70,11 @@ export class NiubizProvider implements PaymentProviderRepository {
 
     const accessToken = await this.getAccessToken();
     const body = {
-      channel:     "web",
+      channel: "web",
       captureType: "manual",
-      countable:   true,
-      order:       {
-        tokenId:       transactionToken.toUpperCase(),
+      countable: true,
+      order: {
+        tokenId: transactionToken.toUpperCase(),
         purchaseNumber,
         amount,
         currency,
@@ -77,11 +83,13 @@ export class NiubizProvider implements PaymentProviderRepository {
     };
 
     try {
-      const { data: resp } = await axios.post(
-        NIUBIZ_URL_AUTHORIZATION,
-        body,
-        { headers: { Authorization: accessToken, "Content-Type": "application/json" } }
-      );
+      const { data: resp } = await axios.post(NIUBIZ_URL_AUTHORIZATION, body, {
+        headers: {
+          Authorization: accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("resp", resp);
       return resp as TransactionResponse;
     } catch (err: any) {
       console.error("[Niubiz] validateTransaction failed:", err.response?.data);
