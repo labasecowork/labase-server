@@ -1,8 +1,8 @@
 // src/shared/payments/utils/payments.helpers.ts
 
 import { PaymentProviderRepository } from "../providers/payment-provider.repository";
-import { TransactionResponse }       from "../providers/payment-provider.repository";  // ← importar el tipo
-import { NiubizProvider }            from "../providers/niubiz.provider";
+import { TransactionResponse } from "../providers/payment-provider.repository"; // ← importar el tipo
+import { NiubizProvider } from "../providers/niubiz/niubiz.provider";
 
 /**
  * Factory para instanciar el provider adecuado según env.
@@ -24,11 +24,11 @@ export function resolvePaymentProvider(): PaymentProviderRepository {
 export function mapToTransactionResponse(raw: any): TransactionResponse {
   return {
     transactionToken: raw.transactionToken || raw.id,
-    responseCode:     raw.responseCode ?? raw.status,
-    success:          raw.success,
-    purchaseNumber:   raw.purchaseNumber,
-    amount:           raw.amount,
-    currency:         raw.currency,
-    rawData:          raw,
+    responseCode: raw.responseCode ?? raw.status,
+    success: raw.success,
+    purchaseNumber: raw.purchaseNumber,
+    amount: raw.amount,
+    currency: raw.currency,
+    rawData: raw,
   };
 }

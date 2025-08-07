@@ -22,14 +22,14 @@ export class CreatePaymentController {
       const result = await this.svc.execute(dto, user.id);
 
       // 4) Respuesta
-      const payload = buildHttpResponse(
-        200,
-        "Payment flow initiated",
-        req.path,
-        result
-      );
-      return res.status(200).json(payload);
-
+        const payload = buildHttpResponse(
+          200,
+          "Payment flow initiated",
+          req.path,
+          result
+        );
+        return res.status(200).json(payload);
+       
     } catch (err) {
       return handleServerError(res, req, err);
     }

@@ -1,6 +1,6 @@
 // src/modules/space/features/detail_space/data/detail_space.repository.ts
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../../../../../config/prisma_client";
+import prisma from "../../../../../config/prisma_client";
 
 export class DetailSpaceRepository {
   findById(id: string) {

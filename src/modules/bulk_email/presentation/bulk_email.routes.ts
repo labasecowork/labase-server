@@ -1,19 +1,19 @@
-  // src/modules/bulk_email/presentation/bulk_email.routes.ts
+// src/modules/bulk_email/presentation/bulk_email.routes.ts
 import { Router } from "express";
-import { EmailController } from "./bulk_email.controller";
 import { authenticateToken } from "../../../middlewares/authenticate_token";
+import { asyncHandler } from "../../../middlewares/async_handler";
+import { EmailController } from "./bulk_email.controller";
 
-const emailController = new EmailController();
 const router = Router();
-
+const controller = new EmailController();
 /**
  * @openapi
  * /api/v1/bulk_email:
  *   post:
  *     tags:
  *       - Email
- *     summary: "Enviar correo masivo"
- *     description: "Envía un correo masivo únicamente a suscriptores del newsletter de LaBase. Solo administradores pueden ejecutar esta acción."
+ *     summary: Enviar correo masivo
+ *     description: Envía un correo masivo únicamente a suscriptores del newsletter de LaBase. Solo administradores pueden ejecutar esta acción.
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -36,24 +36,22 @@ const router = Router();
  *                 type: string
  *                 example: "<h2>¡LaBase se actualiza!</h2><p>Haz clic <a href='https://labase.dev'>aquí</a> para conocer más.</p>"
  *     responses:
- *       '200':
- *         description: "Correos enviados exitosamente."
- *       '400':
- *         description: "Error de validación."
- *       '401':
- *         description: "Token inválido o ausente."
- *       '403':
- *         description: "Acceso denegado: solo administradores."
- *       '500':
- *         description: "Fallo inesperado al enviar correos."
+ *       200:
+ *         description: "Correos enviados exitosamente"
+ *       400:
+ *         description: "Error de validación"
+ *       401:
+ *         description: "Token inválido o ausente"
+ *       403:
+ *         description: "Acceso denegado: solo administradores"
+ *       500:
+ *         description: "Fallo inesperado al enviar correos"
  */
 
-router.post("/", authenticateToken, async (req, res, next) => {
-  try {
-    await emailController.sendBulkEmail(req, res);
-  } catch (error) {
-    next(error);
-  }
-});
+router.post(
+  "/",
+  authenticateToken,
+  asyncHandler(controller.sendBulkEmail.bind(controller))
+);
 
-export default router;
+export { router as bulkEmailRoutes };

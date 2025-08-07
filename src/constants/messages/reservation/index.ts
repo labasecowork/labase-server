@@ -8,4 +8,7 @@ export const RESERVATION_MESSAGES = {
   TIME_OVERLAP: "There is an overlapping reservation in that time interval",
   NO_CAPACITY_LEFT:         "No capacity left for the selected time interval",
   PRICE_NOT_DEFINED:        "Price not defined for the selected duration",
+  NOT_FOUND: "Reservation not found",
+  FORBIDDEN: "You do not have permission to view this reservation.",
+
 };

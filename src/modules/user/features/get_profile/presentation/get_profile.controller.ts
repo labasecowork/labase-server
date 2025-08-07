@@ -1,30 +1,19 @@
-import { Request, Response } from "express";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
-import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { buildHttpResponse } from "../../../../../utils";
+import { Response } from "express";
 import { GetProfileService } from "./get_profile.service";
-import { handleServerError } from "../../../../../utils/error_handler";
+import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
+import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
+import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class GetProfileController {
   constructor(private readonly svc = new GetProfileService()) {}
 
-  async handle(req: Request, res: Response) {
-    try {
-      const currentUser = await getAuthenticatedUser(req);
-      const data = await this.svc.execute(currentUser);
+  async handle(req: AuthenticatedRequest, res: Response) {
+    const currentUser = await getAuthenticatedUser(req);
+    const data = await this.svc.execute(currentUser);
 
-      return res
-        .status(HttpStatusCodes.OK.code)
-        .json(
-          buildHttpResponse(
-            HttpStatusCodes.OK.code,
-            "Profile fetched",
-            req.path,
-            data
-          )
-        );
-    } catch (error) {
-      return handleServerError(res, req, error);
-    }
+    return res.status(HttpStatusCodes.OK.code).json(
+      buildHttpResponse(HttpStatusCodes.OK.code, "Perfil obtenido correctamente", req.path, data)
+    );
   }
 }

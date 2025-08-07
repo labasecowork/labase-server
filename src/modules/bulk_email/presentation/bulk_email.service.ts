@@ -1,6 +1,6 @@
 // src/modules/bulk_email/presentation/bulk_email.service.ts
 import { EmailRepository } from "../data/bulk_email.repository";
-import { BulkEmailDTO } from "../domain/dtos/bulk_email.dto";
+import { BulkEmailDTO } from "../domain/bulk_email.dto";
 import { sendEmail } from "../../../utils/email_sender";
 
 export class EmailService {

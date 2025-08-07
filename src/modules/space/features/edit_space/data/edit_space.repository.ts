@@ -1,6 +1,6 @@
 // src/modules/space/features/edit_space/data/edit_space.repository.ts
-import { PrismaClient, Prisma } from "@prisma/client";
-const prisma = new PrismaClient();
+import { Prisma } from "@prisma/client";
+import prisma from "../../../../../config/prisma_client";
 
 export class EditSpaceRepository {
   update(id: string, data: Prisma.SpaceUpdateInput) {

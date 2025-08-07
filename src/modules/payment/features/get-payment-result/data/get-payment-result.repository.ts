@@ -1,12 +1,18 @@
 // src/modules/payment/features/get-payment-result/data/get-payment-result.repository.ts
-
-import { PaymentTransactionRepository } from "../../create-payment/data/payment-transaction.repository";
 import { PaymentTransaction } from "@prisma/client";
+import prisma from "../../../../../config/prisma_client";
 
 export class GetPaymentResultRepository {
-  private txRepo = new PaymentTransactionRepository();
+  async findByPurchaseNumber(purchaseNumber: string): Promise<PaymentTransaction | null> {
+    return prisma.paymentTransaction.findUnique({
+      where: { purchaseNumber },
+    });
+  }
 
-  async execute(purchaseNumber: string): Promise<PaymentTransaction | null> {
-    return this.txRepo.findByPurchaseNumber(purchaseNumber);
+  async findAllByUser(userId: string): Promise<PaymentTransaction[]> {
+    return prisma.paymentTransaction.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    });
   }
 }

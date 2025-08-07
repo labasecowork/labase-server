@@ -5,7 +5,6 @@ import { EMAIL_USER } from "../../../config/env";
 export const publicContactService = async (
   dto: PublicContactDTO
 ): Promise<void> => {
-  
   if (!EMAIL_USER) {
     throw new Error("EMAIL_USER is not defined in environment variables");
   }

@@ -7,43 +7,38 @@ const router = Router();
 const controller = new ListSpacesController();
 /**
  * @openapi
- * /api/v1/space/list:
+ * /api/v1/spaces:
  *   get:
  *     tags:
  *       - Space
- *     summary: List all available spaces
- *     description: Returns a list of spaces filtered by optional type and capacity.
+ *     summary: Listar todos los espacios disponibles
+ *     description: Filtra por tipo, capacidad y disponibilidad.
  *     parameters:
  *       - name: type
  *         in: query
- *         required: false
  *         schema:
  *           type: string
  *           enum: [UNIT, SHARED_SITE, FULL_ROOM]
- *         example: "SHARED_SITE"
  *       - name: capacity
  *         in: query
- *         required: false
  *         schema:
  *           type: integer
  *           minimum: 1
- *         example: 5
  *       - name: available
  *         in: query
- *         required: false
  *         schema:
  *           type: boolean
- *         example: true
  *     responses:
  *       200:
- *         description: List of spaces matching filters
+ *         description: Lista filtrada
  *       400:
- *         description: Validation error in query parameters
+ *         description: Error de validación
  *       500:
- *         description: Internal server error
+ *         description: Error del servidor
  */
 
 router.get("/", asyncHandler(controller.handle.bind(controller)));
+
 
 export { router as listSpacesRoutes };
 
