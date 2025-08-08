@@ -1,7 +1,6 @@
 // src/modules/user/features/edit_profile/data/edit_profile.repository.ts
-import { PrismaClient, Prisma } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { Prisma } from "@prisma/client";
+import prisma from "../../../../../config/prisma_client";
 
 export class EditProfileRepository {
   async update(userId: string, data: Prisma.UsersUpdateInput) {
@@ -16,6 +15,13 @@ export class EditProfileRepository {
         user_type: true,
         adminDetails: { select: { role: true } },
       },
+    });
+  }
+
+  async getStatus(userId: string) {
+    return prisma.users.findUniqueOrThrow({
+      where: { id: userId },
+      select: { status: true },
     });
   }
 }

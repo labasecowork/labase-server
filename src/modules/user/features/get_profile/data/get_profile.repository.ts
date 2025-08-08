@@ -1,10 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "../../../../../config/prisma_client";
 
 export class GetProfileRepository {
   async getProfile(id: string) {
-    const user = await prisma.users.findUniqueOrThrow({
+    return prisma.users.findUniqueOrThrow({
       where: { id },
       select: {
         id: true,
@@ -19,6 +17,5 @@ export class GetProfileRepository {
         adminDetails: { select: { role: true } },
       },
     });
-    return user;
   }
 }

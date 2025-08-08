@@ -35,7 +35,7 @@ export class GetReservationsService {
       this.repo.count(where),
     ]);
 
-        const pages = Math.ceil(total / limit);
+    const pages = Math.ceil(total / limit);
 
     return {
       data,
@@ -46,7 +46,7 @@ export class GetReservationsService {
       hasNext: page < pages,
       hasPrev: page > 1,
       nextPage: page < pages ? page + 1 : null,
-      prevPage: page > 1 ? page - 1 : null
+      prevPage: page > 1 ? page - 1 : null,
     };
   }
 }

@@ -1,1 +1,1 @@
-export { detailReservationRoutes } from "./presentation/detail_reservation.route";
+export { detailReservationRoutes } from "./presentation/detail_reservation.routes";

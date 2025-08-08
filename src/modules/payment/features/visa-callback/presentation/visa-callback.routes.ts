@@ -6,6 +6,7 @@ import { VisaCallbackController } from "./visa-callback.controller";
 
 const router = Router();
 const ctrl = new VisaCallbackController();
+
 /**
  * @openapi
  * /payment/visa-callback:
@@ -24,7 +25,7 @@ const ctrl = new VisaCallbackController();
  *               purchaseNumber:
  *                 type: string
  *                 description: Número de compra generado en create-payment
- *               tokenId::
+ *               transactionToken:
  *                 type: string
  *                 description: Token retornado por el formulario de Niubiz
  *             required:
@@ -32,22 +33,12 @@ const ctrl = new VisaCallbackController();
  *               - transactionToken
  *     responses:
  *       302:
- *         description: "Redirige al frontend para finalizar la reserva"
- *         headers:
- *           Location:
- *             description: "URL de redirección con purchaseNumber"
- *             schema:
- *               type: string
- *       400:
- *         description: "transactionToken o purchaseNumber inválido"
- *       500:
- *         description: "Error interno del servidor"
+ *         description: Redirección al frontend con el resultado
  */
 router.post(
   "/",
-  express.urlencoded({ extended: false}),
+  express.urlencoded({ extended: false }),
   asyncHandler(ctrl.handle.bind(ctrl))
 );
-
 
 export { router as visaCbRoutes };

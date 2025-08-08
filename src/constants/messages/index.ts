@@ -4,6 +4,8 @@ import { AUTH_MESSAGES } from "./auth";
 import { SPACE_MESSAGES } from "./space"; 
 import { RESERVATION_MESSAGES } from "./reservation"; 
 import { NEWSLETTER_MESSAGES } from "./newsletter"; 
+import { PRODUCT_MESSAGES } from "./product"; 
+import { PAYMENT_MESSAGES } from "./payment"; 
 
 export const MESSAGES = {
   ARTICLE: ARTICLE_MESSAGES,
@@ -12,4 +14,6 @@ export const MESSAGES = {
   SPACE: SPACE_MESSAGES,
   RESERVATION: RESERVATION_MESSAGES,
   NEWSLETTER: NEWSLETTER_MESSAGES,
+  PRODUCT: PRODUCT_MESSAGES,
+  PAYMENT: PAYMENT_MESSAGES,
 };
