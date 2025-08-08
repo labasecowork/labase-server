@@ -19,7 +19,7 @@ export interface UpdateEmployeeResponseDTO {
     first_name: string;
     last_name: string;
     email: string;
-    user_type: "admin" | "client" | null;
+    user_type: "employee" | null;
     status: "active" | "suspended" | "pending";
   };
 }

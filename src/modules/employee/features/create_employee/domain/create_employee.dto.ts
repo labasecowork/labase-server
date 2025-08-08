@@ -13,7 +13,6 @@ export interface CreateEmployeeResponseDTO {
     first_name: string;
     last_name: string;
     email: string;
-    user_type: "admin" | "client" | null;
     status: "active" | "suspended" | "pending";
   };
 }

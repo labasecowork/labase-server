@@ -13,7 +13,7 @@ export const UpdateEmployeeBodySchema = z.object({
     .string()
     .min(6, "La contraseña debe tener al menos 6 caracteres")
     .optional(),
-  user_type: z.enum(["admin", "client"]).optional(),
+  user_type: z.enum(["employee"]).optional(),
   profile_image: z.string().url().optional(),
   phone: z.string().optional(),
   birth_date: z.coerce.date().optional(),

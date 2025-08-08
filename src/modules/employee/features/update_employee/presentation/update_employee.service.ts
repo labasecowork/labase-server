@@ -19,7 +19,6 @@ export class UpdateEmployeeService {
     dto: UpdateEmployeeBodyDTO,
     user: CurrentUser
   ) {
-    // Verificar que el usuario sea administrador
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden actualizar empleados",
@@ -27,7 +26,6 @@ export class UpdateEmployeeService {
       );
     }
 
-    // Verificar que el empleado existe
     const employee = await this.repo.findEmployeeById(employeeId);
     if (!employee) {
       throw new AppError(
@@ -36,7 +34,6 @@ export class UpdateEmployeeService {
       );
     }
 
-    // Si se actualiza el email, verificar que no exista otro usuario con ese email
     if (dto.email) {
       const existingUser = await this.repo.findUserByEmail(
         dto.email,
@@ -50,13 +47,12 @@ export class UpdateEmployeeService {
       }
     }
 
-    // Preparar datos de actualización
     const updateData: any = {};
 
     if (dto.first_name) updateData.first_name = dto.first_name;
     if (dto.last_name) updateData.last_name = dto.last_name;
     if (dto.email) updateData.email = dto.email;
-    if (dto.user_type) updateData.user_type = dto.user_type;
+    if (dto.user_type) updateData.user_type = "employee";
     if (dto.profile_image !== undefined)
       updateData.profile_image = dto.profile_image;
     if (dto.phone !== undefined) updateData.phone = dto.phone;
@@ -64,12 +60,10 @@ export class UpdateEmployeeService {
     if (dto.gender !== undefined) updateData.gender = dto.gender;
     if (dto.status) updateData.status = dto.status;
 
-    // Si se actualiza la contraseña, hashearla
     if (dto.password) {
       updateData.password = await bcrypt.hash(dto.password, 12);
     }
 
-    // Actualizar el empleado
     const updatedUser = await this.repo.updateEmployee(employeeId, updateData);
 
     return {

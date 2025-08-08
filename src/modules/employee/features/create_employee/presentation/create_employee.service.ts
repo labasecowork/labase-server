@@ -41,7 +41,7 @@ export class CreateEmployeeService {
       last_name: dto.last_name,
       email: dto.email,
       password: hashedPassword,
-      user_type: dto.user_type,
+      user_type: "employee",
       profile_image: dto.profile_image,
       phone: dto.phone,
       birth_date: dto.birth_date,
