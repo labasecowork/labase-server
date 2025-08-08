@@ -1,14 +1,32 @@
-import { LoggedUser } from "../../edit_profile/presentation/edit_profile.service";
+import { CurrentUser } from "../../../../../utils/authenticated_user";
 import { GetProfileRepository } from "../data/get_profile.repository";
+import { GetProfileResponseDto } from "../domain/get_profile.dto";
 
 export class GetProfileService {
   constructor(private readonly repo = new GetProfileRepository()) {}
 
-  async execute(currentUser: LoggedUser) {
-    const user = await this.repo.getProfile(currentUser.id);
+  async execute(user: CurrentUser): Promise<GetProfileResponseDto> {
+    const profile = await this.repo.getProfile(user.id);
+
+    const gender = profile.gender;
+    const isGenderValid = gender === "M" || gender === "F" || gender === "O";
+    const parsedGender: "M" | "F" | "O" | null = isGenderValid ? gender : null;
+
+    if (!profile.user_type || (profile.user_type !== "admin" && profile.user_type !== "client")) {
+      throw new Error("Tipo de usuario inválido en base de datos");
+    }
+
     return {
-      ...user,
-      user_type: user.user_type as "admin" | "client",
+      id: profile.id,
+      first_name: profile.first_name,
+      last_name: profile.last_name,
+      email: profile.email,
+      phone: profile.phone,
+      birth_date: profile.birth_date,
+      gender: parsedGender,
+      user_type: profile.user_type,
+      status: profile.status,
+      adminDetails: profile.adminDetails ?? null,
     };
   }
 }

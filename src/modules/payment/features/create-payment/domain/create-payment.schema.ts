@@ -5,28 +5,22 @@ import { z } from "zod";
 export const locationDataMap = z.object({
   urlAddress: z.string().url(),
   serviceLocationCityName: z.string().max(50),
-  serviceLocationCountrySubdivisionCode: z.string().length(3), // ej. "LIM"
-  serviceLocationCountryCode: z.string().length(3),            // ej. "PER"
+  serviceLocationCountrySubdivisionCode: z.string().length(3), 
+  serviceLocationCountryCode: z.string().length(3),           
   serviceLocationPostalCode: z.string().max(10),
 });
 
-/* 🔹 Schema principal ampliado */
 export const CreatePaymentSchema = z.object({
   reservationId: z.string().uuid(),
-  purchaseNumber: z
-    .string()
-    .regex(/^\d{1,12}$/, "purchaseNumber must be 1-12 digits"),
-  amount:   z.number().positive(),
-  currency: z.enum(["PEN", "USD"]),
-   metadata: z
+  metadata: z
     .object({
       antifraud: z
         .object({
-          clientIp:           z.string().optional(),
+          clientIp: z.string().optional(),
           merchantDefineData: z.record(z.any()).optional(),
         })
         .optional(),
-      dataMap: locationDataMap.optional(),   // ← aquí
+      dataMap: locationDataMap.optional(),
     })
     .optional(),
 });

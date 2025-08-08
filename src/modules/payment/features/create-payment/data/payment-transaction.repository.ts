@@ -1,8 +1,8 @@
 // src/modules/payment/features/create-payment/data/payment-transaction.repository.ts
 
-import { PrismaClient, PaymentTransaction, PaymentStatus } from "@prisma/client";
+import { PaymentTransaction, PaymentStatus } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import prisma from "../../../../../config/prisma_client";
 
 export class PaymentTransactionRepository {
   async upsert(tx: {

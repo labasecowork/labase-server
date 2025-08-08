@@ -3,7 +3,6 @@ import { Response } from "express";
 import { ListMyAttendanceService } from "./list_my_attendance.service";
 import { ListMyAttendanceSchema } from "../domain/list_my_attendance.schema";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
-import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
@@ -12,24 +11,20 @@ export class ListMyAttendanceController {
   constructor(private readonly service = new ListMyAttendanceService()) {}
 
   async handle(req: AuthenticatedRequest, res: Response) {
-    try {
-      const dto = ListMyAttendanceSchema.parse(req.query);
-      const user = await getAuthenticatedUser(req);
+    const dto = ListMyAttendanceSchema.parse(req.query);
+    const user = await getAuthenticatedUser(req);
 
-      const result = await this.service.execute(dto, user.id);
+    const result = await this.service.execute(dto, user.id);
 
-      return res
-        .status(HttpStatusCodes.OK.code)
-        .json(
-          buildHttpResponse(
-            HttpStatusCodes.OK.code,
-            "Mis asistencias",
-            req.path,
-            result
-          )
-        );
-    } catch (error) {
-      return handleServerError(res, req, error);
-    }
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          "Mis asistencias",
+          req.path,
+          result
+        )
+      );
   }
 }

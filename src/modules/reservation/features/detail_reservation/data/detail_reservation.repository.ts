@@ -1,13 +1,20 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+// src/modules/reservation/features/detail_reservation/data/detail_reservation.repository.ts
+import prisma from "../../../../../config/prisma_client";
 
 export class DetailReservationRepository {
-  async findById(id: string ) {
+  async findById(id: string) {
     return prisma.reservation.findUnique({
       where: { id },
       include: {
         space: true,
-        user: { select: { id: true, first_name: true, last_name: true, email: true } },
+        user: {
+          select: {
+            id: true,
+            first_name: true,
+            last_name: true,
+            email: true,
+          },
+        },
       },
     });
   }

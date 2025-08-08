@@ -1,6 +1,6 @@
 // src/modules/reservation/features/check_availability/data/check_availability.repository.ts
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../../../../../config/prisma_client";
+import prisma from "../../../../../config/prisma_client";
 
 export class CheckAvailabilityRepository {
   findOverlaps(spaceId: string, start: Date, end: Date) {

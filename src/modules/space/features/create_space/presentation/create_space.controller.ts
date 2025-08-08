@@ -3,58 +3,45 @@ import { Response } from "express";
 import { CreateSpaceService } from "./create_space.service";
 import { CreateSpaceSchema } from "../domain/create_space.schema";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
-import {
-  handleServerError,
-  handleZodError,
-} from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { ZodError } from "zod";
 import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
+import { uploadFile } from "../../../../../infrastructure/aws";
 
 export class CreateSpaceController {
   constructor(private readonly service = new CreateSpaceService()) {}
 
   async handle(req: AuthenticatedRequest, res: Response) {
-    try {
-      const dto = CreateSpaceSchema.parse(req.body);
+    const dto = CreateSpaceSchema.parse(JSON.parse(req.body.data));
+    const files = req.files as Express.Multer.File[] | undefined;
 
-      const userRecord = await getAuthenticatedUser(req);
-      if (!userRecord) {
-        return res
-          .status(HttpStatusCodes.UNAUTHORIZED.code)
-          .json(
-            buildHttpResponse(
-              HttpStatusCodes.UNAUTHORIZED.code,
-              "Usuario no autenticado",
-              req.path
-            )
-          );
-      }
+    const imageUrls = files?.length
+      ? (await Promise.all(files.map((f) => uploadFile(f, "public/space/img")))).map((u) => u.url)
+      : [];
 
-      const currentUser = {
-        id: userRecord.id,
-        role: userRecord.user_type as "client" | "admin",
-      } as const;
+    const authUser = await getAuthenticatedUser(req);
+    const currentUser = { id: authUser.id, role: authUser.role };
 
-      const result = await this.service.execute(dto, currentUser);
-      const response = {
-        id: result.space_id,
-        ...dto,
-      };
+    const result = await this.service.execute(dto, currentUser, imageUrls);
 
-      return res
-        .status(HttpStatusCodes.CREATED.code)
-        .json(
-          buildHttpResponse(
-            HttpStatusCodes.CREATED.code,
-            result.message,
-            req.path,
-            { space: response, user: userRecord }
-          )
-        );
-    } catch (error) {
-      return handleServerError(res, req, error);
-    }
+    return res.status(HttpStatusCodes.CREATED.code).json(
+      buildHttpResponse(HttpStatusCodes.CREATED.code, result.message, req.path, {
+        space: {
+          id: result.space_id,
+          name: dto.name,
+          description: dto.description,
+          type: dto.type,
+          access: dto.access,
+          capacityMin: dto.capacityMin,
+          capacityMax: dto.capacityMax,
+          allowByUnit: dto.allowByUnit,
+          allowFullRoom: dto.allowFullRoom,
+          prices: dto.prices,
+          benefitIds: dto.benefitIds,
+          images: imageUrls,
+        },
+        user: authUser,
+      })
+    );
   }
 }

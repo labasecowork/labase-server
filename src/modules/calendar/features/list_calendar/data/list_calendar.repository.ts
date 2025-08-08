@@ -3,11 +3,11 @@ import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
-
+import prisma from "../../../../../config/prisma_client";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const prisma = new PrismaClient();
+
 
 export class ListCalendarRepository {
   /**

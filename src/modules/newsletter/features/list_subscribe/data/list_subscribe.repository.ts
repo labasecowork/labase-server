@@ -1,7 +1,7 @@
 //src/modules/newsletter/features/list_subscribe/data/list_subscribe.repository.ts
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../../../config/prisma_client";
 
-const prisma = new PrismaClient();
+import prisma from "../../../../../config/prisma_client";
 
 export class ListSubscribeRepository {
   async getAllSubscribers() {

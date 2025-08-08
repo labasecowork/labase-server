@@ -11,8 +11,10 @@ const ctrl = new CreatePaymentController();
  * /payment/create-payment:
  *   post:
  *     tags: [Payment]
- *     summary: Inicia un nuevo flujo de pago
- *     description: Genera un `purchaseNumber`, solicita `accessToken` y `sessionToken`, y devuelve la URL del script de checkout.
+ *     summary: Inicia un nuevo flujo de pago con Niubiz
+ *     description: Genera un `purchaseNumber`, obtiene `sessionToken` y entrega el script de pago.
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -20,44 +22,44 @@ const ctrl = new CreatePaymentController();
  *           schema:
  *             type: object
  *             required:
- *               - purchaseNumber
- *               - amount
- *               - currency
  *               - reservationId
  *             properties:
- *               purchaseNumber:
- *                 type: string
- *               amount:
- *                 type: number
- *                 format: float
- *               currency:
- *                 type: string
- *                 description: ISO 4217, e.g. “PEN”
  *               reservationId:
  *                 type: string
- *                 description: UUID de la reserva asociada
- *               userId:
- *                 type: string
- *                 description: (Opcional) UUID del usuario
+ *                 format: uuid
+ *                 description: UUID de la reserva pendiente
  *               metadata:
- *                 $ref: '#/components/schemas/PaymentMetadata'
+ *                 type: object
+ *                 properties:
+ *                   antifraud:
+ *                     type: object
+ *                     properties:
+ *                       clientIp:
+ *                         type: string
+ *                       merchantDefineData:
+ *                         type: object
+ *                   dataMap:
+ *                     $ref: '#/components/schemas/PaymentDataMap'
  *     responses:
  *       200:
  *         description: Flujo iniciado correctamente
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/CreatePaymentResponse'
+ *               type: object
+ *               properties:
+ *                 purchaseNumber:
+ *                   type: string
+ *                 sessionToken:
+ *                   type: string
+ *                 scriptUrl:
+ *                   type: string
  *       400:
- *         description: Datos inválidos
+ *         description: Error de validación
  *       500:
  *         description: Error interno
  */
 
-router.post(
-  "/",
-  authenticateToken,
-  asyncHandler(ctrl.handle.bind(ctrl))
-);
+router.post("/", authenticateToken, asyncHandler(ctrl.handle.bind(ctrl)));
 
 export { router as createPaymentRoutes };

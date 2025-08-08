@@ -1,6 +1,6 @@
 // src/modules/reservation/features/get_reservations/data/get_reservations.repository.ts
-import { PrismaClient, Prisma } from "@prisma/client";
-const prisma = new PrismaClient();
+import {Prisma } from "@prisma/client";
+import prisma from "../../../../../config/prisma_client";
 
 export class GetReservationsRepository {
   findMany(args: Prisma.ReservationFindManyArgs) {

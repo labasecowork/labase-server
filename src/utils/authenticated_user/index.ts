@@ -1,13 +1,20 @@
+// src/utils/authenticated_user/index.ts
 import prisma from "../../config/prisma_client";
-import { AuthenticatedRequest } from "../../middlewares/authenticate_token";
-import { LoggedUser } from "../../modules/user/features/edit_profile/presentation/edit_profile.service";
-import { AppError } from "../errors";
-import { HttpStatusCodes } from "../../constants/http_status_codes";
+import { AuthenticatedRequest } from "../..//middlewares/authenticate_token";
+import { AppError } from "../..//utils/errors";
+import { HttpStatusCodes } from "../..//constants/http_status_codes";
+
+export interface CurrentUser {
+  id: string;
+  role: "admin" | "client";
+  admin_role?: "superadmin" | "manager";
+}
 
 export const getAuthenticatedUser = async (
   req: AuthenticatedRequest
-): Promise<LoggedUser> => {
+): Promise<CurrentUser> => {
   const id = req.user?.id;
+
   if (!id) {
     throw new AppError(
       "Token de autenticación no válido o no proporcionado",
@@ -20,19 +27,22 @@ export const getAuthenticatedUser = async (
     select: {
       id: true,
       user_type: true,
-      status: true,
       adminDetails: { select: { role: true } },
     },
   });
 
-  if (!user.user_type) {
+  if (!user.user_type || (user.user_type !== "admin" && user.user_type !== "client")) {
     throw new AppError(
-      "Tipo de usuario no configurado en la base de datos",
-      HttpStatusCodes.INTERNAL_SERVER_ERROR.code
+      "Tipo de usuario no permitido",
+      HttpStatusCodes.FORBIDDEN.code
     );
   }
-  return {
-    ...user,
-    user_type: user.user_type as "admin" | "client",
+
+  const result: CurrentUser = {
+    id: user.id,
+    role: user.user_type,
+    admin_role: user.adminDetails?.role ?? undefined,
   };
+
+  return result;
 };

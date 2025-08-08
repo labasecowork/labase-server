@@ -14,7 +14,7 @@ interface CurrentUser {
 export class CreateSpaceService {
   constructor(private readonly repo = new CreateSpaceRepository()) {}
 
-  async execute(dto: CreateSpaceDTO, user: CurrentUser) {
+  async execute(dto: CreateSpaceDTO, user: CurrentUser, imageUrls: string[]) {
     if (user.role !== "admin") {
       throw new AppError(
         SPACE_MESSAGES.FORBIDDEN,
@@ -22,31 +22,32 @@ export class CreateSpaceService {
       );
     }
 
-    const created = await this.repo.create({
-      name:         dto.name,
-      description:  dto.description,
-      type:         dto.type,
-      access:       dto.access,
-      capacityMin:  dto.capacityMin,
-      capacityMax:  dto.capacityMax,
-      allowByUnit:  dto.allowByUnit,
-      allowFullRoom:dto.allowFullRoom,
-      disabled:     false,
-      prices: {
-        create: dto.prices.map((p) => ({
-          duration: p.unit,
-          mode:     p.mode,
-          amount:   p.value,
-        })),
-      },
-      spaceBenefits: dto.benefitIds?.length
-        ? {
-            create: dto.benefitIds.map((id) => ({
-              benefit: { connect: { id } },
-            })),
-          }
-        : undefined,
-    });
+      const created = await this.repo.create({
+        name: dto.name,
+        description: dto.description,
+        type: dto.type,
+        access: dto.access,
+        capacityMin: dto.capacityMin,
+        capacityMax: dto.capacityMax,
+        allowByUnit: dto.allowByUnit,
+        allowFullRoom: dto.allowFullRoom,
+        disabled: false,
+        images: imageUrls,
+        prices: {
+          create: dto.prices.map((p) => ({
+            duration: p.unit,
+            mode: p.mode,
+            amount: p.value,
+          })),
+        },
+        spaceBenefits: dto.benefitIds?.length
+          ? {
+              create: dto.benefitIds.map((id) => ({
+                benefit: { connect: { id } },
+              })),
+            }
+          : undefined,
+      });
 
     return {
       message:   SPACE_MESSAGES.CREATED_SUCCESS,
