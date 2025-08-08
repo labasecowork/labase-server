@@ -2,10 +2,10 @@
 import prisma from "../../../config/prisma_client";
 
 export class EmailRepository {
-  async getNewsletterEmails(): Promise<string[]> {
+  async getNewsletterEmails(): Promise<{ name: string; email: string }[]> {
     const subs = await prisma.newsletterSubscriber.findMany({
-      select: { email: true },
+      select: { email: true, name: true },
     });
-    return subs.map((s) => s.email);
+    return subs;
   }
 }

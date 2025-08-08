@@ -14,7 +14,7 @@ export class GetEmployeeController {
   async handle(req: Request, res: Response) {
     try {
       const user = await getAuthenticatedUser(req);
-      if (user.user_type !== "admin") {
+      if (user.role !== "admin") {
         throw new AppError(
           "Solo los administradores pueden ver la información de empleados",
           HttpStatusCodes.FORBIDDEN.code

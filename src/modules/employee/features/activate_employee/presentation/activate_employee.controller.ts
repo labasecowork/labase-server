@@ -23,7 +23,7 @@ export class ActivateEmployeeController {
 
       const user = {
         id: authUser.id,
-        role: authUser.user_type as "admin" | "client" | "employee",
+        role: authUser.role as "admin" | "client" | "employee",
       };
 
       const result = await this.service.execute(params.id, user);

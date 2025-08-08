@@ -1,6 +1,8 @@
 import { sendEmail } from "../../../utils/email_sender";
 import { PublicContactDTO } from "../domain/public_contact.dto";
 import { EMAIL_USER } from "../../../config/env";
+import path from "path";
+import ejs from "ejs";
 
 export const publicContactService = async (
   dto: PublicContactDTO
@@ -20,23 +22,25 @@ Mensaje:
 ${dto.message}
   `.trim();
 
-  const htmlContent = `
-    <p><strong>Nombre:</strong> ${fullName}</p>
-    <p><strong>Email:</strong> ${dto.email}</p>
-    ${
-      dto.phoneNumber
-        ? `<p><strong>Celular:</strong> ${dto.phoneNumber}</p>`
-        : ""
-    }
-    <p><strong>Motivo:</strong> ${dto.reason}</p>
-    <p><strong>Mensaje:</strong></p>
-    <p>${dto.message}</p>
-  `;
+  const filePath = path.join(
+    process.cwd(),
+    "public",
+    "templates",
+    "contact.ejs"
+  );
+
+  const html = await ejs.renderFile(filePath, {
+    name: fullName,
+    email: dto.email,
+    phoneNumber: dto.phoneNumber,
+    reason: dto.reason,
+    message: dto.message,
+  });
 
   await sendEmail(
-    EMAIL_USER,
-    `📩 Contacto Web: ${dto.reason}`,
+    "labase.developers@gmail.com",
+    `Contacto: ${dto.reason}`,
     plainText,
-    htmlContent
+    html
   );
 };

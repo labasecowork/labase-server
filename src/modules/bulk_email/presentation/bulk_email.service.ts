@@ -2,6 +2,8 @@
 import { EmailRepository } from "../data/bulk_email.repository";
 import { BulkEmailDTO } from "../domain/bulk_email.dto";
 import { sendEmail } from "../../../utils/email_sender";
+import path from "path";
+import ejs from "ejs";
 
 export class EmailService {
   private emailRepository: EmailRepository;
@@ -11,17 +13,28 @@ export class EmailService {
   }
 
   async sendBulkEmail(data: BulkEmailDTO) {
-    const emails = await this.emailRepository.getNewsletterEmails();
+    const subs = await this.emailRepository.getNewsletterEmails();
 
-    for (const email of emails) {
+    const filePath = path.join(
+      process.cwd(),
+      "public",
+      "templates",
+      "bulk_email.ejs"
+    );
+
+    for (const sub of subs) {
       try {
-        await sendEmail(email, data.subject, data.text, data.html);
-        console.log(`Email sent to: ${email}`);
+        const html = await ejs.renderFile(filePath, {
+          name: sub.name,
+          content: data.html,
+          subject: data.subject,
+        });
+        await sendEmail(sub.email, data.subject, data.text, html);
       } catch (error) {
-        console.error(`Error sending to ${email}:`, error);
+        console.error(`Error sending to ${sub.email}:`, error);
       }
     }
 
-    return { message: `Bulk email sent to ${emails.length} subscribers.` };
+    return { message: `Bulk email sent to ${subs.length} subscribers.` };
   }
 }
