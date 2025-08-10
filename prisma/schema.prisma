@@ -64,34 +64,18 @@ enum PriceMode {
 }
 
 enum ReservationStatus {
-  PENDING // ✅ Estado inicial al crear una reserva. Aún no se ha pagado.
-  // Se asigna automáticamente al crear la reserva desde el frontend o backend.
-
-  CONFIRMED // ✅ Estado asignado cuando el pago fue APROBADO por el proveedor (Niubiz).
-  // Se actualiza automáticamente desde el callback (`visa-callback.service.ts`) cuando `result.success === true`.
-
-  CANCELLED // 🚫 Estado cuando un admin o cliente cancela manualmente la reserva, o vence el tiempo de espera sin pagar.
-  // (Puede ser implementado con lógica adicional, no sucede automáticamente ahora.)
-
-  IN_PROGRESS // 🟡 Estado al momento de escanear el código QR de una reserva CONFIRMADA **y** dentro del horario.
-  // Se actualiza en `resolve_qr.service.ts` si el horario es válido y la reserva está confirmada.
+  PENDING // Estado inicial al crear una reserva. Aún no se ha pagado.
+  CONFIRMED // Estado asignado cuando el pago fue APROBADO por el proveedor (Niubiz).
+  CANCELLED // Estado cuando un admin o cliente cancela manualmente la reserva, o vence el tiempo de espera sin pagar.
+  IN_PROGRESS // Estado al momento de escanear el código QR de una reserva CONFIRMADA **y** dentro del horario.
 }
 
 enum PaymentStatus {
-  PENDING // ✅ Estado inicial al crear el flujo de pago (aún sin generar sessionToken).
-  // Se guarda cuando se ejecuta el endpoint `/payment/create-payment`, antes de contactar con Niubiz.
-
-  READY // 🟡 Estado cuando se ha generado correctamente el `sessionToken` y script de pago (checkout.js).
-  // Se actualiza tras obtener respuesta positiva de Niubiz en `create-payment.service.ts`.
-
-  APPROVED // ✅ Estado final cuando el proveedor aprueba el pago del cliente.
-  // Se actualiza en `visa-callback.service.ts` cuando `result.success === true`.
-
-  CANCELED // 🚫 Pago cancelado manualmente por el usuario (desde frontend o backend).
-  // (Estado posible para futuras extensiones, aún no ocurre automáticamente.)
-
-  FAILED // ❌ El proveedor rechazó el pago (tarjeta inválida, error interno, etc.).
-  // Se actualiza en `visa-callback.service.ts` cuando `result.success === false`.
+  PENDING // Estado inicial al crear el flujo de pago (aún sin generar sessionToken).
+  READY // Estado cuando se ha generado correctamente el `sessionToken` y script de pago (checkout.js).
+  APPROVED // Estado final cuando el proveedor aprueba el pago del cliente.
+  CANCELED // Pago cancelado manualmente por el usuario (desde frontend o backend).
+  FAILED // El proveedor rechazó el pago (tarjeta inválida, error interno, etc.).
 }
 
 enum article_status {
