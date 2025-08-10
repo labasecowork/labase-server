@@ -5,8 +5,8 @@ import { z } from "zod";
 export const locationDataMap = z.object({
   urlAddress: z.string().url(),
   serviceLocationCityName: z.string().max(50),
-  serviceLocationCountrySubdivisionCode: z.string().length(3), 
-  serviceLocationCountryCode: z.string().length(3),           
+  serviceLocationCountrySubdivisionCode: z.string().length(3),
+  serviceLocationCountryCode: z.string().length(3),
   serviceLocationPostalCode: z.string().max(10),
 });
 

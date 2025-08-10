@@ -8,7 +8,6 @@ import prisma from "../../../../../config/prisma_client";
 export interface StartPaymentResult {
   purchaseNumber: string;
   sessionToken: string;
-  scriptUrl: string;
 }
 
 type EnrichedPaymentDTO = CreatePaymentDTO & {
@@ -21,8 +20,6 @@ export class CreatePaymentRepository {
   private provider = resolvePaymentProvider();
 
   async execute(dto: EnrichedPaymentDTO): Promise<StartPaymentResult> {
-    const accessToken = await this.provider.getAccessToken();
-
     const sessionRequest = {
       channel: "web",
       purchaseNumber: dto.purchaseNumber,
@@ -31,13 +28,16 @@ export class CreatePaymentRepository {
       metadata: dto.metadata,
     };
 
-    const sessionToken = await this.provider.getSessionToken(accessToken, sessionRequest);
-    const scriptUrl = await this.provider.getCheckoutScript();
+    const accessToken = await this.provider.getAccessToken();
+
+    const sessionToken = await this.provider.getSessionToken(
+      accessToken,
+      sessionRequest
+    );
 
     return {
       purchaseNumber: dto.purchaseNumber,
       sessionToken,
-      scriptUrl,
     };
   }
 }
@@ -46,7 +46,6 @@ export class CreatePaymentRepository {
  * Repositorio para validar y actualizar reservas desde el módulo de pago
  */
 export class ReservationRepository {
-
   async findById(id: string): Promise<Reservation | null> {
     return prisma.reservation.findUnique({
       where: { id },

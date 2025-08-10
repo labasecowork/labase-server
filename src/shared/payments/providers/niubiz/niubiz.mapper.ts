@@ -1,8 +1,10 @@
 // src/shared/payments/providers/niubiz/niubiz.mapper.ts
 import { NiubizTransactionResponse } from "./niubiz.types";
-import { TransactionResponse } from "../payment-provider.repository";
+import { Currency, TransactionResponse } from "../payment-provider.repository";
 
-export function mapNiubizToTransaction(resp: NiubizTransactionResponse): TransactionResponse {
+export function mapNiubizToTransaction(
+  resp: NiubizTransactionResponse
+): TransactionResponse {
   const actionCode = resp?.dataMap?.ACTION_CODE;
 
   return {
@@ -11,7 +13,7 @@ export function mapNiubizToTransaction(resp: NiubizTransactionResponse): Transac
     success: actionCode === "000",
     purchaseNumber: resp.purchaseNumber,
     amount: resp.amount,
-    currency: resp.currency as any,
+    currency: resp.currency as Currency,
     rawData: resp,
   };
 }

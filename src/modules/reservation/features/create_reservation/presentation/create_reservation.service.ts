@@ -23,7 +23,6 @@ export class CreateReservationService {
   constructor(private readonly repo = new CreateReservationRepository()) {}
 
   async execute(dto: CreateReservationDTO, user: CurrentUser) {
-
     const space = await this.repo.findSpaceById(dto.spaceId);
     if (!space || space.disabled) {
       throw new AppError(
@@ -120,6 +119,8 @@ export class CreateReservationService {
     const status: Reservation["status"] =
       user.role === "admin" ? "CONFIRMED" : "PENDING";
 
+    const purchaseNumber =
+      (await this.repo.countReservations(dto.spaceId)) + 100;
     const codeQr = generateQrCode();
     const created = await this.repo.create({
       space: { connect: { id: dto.spaceId } },
@@ -131,6 +132,7 @@ export class CreateReservationService {
       codeQr,
       price,
       status,
+      purchaseNumber: purchaseNumber.toString(),
     });
 
     io.emit("RESERVATION_CREATED", {

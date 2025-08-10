@@ -21,10 +21,10 @@ import {
 import {
   NiubizSessionRequestBody,
   NiubizAuthorizationRequest,
-  NiubizTransactionResponse,
+  NiubizPaymentResponse,
+  isSuccessfulPayment,
+  getTransactionData,
 } from "./niubiz.types";
-
-import { mapNiubizToTransaction } from "./niubiz.mapper";
 
 export class NiubizProvider implements PaymentProviderRepository {
   /** Paso 1: obtener token de seguridad */
@@ -76,25 +76,42 @@ export class NiubizProvider implements PaymentProviderRepository {
     }
   }
 
-  /** Paso 3: obtener URL del script */
-  async getCheckoutScript(): Promise<string> {
-    return NIUBIZ_URL_JS;
-  }
-
   /** Paso 4: validación (autorización) del token de transacción */
   async validateTransaction(
     data: CreatePaymentDTO
   ): Promise<TransactionResponse> {
+    this.validateTransactionData(data);
+
+    const accessToken = await this.getAccessToken();
+    const authRequest = this.buildAuthorizationRequest(data);
+    const headers = this.buildAuthHeaders(accessToken);
+
+    try {
+      const { data: response } = await axios.post<NiubizPaymentResponse>(
+        NIUBIZ_URL_AUTHORIZATION,
+        authRequest,
+        { headers }
+      );
+
+      return this.mapPaymentResponseToTransaction(response, data);
+    } catch (err: any) {
+      return this.handlePaymentError(err, data);
+    }
+  }
+
+  private validateTransactionData(data: CreatePaymentDTO): void {
     if (!data.transactionToken) {
       throw new AppError(
         "MISSING_TRANSACTION_TOKEN",
         HttpStatusCodes.BAD_REQUEST.code
       );
     }
+  }
 
-    const accessToken = await this.getAccessToken();
-
-    const body: NiubizAuthorizationRequest = {
+  private buildAuthorizationRequest(
+    data: CreatePaymentDTO
+  ): NiubizAuthorizationRequest {
+    return {
       channel: "web",
       captureType: "manual",
       countable: true,
@@ -106,24 +123,51 @@ export class NiubizProvider implements PaymentProviderRepository {
       },
       dataMap: data.dataMap,
     };
+  }
 
-    const headers = {
+  private buildAuthHeaders(accessToken: string) {
+    return {
       Authorization: accessToken,
       "Content-Type": "application/json",
     };
+  }
 
-    try {
-      const { data: resp } = await axios.post(NIUBIZ_URL_AUTHORIZATION, body, {
-        headers,
-      });
-      return mapNiubizToTransaction(resp as NiubizTransactionResponse);
-    } catch (err: any) {
-      console.error("[Niubiz] validateTransaction failed:", err.response?.data);
-      throw new AppError(
-        "NIUBIZ_VALIDATION_ERROR",
-        HttpStatusCodes.BAD_REQUEST.code
-      );
-    }
+  private mapPaymentResponseToTransaction(
+    response: NiubizPaymentResponse,
+    originalData: CreatePaymentDTO
+  ): TransactionResponse {
+    const success = isSuccessfulPayment(response);
+    const transactionData = getTransactionData(response);
+
+    return {
+      transactionToken:
+        transactionData?.TRANSACTION_ID || originalData.transactionToken,
+      success,
+      purchaseNumber: originalData.purchaseNumber,
+      amount: originalData.amount,
+      currency: originalData.currency,
+      responseCode: transactionData?.ACTION_CODE,
+      rawData: response,
+    };
+  }
+
+  private handlePaymentError(
+    error: any,
+    originalData: CreatePaymentDTO
+  ): TransactionResponse {
+    const errorResponse = error.response?.data as NiubizPaymentResponse;
+    const transactionData = getTransactionData(errorResponse);
+
+    return {
+      transactionToken:
+        transactionData?.TRANSACTION_ID || originalData.transactionToken,
+      success: false,
+      purchaseNumber: originalData.purchaseNumber,
+      amount: originalData.amount,
+      currency: originalData.currency,
+      responseCode: transactionData?.ACTION_CODE,
+      rawData: errorResponse,
+    };
   }
 
   /** Paso 5: flujo resumido para crear pago */

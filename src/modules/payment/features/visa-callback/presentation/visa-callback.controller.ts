@@ -1,33 +1,54 @@
 // src/modules/payment/features/visa-callback/presentation/visa-callback.controller.ts
 import { Request, Response } from "express";
 import { VisaCallbackService } from "./visa-callback.service";
+import { VisaCallbackDTO } from "../domain/visa-callback.dto";
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { handleServerError } from "../../../../../utils/error_handler";
 
 export class VisaCallbackController {
   constructor(private svc = new VisaCallbackService()) {}
 
   async handle(req: Request, res: Response) {
-    try {
-      const purchaseNumber = req.query.purchaseNumber as string;
-      const transactionToken = req.body.transactionToken as string;
+    const callbackData = this.extractAndValidateData(req);
 
-      if (!purchaseNumber || !transactionToken) {
-        throw new AppError(
-          "MISSING_PARAMETERS",
-          HttpStatusCodes.BAD_REQUEST.code
-        );
-      }
+    const result = await this.svc.execute(callbackData);
 
-      const result = await this.svc.execute({ purchaseNumber, transactionToken });
+    const redirectUrl = this.buildRedirectUrl(callbackData, result.success);
 
-      return res.status(200).json({
-        message: "Pago procesado correctamente",
-        ...result,
-      });
-    } catch (error) {
-      return handleServerError(res, req, error);
+    return res.redirect(redirectUrl);
+  }
+
+  private extractAndValidateData(req: Request): VisaCallbackDTO {
+    const purchaseNumber = req.query.purchaseNumber as string;
+    const reservationId = req.query.reservationId as string;
+    const transactionToken = req.body.transactionToken as string;
+
+    const missingParams: string[] = [];
+    if (!purchaseNumber) missingParams.push("purchaseNumber");
+    if (!reservationId) missingParams.push("reservationId");
+    if (!transactionToken) missingParams.push("transactionToken");
+
+    if (missingParams.length > 0) {
+      throw new AppError(
+        `MISSING_PARAMETERS: ${missingParams.join(", ")}`,
+        HttpStatusCodes.BAD_REQUEST.code
+      );
     }
+
+    return {
+      purchaseNumber,
+      reservationId,
+      transactionToken,
+    };
+  }
+
+  private buildRedirectUrl(
+    callbackData: VisaCallbackDTO,
+    success: boolean
+  ): string {
+    const baseUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const status = success ? "success" : "failed";
+
+    return `${baseUrl}/client/reservations/${callbackData.reservationId}?purchaseNumber=${callbackData.purchaseNumber}&status=${status}`;
   }
 }

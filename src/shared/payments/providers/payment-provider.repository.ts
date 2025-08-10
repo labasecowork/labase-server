@@ -41,8 +41,10 @@ export interface TransactionResponse {
 
 export interface PaymentProviderRepository {
   getAccessToken(): Promise<string>;
-  getSessionToken(accessToken: string, data: SessionRequestDTO): Promise<string>;
+  getSessionToken(
+    accessToken: string,
+    data: SessionRequestDTO
+  ): Promise<string>;
   validateTransaction(data: CreatePaymentDTO): Promise<TransactionResponse>;
   createPayment(data: CreatePaymentDTO): Promise<TransactionResponse>;
-  getCheckoutScript(): Promise<string>;
 }

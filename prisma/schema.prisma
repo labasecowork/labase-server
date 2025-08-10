@@ -64,37 +64,35 @@ enum PriceMode {
 }
 
 enum ReservationStatus {
-  PENDING    // ✅ Estado inicial al crear una reserva. Aún no se ha pagado.
-             // Se asigna automáticamente al crear la reserva desde el frontend o backend.
+  PENDING // ✅ Estado inicial al crear una reserva. Aún no se ha pagado.
+  // Se asigna automáticamente al crear la reserva desde el frontend o backend.
 
-  CONFIRMED  // ✅ Estado asignado cuando el pago fue APROBADO por el proveedor (Niubiz).
-             // Se actualiza automáticamente desde el callback (`visa-callback.service.ts`) cuando `result.success === true`.
+  CONFIRMED // ✅ Estado asignado cuando el pago fue APROBADO por el proveedor (Niubiz).
+  // Se actualiza automáticamente desde el callback (`visa-callback.service.ts`) cuando `result.success === true`.
 
-  CANCELLED  // 🚫 Estado cuando un admin o cliente cancela manualmente la reserva, o vence el tiempo de espera sin pagar.
-             // (Puede ser implementado con lógica adicional, no sucede automáticamente ahora.)
+  CANCELLED // 🚫 Estado cuando un admin o cliente cancela manualmente la reserva, o vence el tiempo de espera sin pagar.
+  // (Puede ser implementado con lógica adicional, no sucede automáticamente ahora.)
 
   IN_PROGRESS // 🟡 Estado al momento de escanear el código QR de una reserva CONFIRMADA **y** dentro del horario.
-              // Se actualiza en `resolve_qr.service.ts` si el horario es válido y la reserva está confirmada.
+  // Se actualiza en `resolve_qr.service.ts` si el horario es válido y la reserva está confirmada.
 }
-
 
 enum PaymentStatus {
-  PENDING    // ✅ Estado inicial al crear el flujo de pago (aún sin generar sessionToken).
-             // Se guarda cuando se ejecuta el endpoint `/payment/create-payment`, antes de contactar con Niubiz.
+  PENDING // ✅ Estado inicial al crear el flujo de pago (aún sin generar sessionToken).
+  // Se guarda cuando se ejecuta el endpoint `/payment/create-payment`, antes de contactar con Niubiz.
 
-  READY      // 🟡 Estado cuando se ha generado correctamente el `sessionToken` y script de pago (checkout.js).
-             // Se actualiza tras obtener respuesta positiva de Niubiz en `create-payment.service.ts`.
+  READY // 🟡 Estado cuando se ha generado correctamente el `sessionToken` y script de pago (checkout.js).
+  // Se actualiza tras obtener respuesta positiva de Niubiz en `create-payment.service.ts`.
 
-  APPROVED   // ✅ Estado final cuando el proveedor aprueba el pago del cliente.
-             // Se actualiza en `visa-callback.service.ts` cuando `result.success === true`.
+  APPROVED // ✅ Estado final cuando el proveedor aprueba el pago del cliente.
+  // Se actualiza en `visa-callback.service.ts` cuando `result.success === true`.
 
-  CANCELED   // 🚫 Pago cancelado manualmente por el usuario (desde frontend o backend).
-             // (Estado posible para futuras extensiones, aún no ocurre automáticamente.)
+  CANCELED // 🚫 Pago cancelado manualmente por el usuario (desde frontend o backend).
+  // (Estado posible para futuras extensiones, aún no ocurre automáticamente.)
 
-  FAILED     // ❌ El proveedor rechazó el pago (tarjeta inválida, error interno, etc.).
-             // Se actualiza en `visa-callback.service.ts` cuando `result.success === false`.
+  FAILED // ❌ El proveedor rechazó el pago (tarjeta inválida, error interno, etc.).
+  // Se actualiza en `visa-callback.service.ts` cuando `result.success === false`.
 }
-
 
 enum article_status {
   pending
@@ -124,10 +122,10 @@ enum AttendanceType {
 }
 
 enum unit_of_measure {
-  unit       // unidad
-  kilogram   // kilogramo
-  meter      // metro
-  piece      // pieza
+  unit // unidad
+  kilogram // kilogramo
+  meter // metro
+  piece // pieza
 }
 
 model Users {
@@ -207,7 +205,7 @@ model Space {
   allowFullRoom Boolean // permite reservar toda la sala de una sola vez.
   disabled      Boolean    @default(false) // ¿Deshabilitado?                   
   createdAt     DateTime   @default(now()) // Fecha de creación del espacio
- images        String[]   // URLs de imágenes en S3
+  images        String[] // URLs de imágenes en S3
 
   spaceBenefits SpaceBenefit[]
   prices        Price[] // Relación: precios por duración
@@ -251,17 +249,18 @@ model Price {
 }
 
 model Reservation {
-  id        String            @id @default(uuid()) // ID de la reserva
-  userId    String // FK al usuario que reservó
-  spaceId   String // FK al espacio reservado
-  startTime DateTime // Fecha y hora de inicio de la reserva
-  endTime   DateTime // Fecha y hora de fin de la reserva
-  people    Int // Número total de personas
-  fullRoom  Boolean // ¿Se reservó todo el espacio?
-  codeQr    String            @unique // Codigo QR
-  price     Decimal // Precio a cobrar
-  status    ReservationStatus @default(PENDING)
-  createdAt DateTime          @default(now()) // Timestamp de creación
+  id             String            @id @default(uuid()) // ID de la reserva
+  purchaseNumber String            @unique // Número de compra generado
+  userId         String // FK al usuario que reservó
+  spaceId        String // FK al espacio reservado
+  startTime      DateTime // Fecha y hora de inicio de la reserva
+  endTime        DateTime // Fecha y hora de fin de la reserva
+  people         Int // Número total de personas
+  fullRoom       Boolean // ¿Se reservó todo el espacio?
+  codeQr         String            @unique // Codigo QR
+  price          Decimal // Precio a cobrar
+  status         ReservationStatus @default(PENDING)
+  createdAt      DateTime          @default(now()) // Timestamp de creación
 
   user  Users @relation("UserReservations", fields: [userId], references: [id], onDelete: Cascade)
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
@@ -294,14 +293,18 @@ model NewsletterSubscriber {
 }
 
 model PaymentTransaction {
-  id             String        @id @default(uuid())
-  purchaseNumber String        @unique
-  provider       String
-  amount         Float
-  currency       String
-  status         PaymentStatus @default(PENDING)
-  rawResponse    Json?
-  createdAt      DateTime      @default(now())
+  id                String        @id @default(uuid())
+  transactionId     String        @map("transaction_id") @db.VarChar(50)
+  purchaseNumber    String        @unique @map("purchase_number") @db.VarChar(50)
+  amount            Float
+  authorizationCode String?       @map("authorization_code") @db.VarChar(20)
+  status            PaymentStatus
+  actionDescription String?       @map("action_description") @db.VarChar(100)
+  cardMasked        String?       @map("card_masked") @db.VarChar(25)
+  transactionDate   String        @map("transaction_date") @db.VarChar(20)
+  errorCode         Int?          @map("error_code")
+  errorMessage      String?       @map("error_message") @db.VarChar(100)
+  createdAt         DateTime      @default(now())
 
   reservationId String?
   reservation   Reservation? @relation(fields: [reservationId], references: [id], onDelete: Cascade, name: "ReservationPayments")
@@ -359,14 +362,14 @@ model Articles {
 }
 
 model products {
-  id                  String            @id @default(uuid())    // PK interno y código / serie único (UUID)
-  name                String                                    // Nombre del producto
-  photo_url           String                                    // URL de la foto en AWS S3
-  brand               String                                    // Marca del producto
-  unit_of_measure     unit_of_measure                           // Unidad de medida
-  description         String?                                   // Descripción detallada
-  observations        String?                                   // Notas adicionales
-  quantity            Int                                       // Stock disponible
+  id              String          @id @default(uuid()) // PK interno y código / serie único (UUID)
+  name            String // Nombre del producto
+  photo_url       String // URL de la foto en AWS S3
+  brand           String // Marca del producto
+  unit_of_measure unit_of_measure // Unidad de medida
+  description     String? // Descripción detallada
+  observations    String? // Notas adicionales
+  quantity        Int // Stock disponible
 
   @@map("products")
 }
