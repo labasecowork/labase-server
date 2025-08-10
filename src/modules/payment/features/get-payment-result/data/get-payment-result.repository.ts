@@ -3,7 +3,9 @@ import { PaymentTransaction } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 export class GetPaymentResultRepository {
-  async findByPurchaseNumber(purchaseNumber: string): Promise<PaymentTransaction | null> {
+  async findByPurchaseNumber(
+    purchaseNumber: string
+  ): Promise<PaymentTransaction | null> {
     return prisma.paymentTransaction.findUnique({
       where: { purchaseNumber },
     });
@@ -13,6 +15,9 @@ export class GetPaymentResultRepository {
     return prisma.paymentTransaction.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
+      include: {
+        reservation: true,
+      },
     });
   }
 }
