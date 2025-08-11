@@ -1,0 +1,16 @@
+name: Deploy labase-web
+on:
+  pull_request:
+    types: [closed]
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PM2 deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 31.97.218.15
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          script: pm2 deploy /root/labase-web/ecosystem.config.js production
