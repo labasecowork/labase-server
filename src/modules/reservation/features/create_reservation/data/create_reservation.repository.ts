@@ -63,4 +63,8 @@ export class CreateReservationRepository {
       where: { spaceId },
     });
   }
+
+  countReservationsAll() {
+    return prisma.reservation.count();
+  }
 }

@@ -6,9 +6,6 @@ import { CreateReservationRepository } from "../../../../reservation/features/cr
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
-/** Genera un número de compra numérico de 12 dígitos */
-const generatePurchaseNumber = () => Date.now().toString().slice(-12);
-
 type EnrichedPaymentDTO = CreatePaymentDTO & {
   purchaseNumber: string;
   amount: number;
@@ -62,7 +59,7 @@ export class CreatePaymentService {
           serviceLocationPostalCode: "15074",
         },
       },
-      purchaseNumber: generatePurchaseNumber(),
+      purchaseNumber: reservation.purchaseNumber,
       amount: reservation.price.toNumber(),
       currency: "PEN",
     };

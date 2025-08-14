@@ -119,8 +119,8 @@ export class CreateReservationService {
     const status: Reservation["status"] =
       user.role === "admin" ? "CONFIRMED" : "PENDING";
 
-    const purchaseNumber =
-      (await this.repo.countReservations(dto.spaceId)) + 100;
+    const purchaseNumber = (await this.repo.countReservationsAll()) + 1;
+
     const codeQr = generateQrCode();
     const created = await this.repo.create({
       space: { connect: { id: dto.spaceId } },

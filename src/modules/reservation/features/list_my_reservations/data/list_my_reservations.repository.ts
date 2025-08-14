@@ -6,6 +6,14 @@ export class ListMyReservationsRepository {
     return prisma.reservation.findMany({
       where: { userId },
       orderBy: { startTime: "desc" },
+      include: {
+        space: {
+          select: {
+            name: true,
+            images: true,
+          },
+        },
+      },
       skip,
       take,
     });
