@@ -12,7 +12,12 @@ export class GetProfileService {
     const isGenderValid = gender === "M" || gender === "F" || gender === "O";
     const parsedGender: "M" | "F" | "O" | null = isGenderValid ? gender : null;
 
-    if (!profile.user_type || (profile.user_type !== "admin" && profile.user_type !== "client")) {
+    if (
+      !profile.user_type ||
+      (profile.user_type !== "admin" &&
+        profile.user_type !== "client" &&
+        profile.user_type !== "employee")
+    ) {
       throw new Error("Tipo de usuario inválido en base de datos");
     }
 

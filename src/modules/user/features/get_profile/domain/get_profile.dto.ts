@@ -6,7 +6,7 @@ export interface GetProfileResponseDto {
   phone: string | null;
   birth_date: Date | null;
   gender: "M" | "F" | "O" | null;
-  user_type: "admin" | "client";
+  user_type: "admin" | "client" | "employee";
   status: string;
   adminDetails: {
     role: string;

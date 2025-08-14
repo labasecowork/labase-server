@@ -6,7 +6,7 @@ import { HttpStatusCodes } from "../..//constants/http_status_codes";
 
 export interface CurrentUser {
   id: string;
-  role: "admin" | "client";
+  role: "admin" | "client" | "employee";
   admin_role?: "superadmin" | "manager";
 }
 
@@ -31,7 +31,12 @@ export const getAuthenticatedUser = async (
     },
   });
 
-  if (!user.user_type || (user.user_type !== "admin" && user.user_type !== "client")) {
+  if (
+    !user.user_type ||
+    (user.user_type !== "admin" &&
+      user.user_type !== "client" &&
+      user.user_type !== "employee")
+  ) {
     throw new AppError(
       "Tipo de usuario no permitido",
       HttpStatusCodes.FORBIDDEN.code
