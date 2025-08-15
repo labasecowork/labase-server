@@ -23,7 +23,10 @@ export async function sendEmail(
       attachments: [
         {
           filename: "logo.png",
-          path: path.join(__dirname, "../../../public/images/logo.png"),
+          path: path.join(
+            process.env.PROJECT_ROOT || "",
+            "public/images/logo.png"
+          ),
           cid: "logo",
         },
         ...(attachments || []),
