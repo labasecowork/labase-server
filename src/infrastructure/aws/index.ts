@@ -1,7 +1,5 @@
-
 //src/infrastructure/aws/index.ts
-
-  import {
+import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
@@ -21,7 +19,7 @@ import path from "path";
 const s3Client = new S3Client({
   region: AWS_BUCKET_REGION || "us-east-1",
   credentials: {
-     accessKeyId: AWS_KEY_ACCESS!,
+    accessKeyId: AWS_KEY_ACCESS!,
     secretAccessKey: AWS_KEY_ACCESS_SECRET!,
   },
 });
@@ -39,7 +37,7 @@ export const getUrl = (key: string) => {
 
 export async function uploadFile(
   file: Express.Multer.File,
-  pathPrefix: string
+  pathPrefix: string,
 ) {
   let fileBody: Buffer | fs.ReadStream;
   let originalFileName: string;
@@ -92,6 +90,4 @@ export async function deleteFile(key: string) {
     Key: key,
   });
   return await s3Client.send(command);
-
 }
-

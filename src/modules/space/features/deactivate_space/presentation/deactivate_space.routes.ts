@@ -9,12 +9,14 @@ const ctrl = new DeactivateSpaceController();
 
 /**
  * @openapi
- * /api/v1/space/{id}/deactivate/:
+ * /api/v1/spaces/{id}/deactivate:
  *   patch:
  *     tags:
  *       - Space
  *     summary: Deactivate a space
- *     description: 'Marks a space as inactive by setting "disabled: true". Only accessible by admins.'
+ *     description: >
+ *       Marks a space as inactive by setting "disabled: true".
+ *       Only accessible by admins.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -23,7 +25,6 @@ const ctrl = new DeactivateSpaceController();
  *         required: true
  *         schema:
  *           type: string
- *         example: "clxyz123abc"
  *     responses:
  *       200:
  *         description: Space successfully deactivated
@@ -34,8 +35,6 @@ const ctrl = new DeactivateSpaceController();
  *       500:
  *         description: Internal server error
  */
-
-
 router.patch("/", authenticateToken, asyncHandler(ctrl.handle.bind(ctrl)));
 
 export { router as deactivateSpaceRoutes };

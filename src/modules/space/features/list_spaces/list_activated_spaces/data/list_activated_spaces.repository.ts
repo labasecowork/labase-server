@@ -1,8 +1,8 @@
-// src/modules/space/features/list_spaces/data/list_spaces.repository.ts
+// src/modules/space/features/list_spaces/list_activated_spaces/data/list_activated_spaces.repository.ts
 import { Prisma } from "@prisma/client";
-import prisma from "../../../../../config/prisma_client";
+import prisma from "../../../../../../config/prisma_client";
 
-export class ListSpacesRepository {
+export class ListActivatedSpacesRepository {
   listMany(filters: Prisma.SpaceFindManyArgs) {
     return prisma.space.findMany({
       ...filters,

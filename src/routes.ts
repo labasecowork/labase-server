@@ -6,7 +6,7 @@ import { spaceRouter } from "./modules/space";
 import { reservationRouter } from "./modules/reservation";
 import { userRouter } from "./modules/user";
 import { publicContactRoutes } from "./modules/public_contact/presentation/public_contact.routes";
-import { bulkEmailRoutes }  from "./modules/bulk_email/presentation/bulk_email.routes";
+import { bulkEmailRoutes } from "./modules/bulk_email/presentation/bulk_email.routes";
 import calendarRouter from "./modules/calendar/index";
 import testingRouter from "./modules/testing_aws";
 import { paymentRoutes } from "./modules/payment";
@@ -16,7 +16,7 @@ import { attendanceRouter } from "./modules/attendance";
 import { employeeRouter } from "./modules/employee";
 import { newsletterRouter } from "./modules/newsletter";
 import { productRouter } from "./modules/product";
-
+import { chatbotwhatsapp } from "./modules/chatbot/presentation/send_message.routes";
 const router = Router();
 const API_VERSION = "/api/v1";
 
@@ -36,5 +36,6 @@ router.use(`${API_VERSION}/payment`, paymentRoutes);
 router.use(`${API_VERSION}/`, attendanceRouter);
 router.use(`${API_VERSION}/`, employeeRouter);
 router.use(`${API_VERSION}/products`, productRouter);
+router.use(`${API_VERSION}/chatbotwhatsapp`, chatbotwhatsapp);
 
 export default router;

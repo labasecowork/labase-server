@@ -21,7 +21,7 @@ export class UpdateEmployeeController {
 
     const user = {
       id: authUser.id,
-      role: authUser.role, // Usamos la propiedad 'role' ya normalizada
+      role: authUser.role,
     };
 
     const result = await this.service.execute(params.id, body, user);
@@ -30,7 +30,7 @@ export class UpdateEmployeeController {
       buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path, {
         employee_id: result.employee_id,
         user: result.user,
-      })
+      }),
     );
   }
 }

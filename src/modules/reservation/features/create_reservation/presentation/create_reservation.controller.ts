@@ -12,18 +12,24 @@ export class CreateReservationController {
 
   async handle(req: AuthenticatedRequest, res: Response) {
     const dto = CreateReservationSchema.parse(req.body);
+
     const user = await getAuthenticatedUser(req);
 
     const result = await this.service.execute(dto, user);
 
     return res.status(HttpStatusCodes.CREATED.code).json(
-      buildHttpResponse(HttpStatusCodes.CREATED.code, result.message, req.path, {
-        reservation_id: result.reservation_id,
-        codeQr: result.codeQr,
-        price: result.price,
-        status: result.status,
-        user,
-      })
+      buildHttpResponse(
+        HttpStatusCodes.CREATED.code,
+        result.message,
+        req.path,
+        {
+          reservation_id: result.reservation_id,
+          codeQr: result.codeQr,
+          price: result.price,
+          status: result.status,
+          user,
+        },
+      ),
     );
   }
 }

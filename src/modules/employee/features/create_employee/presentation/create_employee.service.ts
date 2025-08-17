@@ -15,27 +15,23 @@ export class CreateEmployeeService {
   constructor(private readonly repo = new CreateEmployeeRepository()) {}
 
   async execute(dto: CreateEmployeeDTO, user: CurrentUser) {
-    // Verificar que el usuario sea administrador
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden crear empleados",
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code,
       );
     }
 
-    // Verificar que el email no existe
     const existingUser = await this.repo.findUserByEmail(dto.email);
     if (existingUser) {
       throw new AppError(
         "Ya existe un usuario con este email",
-        HttpStatusCodes.CONFLICT.code
+        HttpStatusCodes.CONFLICT.code,
       );
     }
 
-    // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(dto.password, 12);
 
-    // Crear el empleado
     const result = await this.repo.createEmployee({
       first_name: dto.first_name,
       last_name: dto.last_name,

@@ -1,7 +1,5 @@
 // src/modules/reservation/features/create_reservation/data/create_reservation.repository.ts
-
 import { PrismaClient, Prisma, Reservation } from "@prisma/client";
-
 import prisma from "../../../../../config/prisma_client";
 
 export class CreateReservationRepository {
@@ -50,7 +48,7 @@ export class CreateReservationRepository {
 
   async updateStatus(
     id: string,
-    status: Reservation["status"]
+    status: Reservation["status"],
   ): Promise<Reservation> {
     return prisma.reservation.update({
       where: { id },

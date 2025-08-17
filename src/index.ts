@@ -12,6 +12,7 @@ import { APP_URL, PORT } from "./config/env";
 import { displayWelcomeMessage } from "./utils";
 import { customMorganFormat } from "./utils/cli";
 import { multerErrorHandler } from "./middlewares/multer_error_handler/multer_error_handler";
+import { startWhatsAppBot } from "./modules/chatbot/presentation/whatsapp.bot";
 /*import fs from "fs";
 import path from "path";
 
@@ -49,9 +50,26 @@ app.get("/ping", (_, res) => res.send("pong"));
 
 // Start server
 const main = async () => {
-  await redisClient.connect();
+  // ⬇️ Inicia Redis (si falla, registra y no cae el proceso)
+  try {
+    await redisClient.connect();
+  } catch (e) {
+    console.error("[Redis] No conectó:", e);
+  }
+
+  // // ⬇️ INICIA EL BOT AQUÍ, UNA SOLA VEZ
+  // try {
+  //   await startWhatsAppBot();
+  // } catch (e) {
+  //   console.error("[WhatsApp] No inició:", e);
+  // }
+
   server.listen(PORT, () => {
     displayWelcomeMessage(appUrl);
+    console.log(`[HTTP] Server on :${PORT}`);
+    console.log(
+      "[WhatsApp] Si usas PM2, mira los logs para ver el QR: pm2 logs labase-server",
+    );
   });
 };
 

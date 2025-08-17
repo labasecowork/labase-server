@@ -15,7 +15,7 @@ export class EditProductController {
     const dto = EditProductSchema.parse(JSON.parse(req.body.data));
     const user = await getAuthenticatedUser(req);
     const id = req.params.id;
-    const files = req.files as Express.Multer.File[];
+    const files = req.files as Express.Multer.File[] | undefined;
 
     const newImageUrl = files?.[0]
       ? (await uploadFile(files[0], "public/products/img")).url
@@ -30,8 +30,8 @@ export class EditProductController {
           HttpStatusCodes.OK.code,
           "Producto actualizado",
           req.path,
-          updated
-        )
+          updated,
+        ),
       );
   }
 }

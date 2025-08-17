@@ -2,9 +2,7 @@
 import { Router } from "express";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
-
 import { BenefitController } from "./benefit_space.controller";
-
 
 const router = Router();
 const ctrl = new BenefitController();
