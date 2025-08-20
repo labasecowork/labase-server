@@ -1,7 +1,7 @@
 //src/utils/email_sender
 import { Attachment } from "nodemailer/lib/mailer";
 import transporter from "../../config/email";
-import { EMAIL_USER } from "../../config/env";
+import { EMAIL_USER, ENVIRONMENT, PROJECT_ROOT } from "../../config/env";
 import path from "path";
 import { getDirname } from "..";
 
@@ -13,7 +13,8 @@ export async function sendEmail(
   attachments?: Attachment[]
 ): Promise<void> {
   try {
-    const __dirname = getDirname(import.meta.url);
+    const dirname = ENVIRONMENT === "production" ? PROJECT_ROOT || "" : getDirname(import.meta.url);
+
     const info = await transporter.sendMail({
       from: EMAIL_USER,
       to,
@@ -24,7 +25,7 @@ export async function sendEmail(
         {
           filename: "logo.png",
           path: path.join(
-            process.env.PROJECT_ROOT || "",
+            dirname,
             "public/images/logo.png"
           ),
           cid: "logo",

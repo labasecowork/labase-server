@@ -8,7 +8,6 @@ pnpm-debug.log*
 
 # Entornos y credenciales
 .env
-.env.*
 .cursorrules
 
 # Prisma

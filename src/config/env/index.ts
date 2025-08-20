@@ -2,6 +2,12 @@ import { config } from "dotenv";
 
 config();
 
+// ENVIRONMENT
+export const ENVIRONMENT = process.env.ENVIRONMENT;
+
+// PROJECT ROOT
+export const PROJECT_ROOT = process.env.PROJECT_ROOT;
+
 // REDIS
 export const REDIS_URL = process.env.REDIS_URL;
 
