@@ -1,5 +1,4 @@
 // src/modules/reservation/features/resolve_qr/presentation/resolve_qr.service.ts
-
 import { ResolveQrDTO } from "../domain/resolve_qr.dto";
 import { ResolveQrRepository } from "../data/resolve_qr.repository";
 import { AppError } from "../../../../../utils/errors";
@@ -12,7 +11,10 @@ export class ResolveQrService {
   async execute(dto: ResolveQrDTO) {
     const reservation = await this.repo.findReservationByCode(dto.code);
     if (!reservation) {
-      throw new AppError("RESERVATION_NOT_FOUND", HttpStatusCodes.NOT_FOUND.code);
+      throw new AppError(
+        "RESERVATION_NOT_FOUND",
+        HttpStatusCodes.NOT_FOUND.code,
+      );
     }
 
     const now = new Date();
@@ -27,7 +29,7 @@ export class ResolveQrService {
 
       if (reservation.status === ReservationStatus.CONFIRMED) {
         await this.repo.markAsInProgress(reservation.id);
-        reservation.status = ReservationStatus.IN_PROGRESS; 
+        reservation.status = ReservationStatus.IN_PROGRESS;
       }
     }
 

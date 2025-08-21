@@ -32,3 +32,7 @@ dist/
 *.swo
 *.sublime-project
 *.sublime-workspace
+
+# WhatsApp Web.js
+.wp-auth/
+.wwebjs_cache/

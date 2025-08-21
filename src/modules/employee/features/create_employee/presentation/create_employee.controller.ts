@@ -1,5 +1,4 @@
 // src/modules/employee/features/create_employee/presentation/create_employee.controller.ts
-
 import { Response } from "express";
 import { CreateEmployeeService } from "./create_employee.service";
 import { CreateEmployeeSchema } from "../domain/create_employee.schema";
@@ -31,8 +30,8 @@ export class CreateEmployeeController {
         {
           employee_id: result.employee_id,
           user: result.user,
-        }
-      )
+        },
+      ),
     );
   }
 }

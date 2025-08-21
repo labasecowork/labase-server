@@ -1,50 +1,65 @@
-# 📘 LaBase Backend – Developer Documentation
+📘 Grupo Aguirre Backend – Developer Documentation
+✨ Description
 
-## ✨ Description
+El backend gestiona reservas, citas legales, clientes y la lógica central de negocio del Grupo Aguirre Abogados Perú.
+Se basa en Node.js, Express y TypeScript, aplicando Clean Architecture con Vertical Slices para asegurar una separación clara de responsabilidades, escalabilidad y mantenibilidad a largo plazo.
 
-LaBase Backend is the core service that manages reservations, appointments, clients, and related business logic. It uses PostgreSQL as the main datastore and provides a robust API built on Node.js, Express, and TypeScript following **Clean Architecture with Vertical Slices**.
+Incluye un asistente legal de WhatsApp que combina whatsapp-web.js (cliente de WhatsApp Web) con Gemini (API de Google Generative Language) para ofrecer respuestas automáticas con contexto legal de Perú, misión, visión y servicios del estudio.
 
-This approach ensures clear separation of concerns, high scalability, and maintainability over time.
+🛠 Technologies Used
+-Node.js (v18 o superior)
+-Express (framework web)
+-TypeScript (tipado estático)
+-Prisma ORM (mapeo con PostgreSQL)
+-Zod (validación de datos)
+-Axios (cliente HTTP)
+-Socket.IO (eventos en tiempo real)
+-Bcrypt (hash de contraseñas)
+-Swagger (documentación API interactiva)
+-Redis (cache y sesiones temporales)
+-AWS S3 (almacenamiento de archivos)
+-dayjs y date-fns (manejo de fechas)
+-nanoid y uuid (identificadores únicos)
+-Multer (subida de archivos)
+-Nodemailer (envío de correos)
+-dotenv (variables de entorno)
+-EJS (templates de email)
+-Morgan (logger HTTP)
+-whatsapp-web.js (integración WhatsApp Business con cliente local)
+-qrcode-terminal (render QR para vincular WhatsApp)
+-Google Gemini API (IA generativa para el chatbot legal)
 
----
+⚙️ Requirements
+-Node.js v18 o superior (recomendado v20+)
+-PostgreSQL (local o en Docker)
+-Redis (local)
+-Docker (opcional, para entornos containerizados)
+-Chromium/Chrome con flags --no-sandbox (requerido por whatsapp-web.js en servidores VPS sin GUI)
 
-## 🛠 Technologies Used
-
-- **Node.js** (version 18 or higher) 
-- **Express** (web framework) 
-- **TypeScript** (static typing) 
-- **Prisma ORM** (PostgreSQL database mapping) 
-- **Zod** (data validation) 
-- **Axios** (HTTP client) 
-- **Socket.IO** (real-time events) 
-- **Bcrypt** (password hashing) 
-- **Swagger** (interactive API documentation)
-- **Redis** (caching and session storage) 
-- **AWS S3** (planned for file storage)
-- **dayjs** (date/time formatting and manipulation) 
-- **date-fns** (programmatic date handling)
-- **nanoid** (unique ID generation)
-- **uuid** (universally unique identifiers) 
-- **Multer** (file upload handling)
-- **Nodemailer** (email sending)
-- **dotenv** (environment variables loader) 
-- **EJS** (email templating)
-- **Morgan** (HTTP logger middleware)
----
-
-## ⚙️ Requirements
-
-- Node.js **v18 or higher** (recommended v20+)
-- PostgreSQL (installed locally or via Docker)
-- Redis (local or hosted)
-- Docker (optional, for containerized environments)
-
----
-
-## 🚀 Installation and Setup
-
-### 1️⃣ Clone the repository
-
-```bash
+🚀 Installation and Setup
+1. Clonar el repositorio
 git clone <REPOSITORY_URL>
-cd labase-service
+cd aguirre-service
+
+2. Instalar dependencias
+npm install
+
+3. Configurar variables de entorno
+Crea un archivo .env basado en .env.example. Incluye:
+
+DATABASE_URL=postgresql://user:password@localhost:5432/aguirre_db
+REDIS_URL=redis://localhost:6379
+API_KEY_GEMINI=tu_api_key
+PORT=3001
+APP_URL=http://localhost:3001
+
+4. Levantar el servidor
+npm run dev
+
+* Al iniciar, se mostrará en consola el QR de WhatsApp (usar cámara del teléfono para vincular) *
+
+🤖 WhatsApp Bot
+-Cliente: whatsapp-web.js con LocalAuth.
+-IA: Google Gemini con contexto legal del Grupo Aguirre Abogados Perú.
+-Atención: 100% remota, sin necesidad de acudir a oficina física.
+-Flujo de citas: El bot puede recibir datos del cliente y generar citas provisionales (pendientes de confirmación).

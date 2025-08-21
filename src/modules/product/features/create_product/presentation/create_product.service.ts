@@ -4,21 +4,20 @@ import { CreateProductRepository } from "../data/create_product.repository";
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { PRODUCT_MESSAGES } from "../../../../../constants/messages/product";
-
-interface CurrentUser {
-  id: string;
-  role: "client" | "admin";
-  admin_role?: "superadmin" | "manager";
-}
+import type { CurrentUser } from "../../../../../utils/authenticated_user";
 
 export class CreateProductService {
   constructor(private readonly repo = new CreateProductRepository()) {}
 
-  async execute(dto: CreateProductDTO, user: CurrentUser, imageUrl: string) {
+  async execute(
+    dto: CreateProductDTO,
+    user: Pick<CurrentUser, "id" | "role">,
+    imageUrl: string,
+  ) {
     if (user.role !== "admin") {
       throw new AppError(
         PRODUCT_MESSAGES.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code,
       );
     }
 

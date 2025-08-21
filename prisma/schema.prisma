@@ -2,9 +2,9 @@
 // ¿Buscas formas de acelerar tus consultas o escalar fácilmente con tus funciones serverless o edge?
 // Prueba Prisma Accelerate: https://pris.ly/cli/accelerate-init
 // npx prisma generate
-// npx prisma migrate reset 
+// npx prisma migrate reset
 // npx prisma migrate dev --init
-// npx prisma studio 
+// npx prisma studio
 
 generator client {
   provider = "prisma-client-js"
@@ -187,7 +187,7 @@ model Space {
   capacityMax   Int // Máximo de personas permitidas en el espacio
   allowByUnit   Boolean // ¿Se permiten reservas “por unidad” (sitio individual).
   allowFullRoom Boolean // permite reservar toda la sala de una sola vez.
-  disabled      Boolean    @default(false) // ¿Deshabilitado?                   
+  disabled      Boolean    @default(false) // ¿Deshabilitado?
   createdAt     DateTime   @default(now()) // Fecha de creación del espacio
   images        String[] // URLs de imágenes en S3
 

@@ -4,15 +4,16 @@ import { AppError } from "../../../../../utils/errors";
 import { PRODUCT_MESSAGES } from "../../../../../constants/messages/product";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { deleteFile } from "../../../../../infrastructure/aws";
+import type { CurrentUser } from "../../../../../utils/authenticated_user"; // ✅ usa el tipo centralizado
 
 export class DeleteProductService {
   constructor(private readonly repo = new DeleteProductRepository()) {}
 
-  async execute(id: string, user: { id: string; role: "admin" | "client" }) {
+  async execute(id: string, user: Pick<CurrentUser, "id" | "role">) {
     if (user.role !== "admin") {
       throw new AppError(
         PRODUCT_MESSAGES.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code,
       );
     }
 
@@ -20,7 +21,7 @@ export class DeleteProductService {
     if (!existing) {
       throw new AppError(
         PRODUCT_MESSAGES.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code
+        HttpStatusCodes.NOT_FOUND.code,
       );
     }
 

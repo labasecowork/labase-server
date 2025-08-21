@@ -33,8 +33,8 @@ export class MarkAttendanceController {
           date: result.date,
           check_time: result.check_time,
           user: authUser,
-        }
-      )
+        },
+      ),
     );
   }
 }

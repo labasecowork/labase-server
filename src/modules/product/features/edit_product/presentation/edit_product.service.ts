@@ -5,12 +5,7 @@ import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { PRODUCT_MESSAGES } from "../../../../../constants/messages/product";
 import { deleteFile } from "../../../../../infrastructure/aws";
-
-interface CurrentUser {
-  id: string;
-  role: "client" | "admin";
-  admin_role?: "superadmin" | "manager";
-}
+import type { CurrentUser } from "../../../../../utils/authenticated_user";
 
 export class EditProductService {
   constructor(private readonly repo = new EditProductRepository()) {}
@@ -18,13 +13,13 @@ export class EditProductService {
   async execute(
     id: string,
     dto: EditProductDTO,
-    user: CurrentUser,
-    imageUrl: string
+    user: Pick<CurrentUser, "id" | "role">,
+    imageUrl: string,
   ) {
     if (user.role !== "admin") {
       throw new AppError(
         PRODUCT_MESSAGES.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code,
       );
     }
 
@@ -32,7 +27,7 @@ export class EditProductService {
     if (!existing) {
       throw new AppError(
         PRODUCT_MESSAGES.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code
+        HttpStatusCodes.NOT_FOUND.code,
       );
     }
 
