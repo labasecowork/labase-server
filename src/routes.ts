@@ -17,6 +17,8 @@ import { employeeRouter } from "./modules/employee";
 import { newsletterRouter } from "./modules/newsletter";
 import productRouter, { productBrandRouter } from "./modules/product";
 import { chatbotwhatsapp } from "./modules/chatbot/presentation/send_message.routes";
+
+// Nuevos módulos añadidos
 import { seedRouter } from "./modules/seed/presentation/seed.routes";
 import { workareaRouter } from "./modules/workarea";
 import { companyRouter } from "./modules/company";
@@ -31,6 +33,7 @@ router.use(`${API_VERSION}/auth`, authRouter);
 router.use(`${API_VERSION}/users`, userRouter);
 router.use(`${API_VERSION}/spaces`, spaceRouter);
 
+// reservation define sus subrutas
 router.use(`${API_VERSION}/`, reservationRouter);
 
 router.use(`${API_VERSION}/newsletter`, newsletterRouter);
@@ -48,6 +51,7 @@ router.use(`${API_VERSION}/product-brands`, productBrandRouter);
 
 router.use(`${API_VERSION}/chatbotwhatsapp`, chatbotwhatsapp);
 
+// Nuevas rutas
 router.use(`${API_VERSION}/seed`, seedRouter);
 router.use(`${API_VERSION}/`, workareaRouter);
 router.use(`${API_VERSION}/`, companyRouter);
