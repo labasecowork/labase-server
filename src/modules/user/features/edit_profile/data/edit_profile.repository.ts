@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 export class EditProfileRepository {
-  async update(userId: string, data: Prisma.UsersUpdateInput) {
+  async update(userId: string, data: Prisma.usersUpdateInput) {
     return prisma.users.update({
       where: { id: userId },
       data,
@@ -13,7 +13,7 @@ export class EditProfileRepository {
         last_name: true,
         email: true,
         user_type: true,
-        adminDetails: { select: { role: true } },
+        admin_details: { select: { role: true } },
       },
     });
   }

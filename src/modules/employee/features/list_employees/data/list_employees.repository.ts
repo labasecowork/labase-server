@@ -1,5 +1,4 @@
 // src/modules/employee/features/list_employees/data/list_employees.repository.ts
-
 import prisma from "../../../../../config/prisma_client";
 import { user_status } from "@prisma/client";
 
@@ -33,7 +32,7 @@ export class ListEmployeesRepository {
     };
 
     const [employees, total] = await Promise.all([
-      prisma.employeeDetails.findMany({
+      prisma.employee_details.findMany({
         where,
         skip,
         take: limit,
@@ -60,7 +59,7 @@ export class ListEmployeesRepository {
           },
         },
       }),
-      prisma.employeeDetails.count({ where }),
+      prisma.employee_details.count({ where }),
     ]);
 
     return {

@@ -10,13 +10,15 @@ export class PublicContactController {
     const dto = publicContactSchema.parse(req.body);
     await publicContactService(dto);
 
-    return res.status(HttpStatusCodes.OK.code).json(
-      buildHttpResponse(
-        HttpStatusCodes.OK.code,
-        "Mensaje enviado correctamente",
-        req.path,
-        null
-      )
-    );
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          "Message sent successfully",
+          req.path,
+          null,
+        ),
+      );
   }
 }

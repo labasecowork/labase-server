@@ -15,8 +15,8 @@ const controller = new CreateReservationController();
  *     summary: Crear una nueva reserva
  *     description: |
  *       Calcula el precio automáticamente según:
- *       - **modo INDIVIDUAL**: tarifa por unidad × duración × número de personas  
- *       - **modo GROUP**: tarifa grupal × duración  
+ *       - **modo INDIVIDUAL**: tarifa por unidad × duración × número de personas
+ *       - **modo GROUP**: tarifa grupal × duración
  *       La tarifa y la duración se toman de la configuración del espacio.
  *     security:
  *       - bearerAuth: []
@@ -90,7 +90,7 @@ const controller = new CreateReservationController();
 router.post(
   "/",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller))
+  asyncHandler(controller.handle.bind(controller)),
 );
 
 export { router as createReservationRoutes };

@@ -12,19 +12,18 @@ import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { RESERVATION_MESSAGES } from "../../../../../constants/messages/reservation";
 import { generateQrCode } from "../../../../../utils/generate_qr_code";
 import { io } from "../../../../../config/socket";
-import { Reservation } from "@prisma/client";
+import { reservation } from "@prisma/client";
 import type { CurrentUser } from "../../../../../utils/authenticated_user";
 
-/**
- * Reglas clave (alineadas a nuestras guías):
- * - Prisma SOLO en repos (CreateReservationRepository).
- * - Validación Zod en el controller (no aquí).
- * - Errores de dominio con AppError + HttpStatusCodes.
- * - Nada de Promise.all si hay dependencias (secuencial).
- * - Emite "RESERVATION_CREATED" por Socket.IO al finalizar.
- * - Admin crea reservas en estado CONFIRMED; client en PENDING.
- * - employee NO puede crear reservas (política explícita).
- */
+/** Genera un número de compra numérico de 12 dígitos (timestamp + random) */
+function generatePurchaseNumber(): string {
+  const ts = Date.now().toString(); // 13 dígitos
+  const rand = Math.floor(Math.random() * 1e6)
+    .toString()
+    .padStart(6, "0");
+  return (ts.slice(-9) + rand).slice(0, 12);
+}
+
 export class CreateReservationService {
   constructor(private readonly repo = new CreateReservationRepository()) {}
 
@@ -46,20 +45,22 @@ export class CreateReservationService {
       );
     }
 
-    // 2) Reglas de capacidad / flags
-    if (dto.people < space.capacityMin || dto.people > space.capacityMax) {
+    // 2) Reglas de capacidad / flags (nombres reales de Prisma)
+    if (dto.people < space.capacity_min || dto.people > space.capacity_max) {
       throw new AppError(
         RESERVATION_MESSAGES.CAPACITY_OUT_OF_RANGE,
         HttpStatusCodes.BAD_REQUEST.code,
       );
     }
-    if (dto.fullRoom && !space.allowFullRoom) {
+
+    if (dto.fullRoom && !space.allow_full_room) {
       throw new AppError(
         RESERVATION_MESSAGES.FULL_ROOM_FORBIDDEN,
         HttpStatusCodes.BAD_REQUEST.code,
       );
     }
-    if (!dto.fullRoom && !space.allowByUnit && space.type === "UNIT") {
+
+    if (!dto.fullRoom && !space.allow_by_unit && space.type === "unit") {
       throw new AppError(
         RESERVATION_MESSAGES.UNIT_BOOKING_FORBIDDEN,
         HttpStatusCodes.BAD_REQUEST.code,
@@ -85,7 +86,7 @@ export class CreateReservationService {
         dto.startTime,
         dto.endTime,
       );
-      if (booked + dto.people > space.capacityMax) {
+      if (booked + dto.people > space.capacity_max) {
         throw new AppError(
           RESERVATION_MESSAGES.NO_CAPACITY_LEFT,
           HttpStatusCodes.CONFLICT.code,
@@ -93,13 +94,13 @@ export class CreateReservationService {
       }
     }
 
-    // 4) Cálculo de precio (elige la mejor unidad disponible según duración)
-    const mode = dto.fullRoom ? "GROUP" : "INDIVIDUAL";
+    // 4) Cálculo de precio (tomar mejor unidad disponible según duración)
+    const mode: "individual" | "group" = dto.fullRoom ? "group" : "individual";
     const prices = (
       space.prices as Array<{
-        duration: "HOUR" | "DAY" | "WEEK" | "MONTH";
+        duration: "hour" | "day" | "week" | "month";
         amount: number;
-        mode: "INDIVIDUAL" | "GROUP";
+        mode: "individual" | "group";
       }>
     ).filter((p) => p.mode === mode);
 
@@ -108,18 +109,24 @@ export class CreateReservationService {
     const days = differenceInDays(dto.endTime, dto.startTime);
     const hours = differenceInHours(dto.endTime, dto.startTime);
 
-    const findRate = (unit: (typeof prices)[number]["duration"]) =>
-      prices.find((p) => p.duration === unit)?.amount ?? null;
+    const rateOf = (u: "hour" | "day" | "week" | "month") =>
+      prices.find((p) => p.duration === u)?.amount ?? null;
 
-    let unitCount: number;
-    if (months >= 1 && findRate("MONTH") !== null) {
-      unitCount = months;
-    } else if (weeks >= 1 && findRate("WEEK") !== null) {
-      unitCount = weeks;
-    } else if (days >= 1 && findRate("DAY") !== null) {
-      unitCount = days;
-    } else if (findRate("HOUR") !== null) {
-      unitCount = hours;
+    let unit: "month" | "week" | "day" | "hour";
+    let count: number;
+
+    if (months >= 1 && rateOf("month") !== null) {
+      unit = "month";
+      count = months;
+    } else if (weeks >= 1 && rateOf("week") !== null) {
+      unit = "week";
+      count = weeks;
+    } else if (days >= 1 && rateOf("day") !== null) {
+      unit = "day";
+      count = days;
+    } else if (rateOf("hour") !== null) {
+      unit = "hour";
+      count = Math.max(1, hours); // ya garantizado por schema
     } else {
       throw new AppError(
         RESERVATION_MESSAGES.PRICE_NOT_DEFINED,
@@ -127,36 +134,33 @@ export class CreateReservationService {
       );
     }
 
-    const rate = findRate(
-      months >= 1 ? "MONTH" : weeks >= 1 ? "WEEK" : days >= 1 ? "DAY" : "HOUR",
-    )!;
-
+    const rate = rateOf(unit)!;
     const price =
-      mode === "INDIVIDUAL" ? unitCount * rate * dto.people : unitCount * rate;
+      mode === "individual" ? count * rate * dto.people : count * rate;
 
     // 5) Estado inicial según rol
-    const status: Reservation["status"] =
-      user.role === "admin" ? "CONFIRMED" : "PENDING";
+    const status: reservation["status"] =
+      user.role === "admin" ? "confirmed" : "pending";
 
-    // 6) PurchaseNumber (numérico secuencial simple)
-    const purchaseNumber = (await this.repo.countReservationsAll()) + 1;
+    // 6) Purchase number seguro
+    const purchaseNumber = generatePurchaseNumber();
 
-    // 7) Crear reserva
+    // 7) Crear reserva (usar snake_case reales)
     const codeQr = generateQrCode();
     const created = await this.repo.create({
       space: { connect: { id: dto.spaceId } },
       user: { connect: { id: user.id } },
-      startTime: dto.startTime,
-      endTime: dto.endTime,
+      start_time: dto.startTime,
+      end_time: dto.endTime,
       people: dto.people,
-      fullRoom: dto.fullRoom,
-      codeQr,
-      price,
+      full_room: dto.fullRoom,
+      code_qr: codeQr,
+      price: Number(price),
       status,
-      purchaseNumber: purchaseNumber.toString(),
+      purchase_number: purchaseNumber,
     });
 
-    // 8) Emitir evento de socket (actualización tiempo real)
+    // 8) Emitir evento de socket
     io.emit("RESERVATION_CREATED", {
       reservationId: created.id,
       userId: user.id,
@@ -165,11 +169,11 @@ export class CreateReservationService {
       spaceId: dto.spaceId,
     });
 
-    // 9) Respuesta DTO
+    // 9) DTO
     return {
       message: RESERVATION_MESSAGES.CREATED_SUCCESS,
       reservation_id: created.id,
-      codeQr: created.codeQr,
+      codeQr: created.code_qr,
       price,
       status: created.status,
     };

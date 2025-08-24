@@ -1,8 +1,8 @@
 // src/utils/authenticated_user/index.ts
 import prisma from "../../config/prisma_client";
-import { AuthenticatedRequest } from "../..//middlewares/authenticate_token";
-import { AppError } from "../..//utils/errors";
-import { HttpStatusCodes } from "../..//constants/http_status_codes";
+import { AuthenticatedRequest } from "../../middlewares/authenticate_token";
+import { AppError } from "../../utils/errors";
+import { HttpStatusCodes } from "../../constants/http_status_codes";
 
 export interface CurrentUser {
   id: string;
@@ -11,14 +11,14 @@ export interface CurrentUser {
 }
 
 export const getAuthenticatedUser = async (
-  req: AuthenticatedRequest
+  req: AuthenticatedRequest,
 ): Promise<CurrentUser> => {
   const id = req.user?.id;
 
   if (!id) {
     throw new AppError(
       "Token de autenticación no válido o no proporcionado",
-      HttpStatusCodes.UNAUTHORIZED.code
+      HttpStatusCodes.UNAUTHORIZED.code,
     );
   }
 
@@ -27,7 +27,7 @@ export const getAuthenticatedUser = async (
     select: {
       id: true,
       user_type: true,
-      adminDetails: { select: { role: true } },
+      admin_details: { select: { role: true } },
     },
   });
 
@@ -39,14 +39,14 @@ export const getAuthenticatedUser = async (
   ) {
     throw new AppError(
       "Tipo de usuario no permitido",
-      HttpStatusCodes.FORBIDDEN.code
+      HttpStatusCodes.FORBIDDEN.code,
     );
   }
 
   const result: CurrentUser = {
     id: user.id,
     role: user.user_type,
-    admin_role: user.adminDetails?.role ?? undefined,
+    admin_role: user.admin_details?.role ?? undefined,
   };
 
   return result;

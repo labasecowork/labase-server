@@ -1,8 +1,8 @@
-//src/modules/reservation/features/cancel_reservation/domain/cancel_reservation.schema.ts
+// src/modules/reservation/features/cancel_reservation/domain/cancel_reservation.schema.ts
 import { z } from "zod";
 
 export const CancelReservationParamsSchema = z.object({
-  id: z.string().uuid("id debe ser un UUID válido"),
+  id: z.string().uuid("id must be a valid UUID"),
 });
 
 export const CancelReservationBodySchema = z

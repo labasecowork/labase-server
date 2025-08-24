@@ -1,5 +1,4 @@
 // src/modules/employee/features/deactivate_employee/presentation/deactivate_employee.service.ts
-
 import { DeactivateEmployeeRepository } from "../data/deactivate_employee.repository";
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";

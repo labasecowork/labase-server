@@ -1,11 +1,10 @@
 // src/modules/attendance/features/mark_attendance/data/mark_attendance.repository.ts
-
 import prisma from "../../../../../config/prisma_client";
-import { AttendanceType } from "@prisma/client";
+import { attendance_type } from "@prisma/client";
 
 export class MarkAttendanceRepository {
   async findEmployeeByUserId(userId: string) {
-    return await prisma.employeeDetails.findUnique({
+    return await prisma.employee_details.findUnique({
       where: { employee_id: userId },
       include: {
         user: {
@@ -29,7 +28,7 @@ export class MarkAttendanceRepository {
 
   async create(data: {
     employee_id: string;
-    type: AttendanceType;
+    type: attendance_type;
     date: Date;
     check_time: Date;
   }) {

@@ -3,25 +3,24 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 export class EditSpaceRepository {
-  update(id: string, data: Prisma.SpaceUpdateInput) {
-    return prisma.space.update({
-      where: { id },
-      data,
-      include: {
-        prices: true,
-        spaceBenefits: {         
-          include: { benefit: true },
-        },
-      },
-    });
-  }
-
   findById(id: string) {
     return prisma.space.findUnique({
       where: { id },
       include: {
+        space_images: { select: { id: true, url: true } },
+        space_benefits: { select: { benefit_id: true } },
+      },
+    });
+  }
+
+  update(id: string, data: Prisma.spaceUpdateInput) {
+    return prisma.space.update({
+      where: { id },
+      data,
+      include: {
+        space_images: true,
+        space_benefits: true,
         prices: true,
-        spaceBenefits: { include: { benefit: true } },
       },
     });
   }

@@ -1,5 +1,5 @@
 // src/modules/reservation/features/create_reservation/data/create_reservation.repository.ts
-import { PrismaClient, Prisma, Reservation } from "@prisma/client";
+import { Prisma, reservation } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 export class CreateReservationRepository {
@@ -10,59 +10,42 @@ export class CreateReservationRepository {
     });
   }
 
-  findOverlaps(spaceId: string, start: Date, end: Date) {
+  /** Hay solapamiento si (A.start < B.end) && (A.end > B.start) */
+  findOverlaps(space_id: string, start: Date, end: Date) {
     return prisma.reservation.findFirst({
       where: {
-        spaceId,
-        OR: [
-          { startTime: { lt: end, gte: start } },
-          { endTime: { gt: start, lte: end } },
-          { startTime: { lte: start }, endTime: { gte: end } },
-        ],
+        space_id,
+        start_time: { lt: end },
+        end_time: { gt: start },
       },
+      select: { id: true }, // Más liviano
     });
   }
 
-  sumPeople(spaceId: string, start: Date, end: Date) {
-    return prisma.reservation
-      .aggregate({
-        _sum: { people: true },
-        where: {
-          spaceId,
-          startTime: { lt: end },
-          endTime: { gt: start },
-        },
-      })
-      .then((result) => result._sum.people ?? 0);
+  async sumPeople(space_id: string, start: Date, end: Date): Promise<number> {
+    const result = await prisma.reservation.aggregate({
+      _sum: { people: true },
+      where: {
+        space_id,
+        start_time: { lt: end },
+        end_time: { gt: start },
+      },
+    });
+    return result._sum.people ?? 0;
   }
 
-  create(data: Prisma.ReservationCreateInput) {
+  create(data: Prisma.reservationCreateInput) {
     return prisma.reservation.create({ data });
   }
 
-  async findById(id: string): Promise<Reservation | null> {
-    return prisma.reservation.findUnique({
-      where: { id },
-    });
+  findById(id: string) {
+    return prisma.reservation.findUnique({ where: { id } });
   }
 
-  async updateStatus(
-    id: string,
-    status: Reservation["status"],
-  ): Promise<Reservation> {
+  updateStatus(id: string, status: reservation["status"]) {
     return prisma.reservation.update({
       where: { id },
       data: { status },
     });
-  }
-
-  countReservations(spaceId: string) {
-    return prisma.reservation.count({
-      where: { spaceId },
-    });
-  }
-
-  countReservationsAll() {
-    return prisma.reservation.count();
   }
 }

@@ -3,11 +3,11 @@ import { z } from "zod";
 
 export const CheckAvailabilitySchema = z
   .object({
-    spaceId: z.string().uuid("spaceId debe ser un UUID válido"),
+    spaceId: z.string().uuid("spaceId must be a valid UUID"),
     startTime: z.coerce.date(),
     endTime: z.coerce.date(),
   })
   .refine((d) => d.endTime > d.startTime, {
-    message: "endTime debe ser posterior a startTime",
+    message: "endTime must be later than startTime",
     path: ["endTime"],
   });

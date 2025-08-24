@@ -1,10 +1,9 @@
 // src/modules/employee/features/get_employee/data/get_employee.repository.ts
-
 import prisma from "../../../../../config/prisma_client";
 
 export class GetEmployeeRepository {
   async findEmployeeById(employeeId: string) {
-    const employee = await prisma.employeeDetails.findUnique({
+    const employee = await prisma.employee_details.findUnique({
       where: {
         employee_id: employeeId,
       },

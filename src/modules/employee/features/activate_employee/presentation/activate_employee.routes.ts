@@ -78,7 +78,7 @@ const controller = new ActivateEmployeeController();
 router.patch(
   "/:id/activate",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller))
+  asyncHandler(controller.handle.bind(controller)),
 );
 
 export { router as activateEmployeeRoutes };

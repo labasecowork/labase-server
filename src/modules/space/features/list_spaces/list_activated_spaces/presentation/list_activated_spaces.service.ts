@@ -13,7 +13,6 @@ export class ListActivatedSpacesService {
           capacityMin: { lte: dto.capacity },
           capacityMax: { gte: dto.capacity },
         }),
-        // Activados por defecto; si available es true, reforzamos disabled: false
         ...(dto.available && { disabled: false }),
       },
       orderBy: { id: "asc" },

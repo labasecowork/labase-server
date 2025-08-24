@@ -13,7 +13,7 @@ export class DetailReservationService {
     if (!reservation) {
       throw new AppError(
         RESERVATION_MESSAGES.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code
+        HttpStatusCodes.NOT_FOUND.code,
       );
     }
 
@@ -23,17 +23,17 @@ export class DetailReservationService {
     if (!isOwner && !isAdmin) {
       throw new AppError(
         RESERVATION_MESSAGES.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code,
       );
     }
 
     const now = new Date();
     const status =
-      now < reservation.startTime
+      now < reservation.start_time
         ? "upcoming"
-        : now > reservation.endTime
-        ? "expired"
-        : "in_progress";
+        : now > reservation.end_time
+          ? "expired"
+          : "in_progress";
 
     return { reservation, status };
   }

@@ -1,17 +1,15 @@
 //src/modules/newsletter/data/newsletter.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
-import prisma from "../../../../../config/prisma_client";
-
 export class SubscribeNewsletterRepository {
   async findSubscriberByEmail(email: string) {
-    return prisma.newsletterSubscriber.findUnique({
+    return prisma.newsletter_subscriber.findUnique({
       where: { email },
     });
   }
 
   async subscribeUser(name: string, email: string) {
-    return prisma.newsletterSubscriber.create({
+    return prisma.newsletter_subscriber.create({
       data: { name, email },
     });
   }

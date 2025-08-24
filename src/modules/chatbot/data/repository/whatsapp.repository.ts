@@ -30,7 +30,7 @@ export async function initWpClient(handlers?: WhatsAppHandlers) {
   });
 
   client.on("ready", () => {
-    console.log("[WhatsApp] Listo ✅");
+    console.log("[WhatsApp] Listo");
     handlers?.onReady?.();
   });
 

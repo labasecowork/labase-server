@@ -1,5 +1,4 @@
 // src/modules/employee/features/activate_employee/presentation/activate_employee.controller.ts
-
 import { Response } from "express";
 import { ActivateEmployeeService } from "./activate_employee.service";
 import { ActivateEmployeeParamsSchema } from "../domain/activate_employee.schema";
@@ -32,7 +31,7 @@ export class ActivateEmployeeController {
         buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path, {
           employee_id: result.employee_id,
           user: result.user,
-        })
+        }),
       );
     } catch (error) {
       if (error instanceof ZodError) {

@@ -38,7 +38,7 @@ const ctrl = new VisaCallbackController();
 router.post(
   "/",
   express.urlencoded({ extended: false }),
-  asyncHandler(ctrl.handle.bind(ctrl))
+  asyncHandler(ctrl.handle.bind(ctrl)),
 );
 
 export { router as visaCbRoutes };

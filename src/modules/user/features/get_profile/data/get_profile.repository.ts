@@ -14,7 +14,7 @@ export class GetProfileRepository {
         gender: true,
         user_type: true,
         status: true,
-        adminDetails: { select: { role: true } },
+        admin_details: { select: { role: true } },
       },
     });
   }

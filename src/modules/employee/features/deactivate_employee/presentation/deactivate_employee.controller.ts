@@ -1,5 +1,4 @@
 // src/modules/employee/features/deactivate_employee/presentation/deactivate_employee.controller.ts
-
 import { Response } from "express";
 import { DeactivateEmployeeService } from "./deactivate_employee.service";
 import { DeactivateEmployeeParamsSchema } from "../domain/deactivate_employee.schema";
@@ -26,7 +25,7 @@ export class DeactivateEmployeeController {
       buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path, {
         employee_id: result.employee_id,
         user: result.user,
-      })
+      }),
     );
   }
 }

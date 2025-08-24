@@ -1,7 +1,6 @@
 // src/modules/attendance/features/list_my_attendance/data/list_my_attendance.repository.ts
-
 import prisma from "../../../../../config/prisma_client";
-import { AttendanceType } from "@prisma/client";
+import { attendance_type } from "@prisma/client";
 
 interface FindMyAttendancesParams {
   employee_id: string;
@@ -9,12 +8,12 @@ interface FindMyAttendancesParams {
   limit: number;
   start_date?: Date;
   end_date?: Date;
-  type?: AttendanceType;
+  type?: attendance_type;
 }
 
 export class ListMyAttendanceRepository {
   async findEmployeeByUserId(userId: string) {
-    return await prisma.employeeDetails.findUnique({
+    return await prisma.employee_details.findUnique({
       where: { employee_id: userId },
     });
   }

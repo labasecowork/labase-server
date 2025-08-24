@@ -1,5 +1,4 @@
 // src/modules/employee/features/update_employee/presentation/update_employee.service.ts
-
 import { UpdateEmployeeBodyDTO } from "../domain/update_employee.dto";
 import { UpdateEmployeeRepository } from "../data/update_employee.repository";
 import { AppError } from "../../../../../utils/errors";
@@ -17,12 +16,12 @@ export class UpdateEmployeeService {
   async execute(
     employeeId: string,
     dto: UpdateEmployeeBodyDTO,
-    user: CurrentUser
+    user: CurrentUser,
   ) {
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden actualizar empleados",
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code,
       );
     }
 
@@ -30,19 +29,19 @@ export class UpdateEmployeeService {
     if (!employee) {
       throw new AppError(
         "Empleado no encontrado",
-        HttpStatusCodes.NOT_FOUND.code
+        HttpStatusCodes.NOT_FOUND.code,
       );
     }
 
     if (dto.email) {
       const existingUser = await this.repo.findUserByEmail(
         dto.email,
-        employee.user.id
+        employee.user.id,
       );
       if (existingUser) {
         throw new AppError(
           "Ya existe otro usuario con este email",
-          HttpStatusCodes.CONFLICT.code
+          HttpStatusCodes.CONFLICT.code,
         );
       }
     }

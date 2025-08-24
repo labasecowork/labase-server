@@ -1,4 +1,5 @@
 // src/modules/reservation/features/get_reservations/presentation/get_reservations.service.ts
+import { Prisma } from "@prisma/client";
 import { GetReservationsDTO } from "../domain/get_reservations.dto";
 import { GetReservationsRepository } from "../data/get_reservations.repository";
 
@@ -8,18 +9,21 @@ export class GetReservationsService {
   async execute(dto: GetReservationsDTO) {
     const { page = 1, limit = 10, from, to, spaceId, fullRoom } = dto;
 
-    const where = {
-      ...(spaceId && { spaceId }),
-      ...(fullRoom !== undefined && { fullRoom }),
+    // Prisma usa snake_case
+    const where: Prisma.reservationWhereInput = {
+      ...(spaceId && { space_id: spaceId }),
+      ...(fullRoom !== undefined && { full_room: fullRoom }),
       ...(from || to
         ? {
-            startTime: {
+            start_time: {
               ...(from && { gte: new Date(from) }),
               ...(to && { lte: new Date(to) }),
             },
           }
         : {}),
     };
+
+    const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
       this.repo.findMany({
@@ -28,8 +32,8 @@ export class GetReservationsService {
           user: { select: { first_name: true, last_name: true } },
           space: { select: { name: true } },
         },
-        orderBy: { startTime: "desc" },
-        skip: (page - 1) * limit,
+        orderBy: { start_time: "desc" },
+        skip,
         take: limit,
       }),
       this.repo.count(where),

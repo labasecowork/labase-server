@@ -45,19 +45,19 @@ export class MarkAttendanceService {
 
     if (lastAttendance) {
       if (isSameDay(lastAttendance.date, currentDate)) {
-        if (lastAttendance.type === "ENTRY" && dto.type === "ENTRY") {
+        if (lastAttendance.type === "entry" && dto.type === "entry") {
           throw new AppError(
             "No puedes marcar entrada después de entrada. Primero debes marcar salida.",
             HttpStatusCodes.BAD_REQUEST.code,
           );
         }
-        if (lastAttendance.type === "EXIT" && dto.type === "EXIT") {
+        if (lastAttendance.type === "exit" && dto.type === "exit") {
           throw new AppError(
             "No puedes marcar salida después de salida. Primero debes marcar entrada.",
             HttpStatusCodes.BAD_REQUEST.code,
           );
         }
-        if (lastAttendance.type === "EXIT" && dto.type === "ENTRY") {
+        if (lastAttendance.type === "exit" && dto.type === "entry") {
           const lastCheckDateTime = new Date(
             lastAttendance.date.getFullYear(),
             lastAttendance.date.getMonth(),
@@ -74,13 +74,13 @@ export class MarkAttendanceService {
           }
         }
       } else {
-        if (lastAttendance.type === "ENTRY" && dto.type === "ENTRY") {
+        if (lastAttendance.type === "entry" && dto.type === "entry") {
           throw new AppError(
             `Tienes una entrada pendiente del ${format(lastAttendance.date, "dd/MM/yyyy")}. Debes marcar salida primero.`,
             HttpStatusCodes.BAD_REQUEST.code,
           );
         }
-        if (lastAttendance.type === "EXIT" && dto.type === "EXIT") {
+        if (lastAttendance.type === "exit" && dto.type === "exit") {
           throw new AppError(
             `Ya marcaste salida el ${format(lastAttendance.date, "dd/MM/yyyy")}. Debes marcar entrada primero.`,
             HttpStatusCodes.BAD_REQUEST.code,
@@ -88,7 +88,7 @@ export class MarkAttendanceService {
         }
       }
     } else {
-      if (dto.type === "EXIT") {
+      if (dto.type === "exit") {
         throw new AppError(
           "Tu primera marca de asistencia debe ser una entrada",
           HttpStatusCodes.BAD_REQUEST.code,
@@ -104,7 +104,7 @@ export class MarkAttendanceService {
     });
 
     return {
-      message: `Asistencia marcada exitosamente: ${dto.type === "ENTRY" ? "Entrada" : "Salida"}`,
+      message: `Asistencia marcada exitosamente: ${dto.type === "entry" ? "Entrada" : "Salida"}`,
       attendance_id: attendance.id,
       type: attendance.type,
       date: format(attendance.date, "yyyy-MM-dd"),

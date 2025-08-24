@@ -18,40 +18,50 @@ export class CreateSpaceService {
     if (user.role !== "admin") {
       throw new AppError(
         SPACE_MESSAGES.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code,
       );
     }
 
-      const created = await this.repo.create({
-        name: dto.name,
-        description: dto.description,
-        type: dto.type,
-        access: dto.access,
-        capacityMin: dto.capacityMin,
-        capacityMax: dto.capacityMax,
-        allowByUnit: dto.allowByUnit,
-        allowFullRoom: dto.allowFullRoom,
-        disabled: false,
-        images: imageUrls,
-        prices: {
-          create: dto.prices.map((p) => ({
-            duration: p.unit,
-            mode: p.mode,
-            amount: p.value,
-          })),
-        },
-        spaceBenefits: dto.benefitIds?.length
-          ? {
-              create: dto.benefitIds.map((id) => ({
-                benefit: { connect: { id } },
-              })),
-            }
-          : undefined,
-      });
+    const created = await this.repo.create({
+      name: dto.name,
+      description: dto.description,
+      type: dto.type,
+      access: dto.access,
+      capacity_min: dto.capacityMin,
+      capacity_max: dto.capacityMax,
+      allow_by_unit: dto.allowByUnit,
+      allow_full_room: dto.allowFullRoom,
+      disabled: false,
+
+      space_images: imageUrls.length
+        ? {
+            create: imageUrls.map((url, idx) => ({
+              url,
+              position: idx,
+            })),
+          }
+        : undefined,
+
+      prices: {
+        create: dto.prices.map((p) => ({
+          duration: p.unit,
+          mode: p.mode,
+          amount: p.value,
+        })),
+      },
+
+      space_benefits: dto.benefitIds?.length
+        ? {
+            create: dto.benefitIds.map((id) => ({
+              benefit: { connect: { id } },
+            })),
+          }
+        : undefined,
+    });
 
     return {
-      message:   SPACE_MESSAGES.CREATED_SUCCESS,
-      space_id:  created.id,
+      message: SPACE_MESSAGES.CREATED_SUCCESS,
+      space_id: created.id,
     };
   }
 }

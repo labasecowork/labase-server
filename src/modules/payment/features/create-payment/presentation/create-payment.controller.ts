@@ -1,5 +1,4 @@
 // src/modules/payment/features/create-payment/presentation/create-payment.controller.ts
-
 import { Request, Response } from "express";
 import { CreatePaymentService } from "./create-payment.service";
 import { CreatePaymentSchema } from "../domain/create-payment.schema";
@@ -12,22 +11,18 @@ export class CreatePaymentController {
 
   async handle(req: Request, res: Response) {
     try {
-      // 1) Validamos y parseamos
       console.log("antes", req.body);
       const dto = CreatePaymentSchema.parse(req.body);
       console.log("después", dto);
-      // 2) Extraemos userId del token
       const user = await getAuthenticatedUser(req);
 
-      // 3) Ejecutamos el servicio
       const result = await this.svc.execute(dto, user.id);
 
-      // 4) Respuesta
       const payload = buildHttpResponse(
         200,
         "Payment flow initiated",
         req.path,
-        result
+        result,
       );
       return res.status(200).json(payload);
     } catch (err) {

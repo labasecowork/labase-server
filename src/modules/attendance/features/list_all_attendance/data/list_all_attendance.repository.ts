@@ -1,6 +1,6 @@
 // src/modules/attendance/features/list_all_attendance/data/list_all_attendance.repository.ts
 
-import { AttendanceType } from "@prisma/client";
+import { attendance_type } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 interface FindAttendancesParams {
@@ -9,7 +9,7 @@ interface FindAttendancesParams {
   employee_id?: string;
   start_date?: Date;
   end_date?: Date;
-  type?: AttendanceType;
+  type?: attendance_type;
 }
 
 export class ListAllAttendanceRepository {

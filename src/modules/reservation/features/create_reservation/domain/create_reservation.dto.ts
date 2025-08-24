@@ -9,5 +9,5 @@ export interface CreateReservationResponseDTO {
   reservation_id: string;
   codeQr: string;
   price: number;
-  status: "PENDING" | "CONFIRMED" | "CANCELLED";
+  status: "pending" | "confirmed" | "cancelled";
 }

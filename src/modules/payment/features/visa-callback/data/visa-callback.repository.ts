@@ -25,7 +25,7 @@ export class VisaCallbackRepository {
   }
 
   async confirmReservation(reservationId: string) {
-    return this.reservRepo.updateStatus(reservationId, "CONFIRMED");
+    return this.reservRepo.updateStatus(reservationId, "confirmed");
   }
 
   async getTransactionHistory(reservationId: string) {

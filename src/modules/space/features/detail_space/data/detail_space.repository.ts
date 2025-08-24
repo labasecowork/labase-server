@@ -7,7 +7,7 @@ export class DetailSpaceRepository {
       where: { id },
       include: {
         prices: true,
-        spaceBenefits: {
+        space_benefits: {
           include: { benefit: true },
         },
       },

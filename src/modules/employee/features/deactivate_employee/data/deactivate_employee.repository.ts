@@ -1,10 +1,9 @@
 // src/modules/employee/features/deactivate_employee/data/deactivate_employee.repository.ts
-
 import prisma from "../../../../../config/prisma_client";
 
 export class DeactivateEmployeeRepository {
   async findEmployeeById(employeeId: string) {
-    return await prisma.employeeDetails.findUnique({
+    return await prisma.employee_details.findUnique({
       where: { employee_id: employeeId },
       include: {
         user: {

@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 export class BenefitRepository {
-  create(data: Prisma.BenefitCreateInput) {
+  create(data: Prisma.benefitCreateInput) {
     return prisma.benefit.create({ data });
   }
 
@@ -11,15 +11,15 @@ export class BenefitRepository {
     return prisma.benefit.findMany({ orderBy: { name: "asc" } });
   }
 
-  update(id: string, data: Prisma.BenefitUpdateInput) {
+  update(id: string, data: Prisma.benefitUpdateInput) {
     return prisma.benefit.update({ where: { id }, data });
   }
 
   findById(id: string) {
     return prisma.benefit.findUnique({ where: { id } });
   }
-  
-    delete(id: string) {
+
+  delete(id: string) {
     return prisma.benefit.delete({ where: { id } });
   }
 }

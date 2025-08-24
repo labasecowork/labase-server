@@ -1,5 +1,4 @@
 // src/modules/employee/features/get_employee/presentation/get_employee.service.ts
-
 import { GetEmployeeDTO } from "../domain/get_employee.dto";
 import { GetEmployeeRepository } from "../data/get_employee.repository";
 import { format } from "date-fns";
@@ -15,7 +14,7 @@ export class GetEmployeeService {
     if (!employee) {
       throw new AppError(
         "Empleado no encontrado",
-        HttpStatusCodes.NOT_FOUND.code
+        HttpStatusCodes.NOT_FOUND.code,
       );
     }
 

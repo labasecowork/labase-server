@@ -1,5 +1,4 @@
 // src/modules/employee/features/list_employees/domain/list_employees.dto.ts
-
 import { z } from "zod";
 import { ListEmployeesSchema } from "./list_employees.schema";
 

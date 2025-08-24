@@ -20,21 +20,21 @@ export class LoginUseCase {
     if (!isPasswordValid) {
       throw new AppError(
         "Invalid credentials",
-        HttpStatusCodes.UNAUTHORIZED.code
+        HttpStatusCodes.UNAUTHORIZED.code,
       );
     }
 
     if (!user.isVerified()) {
       throw new AppError(
         "User is not verified",
-        HttpStatusCodes.UNAUTHORIZED.code
+        HttpStatusCodes.UNAUTHORIZED.code,
       );
     }
 
     let adminRole: string | undefined = undefined;
 
     if (user.user_type === "admin") {
-      const adminData = await prisma.adminDetails.findUnique({
+      const adminData = await prisma.admin_details.findUnique({
         where: { admin_id: user.id },
         select: { role: true },
       });

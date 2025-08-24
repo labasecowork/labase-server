@@ -1,6 +1,5 @@
 // src/modules/payment/features/create-payment/data/payment-transaction.repository.ts
-
-import { PaymentTransaction, PaymentStatus } from "@prisma/client";
+import { Prisma, payment_status, payment_transaction } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 export interface CreateTransactionData {
@@ -8,7 +7,7 @@ export interface CreateTransactionData {
   transactionId: string;
   amount: number;
   authorizationCode: string;
-  status: PaymentStatus;
+  status: payment_status;
   actionDescription: string;
   cardMasked: string;
   transactionDate: string;
@@ -19,78 +18,75 @@ export interface CreateTransactionData {
 }
 
 export class PaymentTransactionRepository {
-  async upsert(
-    transactionData: CreateTransactionData
-  ): Promise<PaymentTransaction> {
-    // Intenta actualizar primero, luego crear si no existe
-    try {
-      return await prisma.paymentTransaction.upsert({
-        where: { purchaseNumber: transactionData.purchaseNumber },
-        update: this.buildUpdateData(transactionData),
-        create: this.buildCreateData(transactionData),
-      });
-    } catch (error) {
-      // Fallback: crear directamente si hay problemas con upsert
-      return await prisma.paymentTransaction.create({
-        data: this.buildCreateData(transactionData),
-      });
-    }
+  async upsert(tx: CreateTransactionData): Promise<payment_transaction> {
+    return prisma.payment_transaction.upsert({
+      where: { purchase_number: tx.purchaseNumber },
+      update: this.toUpdateData(tx),
+      create: this.toCreateData(tx),
+    });
   }
 
   async findByPurchaseNumber(
-    purchaseNumber: string
-  ): Promise<PaymentTransaction | null> {
-    return prisma.paymentTransaction.findUnique({
-      where: { purchaseNumber },
+    purchaseNumber: string,
+  ): Promise<payment_transaction | null> {
+    return prisma.payment_transaction.findUnique({
+      where: { purchase_number: purchaseNumber },
     });
   }
 
   async findByTransactionId(
-    transactionId: string
-  ): Promise<PaymentTransaction | null> {
-    return prisma.paymentTransaction.findFirst({
-      where: { transactionId },
+    transactionId: string,
+  ): Promise<payment_transaction | null> {
+    return prisma.payment_transaction.findFirst({
+      where: { transaction_id: transactionId },
     });
   }
 
   async findByReservationId(
-    reservationId: string
-  ): Promise<PaymentTransaction[]> {
-    return prisma.paymentTransaction.findMany({
-      where: { reservationId },
-      orderBy: { createdAt: "desc" },
+    reservationId: string,
+  ): Promise<payment_transaction[]> {
+    return prisma.payment_transaction.findMany({
+      where: { reservation_id: reservationId },
+      orderBy: { created_at: "desc" },
     });
   }
 
-  private buildCreateData(tx: CreateTransactionData) {
+  // --------- helpers ---------
+
+  private toCreateData(
+    tx: CreateTransactionData,
+  ): Prisma.payment_transactionCreateInput {
     return {
-      purchaseNumber: tx.purchaseNumber,
-      transactionId: tx.transactionId,
+      purchase_number: tx.purchaseNumber,
+      transaction_id: tx.transactionId,
       amount: tx.amount,
-      authorizationCode: tx.authorizationCode,
+      authorization_code: tx.authorizationCode,
       status: tx.status,
-      actionDescription: tx.actionDescription,
-      cardMasked: tx.cardMasked,
-      transactionDate: tx.transactionDate,
-      errorCode: tx.errorCode,
-      errorMessage: tx.errorMessage,
-      reservationId: tx.reservationId,
-      userId: tx.userId,
+      action_description: tx.actionDescription,
+      card_masked: tx.cardMasked,
+      transaction_date: tx.transactionDate,
+      error_code: tx.errorCode,
+      error_message: tx.errorMessage,
+      // relaciones opcionales
+      reservation: { connect: { id: tx.reservationId } },
+      ...(tx.userId ? { user: { connect: { id: tx.userId } } } : {}),
     };
   }
 
-  private buildUpdateData(tx: CreateTransactionData) {
+  private toUpdateData(
+    tx: CreateTransactionData,
+  ): Prisma.payment_transactionUpdateInput {
     return {
-      transactionId: tx.transactionId,
+      transaction_id: tx.transactionId,
       amount: tx.amount,
-      authorizationCode: tx.authorizationCode,
+      authorization_code: tx.authorizationCode,
       status: tx.status,
-      actionDescription: tx.actionDescription,
-      cardMasked: tx.cardMasked,
-      transactionDate: tx.transactionDate,
-      errorCode: tx.errorCode,
-      errorMessage: tx.errorMessage,
-      // No actualizamos userId ni reservationId en updates
+      action_description: tx.actionDescription,
+      card_masked: tx.cardMasked,
+      transaction_date: tx.transactionDate,
+      error_code: tx.errorCode,
+      error_message: tx.errorMessage,
+      // No movemos reservation/user en updates
     };
   }
 }

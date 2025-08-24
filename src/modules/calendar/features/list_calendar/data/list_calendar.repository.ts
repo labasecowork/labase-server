@@ -7,8 +7,6 @@ import prisma from "../../../../../config/prisma_client";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-
-
 export class ListCalendarRepository {
   /**
    * Obtiene los eventos de la semana actual (lunes–domingo).
@@ -22,11 +20,13 @@ export class ListCalendarRepository {
       where: {
         ...(userId ? { userId } : {}),
         OR: [
-          { startTime: { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() } },
-          { endTime: { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() } },
           {
-            startTime: { lte: startOfWeek.toDate() },
-            endTime: { gte: endOfWeek.toDate() },
+            start_time: { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() },
+          },
+          { end_time: { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() } },
+          {
+            start_time: { lte: startOfWeek.toDate() },
+            end_time: { gte: endOfWeek.toDate() },
           },
         ],
       },
@@ -53,11 +53,11 @@ export class ListCalendarRepository {
       where: {
         ...(userId ? { userId } : {}),
         OR: [
-          { startTime: { gte: start.toDate(), lte: end.toDate() } },
-          { endTime: { gte: start.toDate(), lte: end.toDate() } },
+          { start_time: { gte: start.toDate(), lte: end.toDate() } },
+          { end_time: { gte: start.toDate(), lte: end.toDate() } },
           {
-            startTime: { lte: start.toDate() },
-            endTime: { gte: end.toDate() },
+            start_time: { lte: start.toDate() },
+            end_time: { gte: end.toDate() },
           },
         ],
       },
@@ -76,11 +76,11 @@ export class ListCalendarRepository {
   private _expandByDay(
     reservations: Array<{
       id: string;
-      startTime: Date;
-      endTime: Date;
+      start_time: Date;
+      end_time: Date;
       user: { first_name: string; last_name: string };
       space: { name: string };
-    }>
+    }>,
   ) {
     const events: Array<{
       id: string;
@@ -92,8 +92,8 @@ export class ListCalendarRepository {
     }> = [];
 
     for (const r of reservations) {
-      const start = dayjs(r.startTime);
-      const end = dayjs(r.endTime);
+      const start = dayjs(r.start_time);
+      const end = dayjs(r.end_time);
 
       for (
         let date = start.startOf("day");

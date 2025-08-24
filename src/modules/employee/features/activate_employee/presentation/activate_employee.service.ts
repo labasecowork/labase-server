@@ -1,5 +1,4 @@
 // src/modules/employee/features/activate_employee/presentation/activate_employee.service.ts
-
 import { ActivateEmployeeRepository } from "../data/activate_employee.repository";
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
