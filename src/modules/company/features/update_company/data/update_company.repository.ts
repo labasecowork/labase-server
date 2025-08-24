@@ -1,0 +1,61 @@
+// src/modules/company/features/update_company/data/update_company.repository.ts
+import { prismaClient } from "../../../../../config/prisma_client";
+import { UpdateCompanyDTO } from "../domain/update_company.dto";
+import { CompanyEntity } from "../../../entities/company.entity";
+
+export class UpdateCompanyRepository {
+  async execute(id: string, data: UpdateCompanyDTO): Promise<CompanyEntity> {
+    const company = await prismaClient.company.update({
+      where: { id },
+      data: {
+        ...(data.name && { name: data.name }),
+        ...(data.description !== undefined && {
+          description: data.description,
+        }),
+      },
+    });
+
+    return {
+      id: company.id,
+      name: company.name,
+      description: company.description,
+      created_at: company.created_at,
+      updated_at: company.updated_at,
+    };
+  }
+
+  async findById(id: string): Promise<CompanyEntity | null> {
+    const company = await prismaClient.company.findUnique({
+      where: { id },
+    });
+
+    if (!company) return null;
+
+    return {
+      id: company.id,
+      name: company.name,
+      description: company.description,
+      created_at: company.created_at,
+      updated_at: company.updated_at,
+    };
+  }
+
+  async checkIfNameExistsExcludingId(
+    name: string,
+    excludeId: string
+  ): Promise<boolean> {
+    const existingCompany = await prismaClient.company.findFirst({
+      where: {
+        name: {
+          equals: name,
+          mode: "insensitive",
+        },
+        id: {
+          not: excludeId,
+        },
+      },
+    });
+
+    return !!existingCompany;
+  }
+}

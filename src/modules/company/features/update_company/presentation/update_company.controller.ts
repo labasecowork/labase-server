@@ -1,35 +1,33 @@
-// src/modules/employee/features/update_employee/presentation/update_employee.controller.ts
-
+// src/modules/company/features/update_company/presentation/update_company.controller.ts
 import { Response } from "express";
-import { UpdateEmployeeService } from "./update_employee.service";
+import { UpdateCompanyService } from "./update_company.service";
 import {
-  UpdateEmployeeParamsSchema,
-  UpdateEmployeeBodySchema,
-} from "../domain/update_employee.schema";
+  UpdateCompanySchema,
+  UpdateCompanyParamsSchema,
+} from "../domain/update_company.schema";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
-export class UpdateEmployeeController {
-  constructor(private readonly service = new UpdateEmployeeService()) {}
+export class UpdateCompanyController {
+  constructor(private readonly service = new UpdateCompanyService()) {}
 
   async handle(req: AuthenticatedRequest, res: Response) {
-    const params = UpdateEmployeeParamsSchema.parse(req.params);
-    const body = UpdateEmployeeBodySchema.parse(req.body);
+    const params = UpdateCompanyParamsSchema.parse(req.params);
+    const dto = UpdateCompanySchema.parse(req.body);
     const authUser = await getAuthenticatedUser(req);
 
     const user = {
       id: authUser.id,
-      role: authUser.role,
+      role: authUser.role as "admin" | "client" | "employee",
     };
 
-    const result = await this.service.execute(params.id, body, user);
+    const result = await this.service.execute(params.id, dto, user);
 
     return res.status(HttpStatusCodes.OK.code).json(
       buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path, {
-        employee_id: result.employee_id,
-        user: result.user,
+        company: result.company,
       })
     );
   }

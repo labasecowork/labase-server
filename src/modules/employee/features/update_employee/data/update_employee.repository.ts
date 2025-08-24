@@ -14,6 +14,8 @@ interface UpdateEmployeeData {
   birth_date?: Date;
   gender?: string;
   status?: user_status;
+  work_area_id?: string;
+  company_id?: string;
 }
 
 export class UpdateEmployeeRepository {

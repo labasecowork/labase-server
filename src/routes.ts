@@ -18,6 +18,8 @@ import { newsletterRouter } from "./modules/newsletter";
 import { productRouter } from "./modules/product";
 import { chatbotwhatsapp } from "./modules/chatbot/presentation/send_message.routes";
 import { seedRouter } from "./modules/seed/presentation/seed.routes";
+import { workareaRouter } from "./modules/workarea";
+import { companyRouter } from "./modules/company";
 const router = Router();
 const API_VERSION = "/api/v1";
 
@@ -39,5 +41,7 @@ router.use(`${API_VERSION}/`, employeeRouter);
 router.use(`${API_VERSION}/products`, productRouter);
 router.use(`${API_VERSION}/chatbotwhatsapp`, chatbotwhatsapp);
 router.use(`${API_VERSION}/seed`, seedRouter);
+router.use(`${API_VERSION}/`, workareaRouter);
+router.use(`${API_VERSION}/`, companyRouter);
 
 export default router;

@@ -1,0 +1,43 @@
+// src/modules/workarea/features/delete_workarea/presentation/delete_workarea.service.ts
+import { DeleteWorkAreaRepository } from "../data/delete_workarea.repository";
+import { DeleteWorkAreaResponseDTO } from "../domain/delete_workarea.dto";
+import { throwError } from "../../../../../utils/errors";
+
+export class DeleteWorkAreaService {
+  constructor(private readonly repository = new DeleteWorkAreaRepository()) {}
+
+  async execute(
+    id: string,
+    user: { id: string; role: "admin" | "client" | "employee" }
+  ): Promise<DeleteWorkAreaResponseDTO> {
+    // Verificar que solo administradores puedan eliminar áreas de trabajo
+    if (user.role !== "admin") {
+      throwError(
+        "FORBIDDEN",
+        "Solo los administradores pueden eliminar áreas de trabajo"
+      );
+    }
+
+    // Verificar que el área de trabajo existe
+    const existingWorkArea = await this.repository.findById(id);
+    if (!existingWorkArea) {
+      throwError("NOT_FOUND", "Área de trabajo no encontrada");
+    }
+
+    // Verificar que no tenga empleados asignados
+    const hasEmployees = await this.repository.hasEmployees(id);
+    if (hasEmployees) {
+      throwError(
+        "CONFLICT",
+        "No se puede eliminar el área de trabajo porque tiene empleados asignados"
+      );
+    }
+
+    // Eliminar el área de trabajo
+    await this.repository.execute(id);
+
+    return {
+      message: "Área de trabajo eliminada exitosamente",
+    };
+  }
+}

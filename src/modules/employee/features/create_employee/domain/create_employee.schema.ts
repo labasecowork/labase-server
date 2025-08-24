@@ -10,4 +10,6 @@ export const CreateEmployeeSchema = z.object({
   phone: z.string().optional(),
   birth_date: z.coerce.date().optional(),
   gender: z.string().optional(),
+  work_area_id: z.string().uuid(),
+  company_id: z.string().uuid(),
 });

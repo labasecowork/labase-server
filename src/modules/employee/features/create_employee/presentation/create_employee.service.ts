@@ -18,7 +18,7 @@ export class CreateEmployeeService {
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden crear empleados",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -26,7 +26,7 @@ export class CreateEmployeeService {
     if (existingUser) {
       throw new AppError(
         "Ya existe un usuario con este email",
-        HttpStatusCodes.CONFLICT.code,
+        HttpStatusCodes.CONFLICT.code
       );
     }
 
@@ -42,6 +42,8 @@ export class CreateEmployeeService {
       phone: dto.phone,
       birth_date: dto.birth_date,
       gender: dto.gender,
+      work_area_id: dto.work_area_id,
+      company_id: dto.company_id,
     });
 
     return {

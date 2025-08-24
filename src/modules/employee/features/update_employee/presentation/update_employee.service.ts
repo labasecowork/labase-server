@@ -59,6 +59,8 @@ export class UpdateEmployeeService {
     if (dto.birth_date) updateData.birth_date = dto.birth_date;
     if (dto.gender !== undefined) updateData.gender = dto.gender;
     if (dto.status) updateData.status = dto.status;
+    if (dto.work_area_id) updateData.work_area_id = dto.work_area_id;
+    if (dto.company_id) updateData.company_id = dto.company_id;
 
     if (dto.password) {
       updateData.password = await bcrypt.hash(dto.password, 12);
