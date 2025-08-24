@@ -1,11 +1,11 @@
 // src/modules/company/features/create_company/data/create_company.repository.ts
-import { prismaClient } from "../../../../../config/prisma_client";
+import prisma from "../../../../../config/prisma_client";
 import { CreateCompanyDTO } from "../domain/create_company.dto";
 import { CompanyEntity } from "../../../entities/company.entity";
 
 export class CreateCompanyRepository {
   async execute(data: CreateCompanyDTO): Promise<CompanyEntity> {
-    const company = await prismaClient.company.create({
+    const company = await prisma.company.create({
       data: {
         name: data.name,
         description: data.description || null,
@@ -22,7 +22,7 @@ export class CreateCompanyRepository {
   }
 
   async checkIfNameExists(name: string): Promise<boolean> {
-    const existingCompany = await prismaClient.company.findFirst({
+    const existingCompany = await prisma.company.findFirst({
       where: {
         name: {
           equals: name,

@@ -4,7 +4,8 @@ import {
   UpdateWorkAreaDTO,
   UpdateWorkAreaResponseDTO,
 } from "../domain/update_workarea.dto";
-import { throwError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../utils/errors";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class UpdateWorkAreaService {
   constructor(private readonly repository = new UpdateWorkAreaRepository()) {}
@@ -16,16 +17,19 @@ export class UpdateWorkAreaService {
   ): Promise<UpdateWorkAreaResponseDTO> {
     // Verificar que solo administradores puedan actualizar áreas de trabajo
     if (user.role !== "admin") {
-      throwError(
-        "FORBIDDEN",
-        "Solo los administradores pueden actualizar áreas de trabajo"
+      throw new AppError(
+        "Solo los administradores pueden actualizar áreas de trabajo",
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
     // Verificar que el área de trabajo existe
     const existingWorkArea = await this.repository.findById(id);
     if (!existingWorkArea) {
-      throwError("NOT_FOUND", "Área de trabajo no encontrada");
+      throw new AppError(
+        "Área de trabajo no encontrada",
+        HttpStatusCodes.NOT_FOUND.code
+      );
     }
 
     // Verificar si el nuevo nombre ya existe (si se está cambiando el nombre)
@@ -35,7 +39,10 @@ export class UpdateWorkAreaService {
         id
       );
       if (nameExists) {
-        throwError("CONFLICT", "Ya existe un área de trabajo con este nombre");
+        throw new AppError(
+          "Ya existe un área de trabajo con este nombre",
+          HttpStatusCodes.CONFLICT.code
+        );
       }
     }
 

@@ -13,8 +13,8 @@ interface CreateEmployeeData {
   phone?: string;
   birth_date?: Date;
   gender?: string;
-  work_area_id: string;
-  company_id: string;
+  work_area_id?: string;
+  company_id?: string;
 }
 
 export class CreateEmployeeRepository {
@@ -55,8 +55,8 @@ export class CreateEmployeeRepository {
       const employee = await tx.employeeDetails.create({
         data: {
           employee_id: user.id,
-          work_area_id: data.work_area_id,
-          company_id: data.company_id,
+          work_area_id: data.work_area_id ?? null,
+          company_id: data.company_id ?? null,
         },
       });
 

@@ -4,7 +4,8 @@ import {
   CreateCompanyDTO,
   CreateCompanyResponseDTO,
 } from "../domain/create_company.dto";
-import { throwError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../utils/errors";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class CreateCompanyService {
   constructor(private readonly repository = new CreateCompanyRepository()) {}
@@ -15,13 +16,19 @@ export class CreateCompanyService {
   ): Promise<CreateCompanyResponseDTO> {
     // Verificar que solo administradores puedan crear empresas
     if (user.role !== "admin") {
-      throwError("FORBIDDEN", "Solo los administradores pueden crear empresas");
+      throw new AppError(
+        "Solo los administradores pueden crear empresas",
+        HttpStatusCodes.FORBIDDEN.code
+      );
     }
 
     // Verificar si ya existe una empresa con el mismo nombre
     const nameExists = await this.repository.checkIfNameExists(data.name);
     if (nameExists) {
-      throwError("CONFLICT", "Ya existe una empresa con este nombre");
+      throw new AppError(
+        "Ya existe una empresa con este nombre",
+        HttpStatusCodes.CONFLICT.code
+      );
     }
 
     // Crear la empresa

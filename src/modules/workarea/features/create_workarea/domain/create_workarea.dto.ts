@@ -12,7 +12,6 @@ export interface CreateWorkAreaResponseDTO {
     name: string;
     description: string | null;
     capacity: number;
-    disabled: boolean;
     created_at: Date;
     updated_at: Date;
   };

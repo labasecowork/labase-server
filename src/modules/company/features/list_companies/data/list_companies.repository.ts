@@ -1,5 +1,5 @@
 // src/modules/company/features/list_companies/data/list_companies.repository.ts
-import { prismaClient } from "../../../../../config/prisma_client";
+import prisma from "../../../../../config/prisma_client";
 import {
   ListCompaniesDTO,
   ListCompaniesResponseDTO,
@@ -8,8 +8,7 @@ import { CompanyEntity } from "../../../entities/company.entity";
 
 export class ListCompaniesRepository {
   async execute(filters: ListCompaniesDTO): Promise<ListCompaniesResponseDTO> {
-    const { page, limit, search } = filters;
-    const skip = (page - 1) * limit;
+    const { search } = filters;
 
     // Construir filtros dinámicos
     const where: any = {};
@@ -31,14 +30,9 @@ export class ListCompaniesRepository {
       ];
     }
 
-    // Obtener total para paginación
-    const total = await prismaClient.company.count({ where });
-
-    // Obtener empresas con paginación
-    const companies = await prismaClient.company.findMany({
+    // Obtener todas las empresas
+    const companies = await prisma.company.findMany({
       where,
-      skip,
-      take: limit,
       orderBy: {
         created_at: "desc",
       },
@@ -52,14 +46,6 @@ export class ListCompaniesRepository {
       updated_at: company.updated_at,
     }));
 
-    return {
-      companies: companyEntities,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    };
+    return companyEntities;
   }
 }

@@ -1,16 +1,16 @@
 // src/modules/company/features/delete_company/data/delete_company.repository.ts
-import { prismaClient } from "../../../../../config/prisma_client";
+import prisma from "../../../../../config/prisma_client";
 import { CompanyEntity } from "../../../entities/company.entity";
 
 export class DeleteCompanyRepository {
   async execute(id: string): Promise<void> {
-    await prismaClient.company.delete({
+    await prisma.company.delete({
       where: { id },
     });
   }
 
   async findById(id: string): Promise<CompanyEntity | null> {
-    const company = await prismaClient.company.findUnique({
+    const company = await prisma.company.findUnique({
       where: { id },
     });
 
@@ -26,7 +26,7 @@ export class DeleteCompanyRepository {
   }
 
   async hasEmployees(id: string): Promise<boolean> {
-    const employeeCount = await prismaClient.employeeDetails.count({
+    const employeeCount = await prisma.employeeDetails.count({
       where: {
         company_id: id,
       },

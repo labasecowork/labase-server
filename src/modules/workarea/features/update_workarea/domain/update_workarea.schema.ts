@@ -9,7 +9,6 @@ export const UpdateWorkAreaSchema = z.object({
     .int()
     .min(1, "La capacidad debe ser mayor a 0")
     .optional(),
-  disabled: z.boolean().optional(),
 });
 
 export const UpdateWorkAreaParamsSchema = z.object({

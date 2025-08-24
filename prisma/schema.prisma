@@ -162,7 +162,6 @@ model WorkArea {
   name        String
   description String?
   capacity    Int
-  disabled    Boolean  @default(false)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
@@ -185,11 +184,11 @@ model Company {
 
 model EmployeeDetails {
   employee_id  String       @id
-  work_area_id String       @unique
-  company_id   String       @unique
+  work_area_id String?
+  company_id   String?
   user         Users        @relation(fields: [employee_id], references: [id])
-  workArea     WorkArea     @relation(fields: [work_area_id], references: [id])
-  company      Company      @relation(fields: [company_id], references: [id])
+  workArea     WorkArea?    @relation(fields: [work_area_id], references: [id])
+  company      Company?     @relation(fields: [company_id], references: [id])
   attendances  Attendance[]
 
   @@map("employee_details")

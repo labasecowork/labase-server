@@ -1,11 +1,11 @@
 // src/modules/workarea/features/update_workarea/data/update_workarea.repository.ts
-import { prismaClient } from "../../../../../config/prisma_client";
+import prisma from "../../../../../config/prisma_client";
 import { UpdateWorkAreaDTO } from "../domain/update_workarea.dto";
 import { WorkAreaEntity } from "../../../entities/workarea.entity";
 
 export class UpdateWorkAreaRepository {
   async execute(id: string, data: UpdateWorkAreaDTO): Promise<WorkAreaEntity> {
-    const workarea = await prismaClient.workArea.update({
+    const workarea = await prisma.workArea.update({
       where: { id },
       data: {
         ...(data.name && { name: data.name }),
@@ -13,7 +13,6 @@ export class UpdateWorkAreaRepository {
           description: data.description,
         }),
         ...(data.capacity && { capacity: data.capacity }),
-        ...(data.disabled !== undefined && { disabled: data.disabled }),
       },
     });
 
@@ -22,14 +21,13 @@ export class UpdateWorkAreaRepository {
       name: workarea.name,
       description: workarea.description,
       capacity: workarea.capacity,
-      disabled: workarea.disabled,
       created_at: workarea.created_at,
       updated_at: workarea.updated_at,
     };
   }
 
   async findById(id: string): Promise<WorkAreaEntity | null> {
-    const workarea = await prismaClient.workArea.findUnique({
+    const workarea = await prisma.workArea.findUnique({
       where: { id },
     });
 
@@ -40,7 +38,6 @@ export class UpdateWorkAreaRepository {
       name: workarea.name,
       description: workarea.description,
       capacity: workarea.capacity,
-      disabled: workarea.disabled,
       created_at: workarea.created_at,
       updated_at: workarea.updated_at,
     };
@@ -50,7 +47,7 @@ export class UpdateWorkAreaRepository {
     name: string,
     excludeId: string
   ): Promise<boolean> {
-    const existingWorkArea = await prismaClient.workArea.findFirst({
+    const existingWorkArea = await prisma.workArea.findFirst({
       where: {
         name: {
           equals: name,

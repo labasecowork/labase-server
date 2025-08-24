@@ -4,7 +4,8 @@ import {
   ListCompaniesDTO,
   ListCompaniesResponseDTO,
 } from "../domain/list_companies.dto";
-import { throwError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../utils/errors";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class ListCompaniesService {
   constructor(private readonly repository = new ListCompaniesRepository()) {}
@@ -15,9 +16,9 @@ export class ListCompaniesService {
   ): Promise<ListCompaniesResponseDTO> {
     // Verificar que solo administradores puedan listar empresas
     if (user.role !== "admin") {
-      throwError(
-        "FORBIDDEN",
-        "Solo los administradores pueden acceder a esta información"
+      throw new AppError(
+        "Solo los administradores pueden acceder a esta información",
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 

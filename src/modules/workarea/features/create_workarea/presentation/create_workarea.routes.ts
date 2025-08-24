@@ -72,8 +72,6 @@ const controller = new CreateWorkAreaController();
  *                           type: string
  *                         capacity:
  *                           type: integer
- *                         disabled:
- *                           type: boolean
  *                         created_at:
  *                           type: string
  *                           format: date-time

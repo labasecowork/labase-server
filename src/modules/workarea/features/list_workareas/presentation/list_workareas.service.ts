@@ -1,26 +1,23 @@
 // src/modules/workarea/features/list_workareas/presentation/list_workareas.service.ts
 import { ListWorkAreasRepository } from "../data/list_workareas.repository";
-import {
-  ListWorkAreasDTO,
-  ListWorkAreasResponseDTO,
-} from "../domain/list_workareas.dto";
-import { throwError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../utils/errors";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
+import { WorkAreaEntity } from "../../../entities/workarea.entity";
 
 export class ListWorkAreasService {
   constructor(private readonly repository = new ListWorkAreasRepository()) {}
 
-  async execute(
-    filters: ListWorkAreasDTO,
-    user: { id: string; role: "admin" | "client" | "employee" }
-  ): Promise<ListWorkAreasResponseDTO> {
-    // Verificar que solo administradores puedan listar áreas de trabajo
+  async execute(user: {
+    id: string;
+    role: "admin" | "client" | "employee";
+  }): Promise<WorkAreaEntity[]> {
     if (user.role !== "admin") {
-      throwError(
-        "FORBIDDEN",
-        "Solo los administradores pueden acceder a esta información"
+      throw new AppError(
+        "Solo los administradores pueden acceder a esta información",
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
-    return await this.repository.execute(filters);
+    return await this.repository.execute();
   }
 }

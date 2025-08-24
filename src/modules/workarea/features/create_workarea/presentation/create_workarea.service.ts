@@ -4,7 +4,8 @@ import {
   CreateWorkAreaDTO,
   CreateWorkAreaResponseDTO,
 } from "../domain/create_workarea.dto";
-import { throwError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../utils/errors";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class CreateWorkAreaService {
   constructor(private readonly repository = new CreateWorkAreaRepository()) {}
@@ -15,16 +16,19 @@ export class CreateWorkAreaService {
   ): Promise<CreateWorkAreaResponseDTO> {
     // Verificar que solo administradores puedan crear áreas de trabajo
     if (user.role !== "admin") {
-      throwError(
-        "FORBIDDEN",
-        "Solo los administradores pueden crear áreas de trabajo"
+      throw new AppError(
+        "Solo los administradores pueden crear áreas de trabajo",
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
     // Verificar si ya existe un área de trabajo con el mismo nombre
     const nameExists = await this.repository.checkIfNameExists(data.name);
     if (nameExists) {
-      throwError("CONFLICT", "Ya existe un área de trabajo con este nombre");
+      throw new AppError(
+        "Ya existe un área de trabajo con este nombre",
+        HttpStatusCodes.CONFLICT.code
+      );
     }
 
     // Crear el área de trabajo

@@ -5,9 +5,6 @@ export interface WorkAreaEntity {
   name: string;
   description: string | null;
   capacity: number;
-  disabled: boolean;
   created_at: Date;
   updated_at: Date;
 }
-
-export type WorkAreaStatus = "active" | "disabled";

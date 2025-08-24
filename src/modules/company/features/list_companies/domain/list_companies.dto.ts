@@ -6,12 +6,4 @@ import { CompanyEntity } from "../../../entities/company.entity";
 
 export type ListCompaniesDTO = z.infer<typeof ListCompaniesSchema>;
 
-export interface ListCompaniesResponseDTO {
-  companies: CompanyEntity[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-}
+export type ListCompaniesResponseDTO = CompanyEntity[];
