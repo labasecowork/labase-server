@@ -14,6 +14,7 @@ export async function sendEmail(
 ): Promise<void> {
   try {
     const dirname = ENVIRONMENT === "production" ? PROJECT_ROOT || "" : getDirname(import.meta.url);
+    const logoPath = ENVIRONMENT === "production" ? path.join(dirname, "public/images/logo.png") : path.join(dirname, "../../../public/images/logo.png");
 
     const info = await transporter.sendMail({
       from: EMAIL_USER,
@@ -24,10 +25,7 @@ export async function sendEmail(
       attachments: [
         {
           filename: "logo.png",
-          path: path.join(
-            dirname,
-            "public/images/logo.png"
-          ),
+          path: logoPath,
           cid: "logo",
         },
         ...(attachments || []),

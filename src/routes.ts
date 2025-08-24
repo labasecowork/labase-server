@@ -17,6 +17,7 @@ import { employeeRouter } from "./modules/employee";
 import { newsletterRouter } from "./modules/newsletter";
 import { productRouter } from "./modules/product";
 import { chatbotwhatsapp } from "./modules/chatbot/presentation/send_message.routes";
+import { seedRouter } from "./modules/seed/presentation/seed.routes";
 const router = Router();
 const API_VERSION = "/api/v1";
 
@@ -37,5 +38,6 @@ router.use(`${API_VERSION}/`, attendanceRouter);
 router.use(`${API_VERSION}/`, employeeRouter);
 router.use(`${API_VERSION}/products`, productRouter);
 router.use(`${API_VERSION}/chatbotwhatsapp`, chatbotwhatsapp);
+router.use(`${API_VERSION}/seed`, seedRouter);
 
 export default router;

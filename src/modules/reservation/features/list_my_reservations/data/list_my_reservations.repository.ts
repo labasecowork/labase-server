@@ -4,7 +4,12 @@ import prisma from "../../../../../config/prisma_client";
 export class ListMyReservationsRepository {
   list(userId: string, skip: number, take: number) {
     return prisma.reservation.findMany({
-      where: { userId },
+      where: {
+        userId,
+        status: {
+          in: ["PENDING", "IN_PROGRESS"],
+        },
+      },
       orderBy: { startTime: "desc" },
       include: {
         space: {
