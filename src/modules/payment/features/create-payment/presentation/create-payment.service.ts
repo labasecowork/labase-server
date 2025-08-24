@@ -24,16 +24,16 @@ export class CreatePaymentService {
     if (!reservation) {
       throw new AppError(
         "RESERVATION_NOT_FOUND",
-        HttpStatusCodes.NOT_FOUND.code
+        HttpStatusCodes.NOT_FOUND.code,
       );
     }
-    if (reservation.status !== "PENDING") {
+    if (reservation.status !== "pending") {
       throw new AppError(
         "PAYMENT_NOT_ALLOWED",
-        HttpStatusCodes.BAD_REQUEST.code
+        HttpStatusCodes.BAD_REQUEST.code,
       );
     }
-    if (reservation.userId !== userId) {
+    if (reservation.user_id !== userId) {
       throw new AppError("FORBIDDEN_PAYMENT", HttpStatusCodes.FORBIDDEN.code);
     }
 
@@ -59,7 +59,7 @@ export class CreatePaymentService {
           serviceLocationPostalCode: "15074",
         },
       },
-      purchaseNumber: reservation.purchaseNumber,
+      purchaseNumber: reservation.purchase_number,
       amount: reservation.price.toNumber(),
       currency: "PEN",
     };

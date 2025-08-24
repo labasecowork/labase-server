@@ -28,6 +28,6 @@ reservationRouter.use("/reservations/:id/cancel", cancelReservationRoutes);
  *  GET   /api/v1/reservations/:id                → Ver detalle de reserva (admin puede ver todo)
  *  POST  /api/v1/reservations/resolve            → obtener reserva desde código QR
  *  PATCH /api/v1/reservations/:id/cancel         → cancelar reserva (admin o dueño; estados PENDING/CONFIRMED)Estados permitidos: PENDING o CONFIRMED.
-                                                                                                                Estados rechazados: IN_PROGRESS o CANCELLED.
+                                                                                                              Estados rechazados: IN_PROGRESS o CANCELLED.
  */
 export default reservationRouter;

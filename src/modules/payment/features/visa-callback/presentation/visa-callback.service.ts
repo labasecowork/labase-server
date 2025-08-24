@@ -3,7 +3,7 @@ import { VisaCallbackDTO } from "../domain/visa-callback.dto";
 import { VisaCallbackRepository } from "../data/visa-callback.repository";
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { PaymentStatus } from "@prisma/client";
+import { payment_status } from "@prisma/client";
 import type {
   CreatePaymentDTO,
   TransactionResponse,
@@ -42,7 +42,7 @@ export class VisaCallbackService {
     if (!dto.transactionToken) {
       throw new AppError(
         "MISSING_TRANSACTION_TOKEN",
-        HttpStatusCodes.BAD_REQUEST.code
+        HttpStatusCodes.BAD_REQUEST.code,
       );
     }
   }
@@ -53,14 +53,14 @@ export class VisaCallbackService {
     if (!reservation) {
       throw new AppError(
         "RESERVATION_NOT_FOUND",
-        HttpStatusCodes.NOT_FOUND.code
+        HttpStatusCodes.NOT_FOUND.code,
       );
     }
 
-    if (!reservation.id || !reservation.userId) {
+    if (!reservation.id || !reservation.user_id) {
       throw new AppError(
         "INTERNAL_PAYMENT_ERROR",
-        HttpStatusCodes.INTERNAL_SERVER_ERROR.code
+        HttpStatusCodes.INTERNAL_SERVER_ERROR.code,
       );
     }
 
@@ -69,7 +69,7 @@ export class VisaCallbackService {
 
   private buildPaymentDTO(
     dto: VisaCallbackDTO,
-    amount: number
+    amount: number,
   ): CreatePaymentDTO {
     return {
       transactionToken: dto.transactionToken,
@@ -89,7 +89,7 @@ export class VisaCallbackService {
   private buildTransactionData(
     dto: VisaCallbackDTO,
     result: TransactionResponse,
-    reservation: any
+    reservation: any,
   ): CreateTransactionData {
     const paymentResponse = result.rawData as NiubizPaymentResponse;
     const isSuccess = isSuccessfulPayment(paymentResponse);
@@ -98,7 +98,7 @@ export class VisaCallbackService {
     const baseData = {
       purchaseNumber: dto.purchaseNumber,
       amount: reservation.price.toNumber(),
-      status: isSuccess ? PaymentStatus.APPROVED : PaymentStatus.FAILED,
+      status: isSuccess ? payment_status.approved : payment_status.failed,
       reservationId: reservation.id,
       userId: reservation.userId,
     };
@@ -140,11 +140,11 @@ export class VisaCallbackService {
   private buildResponse(
     dto: VisaCallbackDTO,
     result: TransactionResponse,
-    reservationId: string
+    reservationId: string,
   ) {
     return {
       success: result.success,
-      status: result.success ? PaymentStatus.APPROVED : PaymentStatus.FAILED,
+      status: result.success ? payment_status.approved : payment_status.failed,
       providerResponse: result,
       reservationId,
       purchaseNumber: dto.purchaseNumber,

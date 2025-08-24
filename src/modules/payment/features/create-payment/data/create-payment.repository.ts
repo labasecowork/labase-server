@@ -1,6 +1,5 @@
 // src/modules/payment/features/create-payment/data/create-payment.repository.ts
-
-import { Reservation } from "@prisma/client";
+import { reservation } from "@prisma/client";
 import { CreatePaymentDTO } from "../domain/create-payment.dto";
 import { resolvePaymentProvider } from "../../../../../shared/payments/utils/payments.helpers";
 import prisma from "../../../../../config/prisma_client";
@@ -32,7 +31,7 @@ export class CreatePaymentRepository {
 
     const sessionToken = await this.provider.getSessionToken(
       accessToken,
-      sessionRequest
+      sessionRequest,
     );
 
     return {
@@ -46,15 +45,15 @@ export class CreatePaymentRepository {
  * Repositorio para validar y actualizar reservas desde el módulo de pago
  */
 export class ReservationRepository {
-  async findById(id: string): Promise<Reservation | null> {
+  async findById(id: string): Promise<reservation | null> {
     return prisma.reservation.findUnique({
       where: { id },
     });
   }
   async updateStatus(
     id: string,
-    status: Reservation["status"]
-  ): Promise<Reservation> {
+    status: reservation["status"],
+  ): Promise<reservation> {
     return prisma.reservation.update({
       where: { id },
       data: { status },

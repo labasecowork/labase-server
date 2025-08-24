@@ -1,5 +1,4 @@
 // src/modules/attendance/features/mark_attendance/presentation/mark_attendance.controller.ts
-
 import { Response } from "express";
 import { MarkAttendanceService } from "./mark_attendance.service";
 import { MarkAttendanceSchema } from "../domain/mark_attendance.schema";

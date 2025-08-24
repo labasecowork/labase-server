@@ -31,11 +31,11 @@ export class ArticleRepository {
     contentUrl: string,
     bannerUrl: string,
     resume: string,
-    readingTime: number
+    readingTime: number,
   ): Promise<Article> {
     const created = await prisma.articles.create({
       data: {
-        author_id: authorId,     
+        author_id: authorId,
         title: data.title,
         content: contentUrl,
         banner: bannerUrl,
@@ -43,13 +43,13 @@ export class ArticleRepository {
         reading_time: readingTime,
         publication_timestamp: new Date(),
         status: "accepted" as article_status,
-        category_id: data.categoryId,      
+        category_id: data.categoryId,
       },
     });
 
     return {
       id: created.id,
-      userId: created.author_id,    
+      userId: created.author_id,
       title: created.title,
       content: created.content,
       banner: created.banner ?? "",
@@ -73,13 +73,13 @@ export class ArticleRepository {
         skip,
         take: limit,
         include: {
-          author: {            
+          author: {
             select: {
               first_name: true,
               last_name: true,
             },
           },
-          articleCategory: { select: { name: true } },
+          article_category: { select: { name: true } },
         },
         orderBy: { publication_timestamp: "desc" },
       }),
@@ -105,7 +105,7 @@ export class ArticleRepository {
         author: {
           select: { first_name: true, last_name: true },
         },
-        articleCategory: { select: { name: true } },
+        article_category: { select: { name: true } },
       },
     });
   }
@@ -120,14 +120,16 @@ export class ArticleRepository {
     bannerUrl: string,
     contentUrl: string,
     resume: string,
-    readingTime: number
+    readingTime: number,
   ): Promise<any> {
-    const article = await prisma.articles.findUnique({ where: { id: articleId } });
+    const article = await prisma.articles.findUnique({
+      where: { id: articleId },
+    });
 
     if (!article || article.author_id !== authorId) {
       throw new AppError(
         MESSAGES.ARTICLE.ARTICLE_ERROR_ACCESS_DENIED,
-        HttpStatusCodes.UNAUTHORIZED.code
+        HttpStatusCodes.UNAUTHORIZED.code,
       );
     }
 
@@ -145,7 +147,7 @@ export class ArticleRepository {
         author: {
           select: { first_name: true, last_name: true },
         },
-        articleCategory: { select: { name: true } },
+        article_category: { select: { name: true } },
       },
     });
   }
@@ -154,12 +156,14 @@ export class ArticleRepository {
   /* DELETE                                                             */
   /* ------------------------------------------------------------------ */
   async delete(articleId: string, authorId: string): Promise<any> {
-    const article = await prisma.articles.findUnique({ where: { id: articleId } });
+    const article = await prisma.articles.findUnique({
+      where: { id: articleId },
+    });
 
     if (!article || article.author_id !== authorId) {
       throw new AppError(
         MESSAGES.ARTICLE.ARTICLE_ERROR_ACCESS_DENIED,
-        HttpStatusCodes.UNAUTHORIZED.code
+        HttpStatusCodes.UNAUTHORIZED.code,
       );
     }
 

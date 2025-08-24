@@ -8,7 +8,7 @@ export type ListAllAttendanceDTO = z.infer<typeof ListAllAttendanceSchema>;
 export interface AttendanceListItem {
   id: string;
   employee_id: string;
-  type: "ENTRY" | "EXIT";
+  type: "entry" | "exit";
   date: string;
   check_time: string;
   employee: {

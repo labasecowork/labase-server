@@ -4,7 +4,7 @@ import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";
 import { CancelReservationController } from "./cancel_reservation.controller";
 
-const router = Router({ mergeParams: true });
+const router = Router();
 const controller = new CancelReservationController();
 
 /**
@@ -17,8 +17,8 @@ const controller = new CancelReservationController();
  *       Reglas:
  *       - Admin puede cancelar cualquier reserva.
  *       - Cliente solo puede cancelar su propia reserva.
- *       - Estados permitidos para cancelar: **PENDING** o **CONFIRMED**.
- *       - No se puede cancelar si está **IN_PROGRESS** o ya **CANCELLED**.
+ *       - Estados permitidos para cancelar: **pending** o **confirmed**.
+ *       - No se puede cancelar si está **in_progress** o ya **cancelled**.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -51,7 +51,7 @@ const controller = new CancelReservationController();
  *         description: Error interno del servidor
  */
 router.patch(
-  "/",
+  "/:id/cancel",
   authenticateToken,
   asyncHandler(controller.handle.bind(controller)),
 );

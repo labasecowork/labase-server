@@ -34,48 +34,48 @@ enum user_status {
 }
 
 enum notification_type {
-  INFO
-  SUCCESS
-  ERROR
-  ALERT
+  info // Notificación informativa
+  success // Operación exitosa
+  error // Error en la operación
+  alert // Alerta importante
 }
 
-enum SpaceType {
-  UNIT // Unidad individual (privada)
-  SHARED_SITE // Sitio individual en espacio compartido
-  FULL_ROOM // Reserva de todo el espacio (sala completa)
+enum space_type {
+  unit // Unidad individual (privada)
+  shared_site // Sitio individual en espacio compartido
+  full_room // Reserva de todo el espacio (sala completa)
 }
 
-enum AccessType {
-  PUBLIC // Visible y reservable por cualquier cliente
-  PRIVATE // Reservable solo por admin o bajo condiciones especiales
+enum access_type {
+  public // Visible y reservable por cualquier cliente
+  private // Reservable solo por admin o bajo condiciones especiales
 }
 
-enum DurationUnit {
-  HOUR
-  DAY
-  WEEK
-  MONTH
+enum duration_unit {
+  hour
+  day
+  week
+  month
 }
 
-enum PriceMode {
-  INDIVIDUAL // Precio por sitio / unidad
-  GROUP // Precio por reserva de sala completa
+enum price_mode {
+  individual // Precio por sitio / unidad
+  group // Precio por reserva de sala completa
 }
 
-enum ReservationStatus {
-  PENDING // Estado inicial al crear una reserva. Aún no se ha pagado.
-  CONFIRMED // Estado asignado cuando el pago fue APROBADO por el proveedor (Niubiz).
-  CANCELLED // Estado cuando un admin o cliente cancela manualmente la reserva, o vence el tiempo de espera sin pagar.
-  IN_PROGRESS // Estado al momento de escanear el código QR de una reserva CONFIRMADA **y** dentro del horario.
+enum reservation_status {
+  pending // Estado inicial al crear una reserva. Aún no se ha pagado.
+  confirmed // Estado asignado cuando el pago fue APROBADO por el proveedor (Niubiz).
+  cancelled // Estado cuando un admin o cliente cancela manualmente la reserva, o vence el tiempo de espera sin pagar.
+  in_progress // Estado al momento de escanear el código QR de una reserva CONFIRMADA **y** dentro del horario.
 }
 
-enum PaymentStatus {
-  PENDING // Estado inicial al crear el flujo de pago (aún sin generar sessionToken).
-  READY // Estado cuando se ha generado correctamente el `sessionToken` y script de pago (checkout.js).
-  APPROVED // Estado final cuando el proveedor aprueba el pago del cliente.
-  CANCELED // Pago cancelado manualmente por el usuario (desde frontend o backend).
-  FAILED // El proveedor rechazó el pago (tarjeta inválida, error interno, etc.).
+enum payment_status {
+  pending // Estado inicial al crear el flujo de pago (aún sin generar sessionToken).
+  ready // Estado cuando se ha generado correctamente el `sessionToken` y script de pago (checkout.js).
+  approved // Estado final cuando el proveedor aprueba el pago del cliente.
+  canceled // Pago cancelado manualmente por el usuario (desde frontend o backend).
+  failed // El proveedor rechazó el pago (tarjeta inválida, error interno, etc.).
 }
 
 enum article_status {
@@ -89,20 +89,20 @@ enum community_user_type {
   member // Miembro de la comunidad
 }
 
-enum ReactionType {
+enum reaction_type {
   like // Me gusta
   dislike // No me gusta
 }
 
-enum ReactionTarget {
+enum reaction_target {
   publication // Reacción a una publicación
   comment // Reacción a un comentario
   reply // Reacción a una respuesta
 }
 
-enum AttendanceType {
-  ENTRY // Entrada
-  EXIT // Salida
+enum attendance_type {
+  entry // Entrada
+  exit // Salida
 }
 
 enum unit_of_measure {
@@ -112,7 +112,12 @@ enum unit_of_measure {
   piece // pieza
 }
 
-model Users {
+enum company_type {
+  internal // La Base
+  tenant // Empresa inquilina
+}
+
+model users {
   id                 String      @id @default(uuid()) // Identificador único del usuario
   first_name         String // Nombre del usuario
   last_name          String // Apellido del usuario
@@ -124,40 +129,38 @@ model Users {
   birth_date         DateTime?   @db.Date // Fecha de nacimiento
   gender             String? // Género del usuario
   status             user_status // Estado actual del usuario
-  creation_timestamp DateTime?   @default(now()) // Fecha de creación del registro
+  creation_timestamp DateTime    @default(now()) // Fecha de creación del registro
 
-  adminDetails          AdminDetails? // Relación uno a uno si es admin
-  employeeDetails       EmployeeDetails?
-  userDetails           UserDetails? // Relación uno a uno para detalles generales
-  receivedNotifications Notification[]       @relation("ReceivedNotifications") // Notificaciones recibidas
-  sentNotifications     Notification[]       @relation("SentNotifications") // Notificaciones enviadas
-  reservations          Reservation[]        @relation("UserReservations") // Reservas realizadas por el usuario
-  paymentTransactions   PaymentTransaction[] @relation("UserPayments")
-  articles              Articles[]           @relation("UserArticles")
+  admin_details        admin_details? // Relación uno a uno si es admin
+  employee_details     employee_details?
+  user_details         user_details? // Relación uno a uno para detalles generales
+  reservations         reservation[]         @relation("user_reservations") // Reservas realizadas por el usuario
+  payment_transactions payment_transaction[] @relation("user_payments")
+  articles             articles[]            @relation("user_articles")
 
-  @@map("users")
+  @@map("users") // (opcional; ya está en snake_case)
 }
 
-model AdminDetails {
-  admin_id String     @id // ID del admin (igual al ID en Users)
+model admin_details {
+  admin_id String     @id // ID del admin (igual al ID en users.id)
   role     admin_role // Rol del administrador
   notes    String? // Notas administrativas adicionales
 
-  user Users @relation(fields: [admin_id], references: [id], onDelete: Cascade) // Relación con Users
+  user users @relation(fields: [admin_id], references: [id], onDelete: Cascade) // Relación con users
 
   @@map("admin_details")
 }
 
-model UserDetails {
+model user_details {
   user_id String      @id // ID del usuario
-  status  user_status // Estado del usuario (repetido para claridad o control local)
+  status  user_status // (volátil) Duplicado de users.status; revisar si realmente se requiere aquí
 
-  user Users @relation(fields: [user_id], references: [id], onDelete: Cascade) // Relación con Users
+  user users @relation(fields: [user_id], references: [id], onDelete: Cascade) // Relación con users
 
   @@map("user_details")
 }
 
-model WorkArea {
+model work_areas {
   id          String   @id @default(uuid())
   name        String
   description String?
@@ -165,196 +168,193 @@ model WorkArea {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  employee_details EmployeeDetails[]
+  employees employee_details[]
 
   @@map("work_areas")
 }
 
-model Company {
+model companies {
   id          String   @id @default(uuid())
-  name        String
+  name        String   @unique
   description String?
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  employee_details EmployeeDetails[]
+  employees employee_details[]
 
   @@map("companies")
 }
 
-model EmployeeDetails {
-  employee_id  String       @id
+model employee_details {
+  employee_id String @id
+  user        users  @relation(fields: [employee_id], references: [id])
+
   work_area_id String?
   company_id   String?
-  user         Users        @relation(fields: [employee_id], references: [id])
-  workArea     WorkArea?    @relation(fields: [work_area_id], references: [id])
-  company      Company?     @relation(fields: [company_id], references: [id])
-  attendances  Attendance[]
 
+  work_area work_areas? @relation(fields: [work_area_id], references: [id], onDelete: SetNull)
+  company   companies?  @relation(fields: [company_id], references: [id], onDelete: SetNull)
+
+  attendances attendance[]
+  visitors    visitors[]
+
+  @@index([work_area_id])
+  @@index([company_id])
   @@map("employee_details")
 }
 
-model Attendance {
-  id          String         @id @default(uuid())
+model attendance {
+  id          String          @id @default(uuid())
   employee_id String
-  type        AttendanceType
-  date        DateTime       @db.Date
-  check_time  DateTime       @db.Time
+  type        attendance_type
+  date        DateTime        @db.Date
+  check_time  DateTime        @db.Time
 
-  employee EmployeeDetails @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+  employee employee_details @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
 
   @@map("attendances")
 }
 
-model Space {
-  id            String     @id @default(uuid()) // ID del espacio
-  name          String // Nombre del espacio (ej: Hangar, Unidad)
-  description   String? // Descripción opcional
-  type          SpaceType // Tipo de espacio (privado, compartido, etc.)
-  access        AccessType // Acceso público o privado
-  capacityMin   Int // Mínimo de personas por reserva
-  capacityMax   Int // Máximo de personas permitidas en el espacio
-  allowByUnit   Boolean // ¿Se permiten reservas “por unidad” (sitio individual).
-  allowFullRoom Boolean // permite reservar toda la sala de una sola vez.
-  disabled      Boolean    @default(false) // ¿Deshabilitado?
-  createdAt     DateTime   @default(now()) // Fecha de creación del espacio
-  images        String[] // URLs de imágenes en S3
+model space {
+  id              String      @id @default(uuid()) // ID del espacio
+  name            String // Nombre del espacio (ej: Hangar, Unidad)
+  description     String? // Descripción opcional
+  type            space_type // Tipo de espacio (privado, compartido, etc.)
+  access          access_type // Acceso público o privado
+  capacity_min    Int // Mínimo de personas por reserva
+  capacity_max    Int // Máximo de personas permitidas en el espacio
+  allow_by_unit   Boolean // ¿Se permiten reservas “por unidad” (sitio individual).
+  allow_full_room Boolean // Permite reservar toda la sala de una sola vez.
+  disabled        Boolean     @default(false) // ¿Deshabilitado?
+  created_at      DateTime    @default(now()) // Fecha de creación del espacio
 
-  spaceBenefits SpaceBenefit[]
-  prices        Price[] // Relación: precios por duración
-  reservations  Reservation[] // Relación: reservas registradas para este espacio
+  space_images   space_image[]
+  space_benefits space_benefit[]
+  prices         price[] // Relación: precios por duración
+  reservations   reservation[] // Relación: reservas registradas para este espacio
+  visitors       visitors[] // Relación: visitantes que ingresaron a este espacio
 
   @@map("spaces")
 }
 
-model Benefit {
+model space_image {
+  id       String  @id @default(uuid())
+  space_id String
+  url      String // URL en S3
+  alt      String? // opcional
+  position Int     @default(0) // orden
+
+  space space @relation(fields: [space_id], references: [id], onDelete: Cascade)
+
+  @@index([space_id, position])
+  @@map("space_images")
+}
+
+model benefit {
   id          String  @id @default(uuid())
   name        String  @unique
   description String?
 
-  spaces SpaceBenefit[]
+  spaces space_benefit[]
 
   @@map("benefits")
 }
 
-model SpaceBenefit {
-  spaceId   String
-  benefitId String
+model space_benefit {
+  space_id   String
+  benefit_id String
 
-  space   Space   @relation(fields: [spaceId], references: [id], onDelete: Cascade)
-  benefit Benefit @relation(fields: [benefitId], references: [id], onDelete: Cascade)
+  space   space   @relation(fields: [space_id], references: [id], onDelete: Cascade)
+  benefit benefit @relation(fields: [benefit_id], references: [id], onDelete: Cascade)
 
-  @@id([spaceId, benefitId])
+  @@id([space_id, benefit_id])
   @@map("space_benefits")
 }
 
-model Price {
-  id       String       @id @default(uuid()) // ID del registro de precio
-  spaceId  String // FK al espacio asociado
-  duration DurationUnit // Tipo de duración (hora, día, semana)
-  mode     PriceMode
+model price {
+  id       String        @id @default(uuid()) // ID del registro de precio
+  space_id String // FK al espacio asociado
+  duration duration_unit // Tipo de duración (hora, día, semana)
+  mode     price_mode
   amount   Float // Monto en moneda local
 
-  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade) // Relación con Space
+  space space @relation(fields: [space_id], references: [id], onDelete: Cascade)
 
-  @@unique([spaceId, duration, mode])
+  @@unique([space_id, duration, mode])
   @@map("prices")
 }
 
-model Reservation {
-  id             String            @id @default(uuid()) // ID de la reserva
-  purchaseNumber String            @unique // Número de compra generado
-  userId         String // FK al usuario que reservó
-  spaceId        String // FK al espacio reservado
-  startTime      DateTime // Fecha y hora de inicio de la reserva
-  endTime        DateTime // Fecha y hora de fin de la reserva
-  people         Int // Número total de personas
-  fullRoom       Boolean // ¿Se reservó todo el espacio?
-  codeQr         String            @unique // Codigo QR
-  price          Decimal // Precio a cobrar
-  status         ReservationStatus @default(PENDING)
-  createdAt      DateTime          @default(now()) // Timestamp de creación
+model reservation {
+  id              String             @id @default(uuid()) // ID de la reserva
+  purchase_number String             @unique // Número de compra generado
+  user_id         String // FK al usuario que reservó
+  space_id        String // FK al espacio reservado
+  start_time      DateTime // Fecha y hora de inicio de la reserva
+  end_time        DateTime // Fecha y hora de fin de la reserva
+  people          Int // Número total de personas
+  full_room       Boolean // ¿Se reservó todo el espacio?
+  code_qr         String             @unique // Código QR
+  price           Decimal // Precio a cobrar
+  status          reservation_status @default(pending)
+  created_at      DateTime           @default(now()) // Timestamp de creación
 
-  user  Users @relation("UserReservations", fields: [userId], references: [id], onDelete: Cascade)
-  space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  user  users @relation("user_reservations", fields: [user_id], references: [id], onDelete: Cascade)
+  space space @relation(fields: [space_id], references: [id], onDelete: Cascade)
 
-  slots               ReservationSlot[] // Relación a los slots individuales (opcional)
-  paymentTransactions PaymentTransaction[] @relation("ReservationPayments")
+  slots                reservation_slot[] // Relación a los slots individuales (opcional)
+  payment_transactions payment_transaction[] @relation("reservation_payments")
 
-  @@index([spaceId, startTime, endTime]) // Index para verificar conflictos
+  @@index([space_id, start_time, end_time]) // Index para verificar conflictos
+  @@index([user_id, created_at]) // Para listar reservas por usuario/fecha
   @@map("reservations")
 }
 
-model ReservationSlot {
-  id            String @id @default(uuid()) // ID del slot individual
-  reservationId String // FK a la reserva principal
-  slotNumber    Int // Número de sitio asignado (1 a N)
+model reservation_slot {
+  id             String @id @default(uuid()) // ID del slot individual
+  reservation_id String // FK a  la reserva principal
+  slot_number    Int // Número de sitio asignado (1 a N)
 
-  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  reservation reservation @relation(fields: [reservation_id], references: [id], onDelete: Cascade)
 
-  @@unique([reservationId, slotNumber]) // Un sitio por reserva
+  @@unique([reservation_id, slot_number]) // Un sitio por reserva
   @@map("reservation_slots")
 }
 
-model NewsletterSubscriber {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
+model payment_transaction {
+  id                 String         @id @default(uuid())
+  transaction_id     String         @db.VarChar(50)
+  purchase_number    String         @unique @db.VarChar(50)
+  amount             Float
+  authorization_code String?        @db.VarChar(20)
+  status             payment_status
+  action_description String?        @db.VarChar(100)
+  card_masked        String?        @db.VarChar(25)
+  transaction_date   String         @db.VarChar(20)
+  error_code         Int?
+  error_message      String?        @db.VarChar(100)
+  created_at         DateTime       @default(now())
 
-  @@map("newsletter_subscribers")
-}
+  reservation_id String?
+  reservation    reservation? @relation(fields: [reservation_id], references: [id], onDelete: Cascade, name: "reservation_payments")
 
-model PaymentTransaction {
-  id                String        @id @default(uuid())
-  transactionId     String        @map("transaction_id") @db.VarChar(50)
-  purchaseNumber    String        @unique @map("purchase_number") @db.VarChar(50)
-  amount            Float
-  authorizationCode String?       @map("authorization_code") @db.VarChar(20)
-  status            PaymentStatus
-  actionDescription String?       @map("action_description") @db.VarChar(100)
-  cardMasked        String?       @map("card_masked") @db.VarChar(25)
-  transactionDate   String        @map("transaction_date") @db.VarChar(20)
-  errorCode         Int?          @map("error_code")
-  errorMessage      String?       @map("error_message") @db.VarChar(100)
-  createdAt         DateTime      @default(now())
+  user_id String?
+  user    users?  @relation("user_payments", fields: [user_id], references: [id])
 
-  reservationId String?
-  reservation   Reservation? @relation(fields: [reservationId], references: [id], onDelete: Cascade, name: "ReservationPayments")
-
-  userId String?
-  user   Users?  @relation("UserPayments", fields: [userId], references: [id])
-
+  @@index([status, created_at]) // Buscar pagos por estado/fecha
   @@map("payment_transactions")
 }
 
-model Notification {
-  id          String            @id @default(uuid()) // ID de la notificación
-  receiverId  String // FK del usuario receptor
-  senderId    String? // FK del emisor (opcional)
-  title       String // Título del mensaje
-  description String // Cuerpo del mensaje
-  type        notification_type // Tipo de notificación
-  createdAt   DateTime          @default(now()) // Timestamp de envío
-  url         String? // Enlace relacionado (opcional)
-
-  receiver Users  @relation("ReceivedNotifications", fields: [receiverId], references: [id])
-  sender   Users? @relation("SentNotifications", fields: [senderId], references: [id])
-
-  @@map("notifications")
-}
-
-model ArticleCategories {
+model article_categories {
   id          String  @id @default(uuid())
   name        String  @unique
   description String?
 
-  articles Articles[]
+  articles articles[]
 
   @@map("article_categories")
 }
 
-model Articles {
+model articles {
   id           String  @id @default(uuid())
   author_id    String
   category_id  String
@@ -367,22 +367,66 @@ model Articles {
   publication_timestamp DateTime?
   status                article_status @default(pending)
 
-  author          Users             @relation("UserArticles", fields: [author_id], references: [id], onDelete: Cascade)
-  articleCategory ArticleCategories @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  author           users              @relation("user_articles", fields: [author_id], references: [id], onDelete: Cascade)
+  article_category article_categories @relation(fields: [category_id], references: [id], onDelete: Cascade)
 
   @@index([status])
   @@map("articles")
 }
 
+model newsletter_subscriber {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  created_at DateTime @default(now())
+
+  @@map("newsletter_subscribers")
+}
+
 model products {
-  id              String          @id @default(uuid()) // PK interno y código / serie único (UUID)
-  name            String // Nombre del producto
-  photo_url       String // URL de la foto en AWS S3
-  brand           String // Marca del producto
-  unit_of_measure unit_of_measure // Unidad de medida
-  description     String? // Descripción detallada
-  observations    String? // Notas adicionales
-  quantity        Int // Stock disponible
+  id              String          @id @default(uuid())
+  name            String
+  photo_url       String
+  brand_id        String
+  unit_of_measure unit_of_measure
+  description     String?
+  observations    String?
+  quantity        Int
+
+  brand product_brand @relation(fields: [brand_id], references: [id], onDelete: Restrict)
 
   @@map("products")
+}
+
+model product_brand {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  created_at DateTime @default(now())
+
+  products products[] // inversa correcta
+
+  @@map("product_brand") // nombre de tabla real (si quieres plural, usa "product_brands")
+}
+
+model visitors {
+  id          String    @id @default(uuid()) // Identificador único
+  dni         String?   @unique // DNI (si es persona natural)
+  ruc         String?   @unique // RUC (si es empresa/independiente)
+  first_name  String // NOMBRE
+  last_name   String // APELLIDO
+  phone       String? // número telefónico
+  email       String? // correo
+  company     String? // empresa a la que pertenece el visitante (opcional)
+  employee_id String // empleado anfitrión (FK a employee_details)
+  space_id    String // espacio visitado (FK a space)
+  entry_time  DateTime // hora de entrada (ISO)
+  exit_time   DateTime? // hora de salida (ISO, opcional si aún no sale)
+  created_at  DateTime  @default(now()) // fecha de registro
+
+  employee employee_details @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+  space    space            @relation(fields: [space_id], references: [id], onDelete: Cascade)
+
+  @@index([employee_id, created_at])
+  @@index([space_id, created_at])
+  @@map("visitors")
 }

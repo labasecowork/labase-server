@@ -4,7 +4,7 @@ import { DeactivateSpaceService } from "./deactivate_space.service";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user"; // ✅
+import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 
 export class DeactivateSpaceController {
   constructor(private readonly service = new DeactivateSpaceService()) {}

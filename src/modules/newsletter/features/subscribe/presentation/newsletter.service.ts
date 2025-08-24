@@ -1,3 +1,4 @@
+//src/modules/newsletter/features/subcribe/presentation/newsletter.service.ts
 import { SubscribeNewsletterDTO } from "../domain/newsletter.dto";
 import { sendEmail } from "../../../../../utils/email_sender";
 import { SubscribeNewsletterRepository } from "../data/newsletter.repository";
@@ -15,7 +16,7 @@ export class SubscribeNewsletterService {
     if (existing) {
       throw new AppError(
         MESSAGES.NEWSLETTER.SUBSCRIBE_ERROR_ALREADY_SUBSCRIBED,
-        HttpStatusCodes.BAD_REQUEST.code
+        HttpStatusCodes.BAD_REQUEST.code,
       );
     }
 
@@ -28,7 +29,7 @@ export class SubscribeNewsletterService {
       process.cwd(),
       "public",
       "templates",
-      "newsletter.ejs"
+      "newsletter.ejs",
     );
 
     const html = await ejs.renderFile(filePath, { name: data.name });

@@ -32,6 +32,7 @@ spaceRouter.use("/:id/activate", activateSpaceRoutes);
  *  MATCHES:
  *  POST  /api/v1/spaces                 → crear espacio
  *  GET   /api/v1/spaces                 → listar espacios
+ *  GET   /api/v1/spaces/deactivated     → lista epsacios desabilitados
  *  GET   /api/v1/spaces/:id             → detalle de espacio
  *  PUT   /api/v1/spaces/:id             → editar espacio
  *  PATCH /api/v1/spaces/:id/deactivate  → desactivar espacio

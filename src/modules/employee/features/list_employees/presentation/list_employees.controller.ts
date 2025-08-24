@@ -1,5 +1,4 @@
 // src/modules/employee/features/list_employees/presentation/list_employees.controller.ts
-
 import { Request, Response } from "express";
 import { ListEmployeesSchema } from "../domain/list_employees.schema";
 import { ListEmployeesService } from "./list_employees.service";
@@ -16,21 +15,23 @@ export class ListEmployeesController {
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden ver la lista de empleados",
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code,
       );
     }
 
     const dto = ListEmployeesSchema.parse(req.query);
     const result = await this.svc.execute(dto);
 
-    return res.status(HttpStatusCodes.OK.code).json(
-      buildHttpResponse(
-        HttpStatusCodes.OK.code,
-        HttpStatusCodes.OK.message,
-        req.path,
-        result,
-        "Lista de empleados"
-      )
-    );
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          HttpStatusCodes.OK.message,
+          req.path,
+          result,
+          "Lista de empleados",
+        ),
+      );
   }
 }

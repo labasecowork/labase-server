@@ -12,7 +12,7 @@ export class ListActivatedSpacesController {
 
   async handle(req: AuthenticatedRequest, res: Response) {
     const dto = ListActivatedSpacesSchema.parse(req.query);
-    await getAuthenticatedUser(req); // mantiene auth consistente
+    await getAuthenticatedUser(req);
 
     const spaces = await this.service.execute(dto);
 

@@ -7,16 +7,18 @@ export function multerErrorHandler(
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Response | void {
   if (err instanceof Error && err.message === "ONLY_IMAGE_FILES_ALLOWED") {
-    return res.status(HttpStatusCodes.BAD_REQUEST.code).json(
-      buildHttpResponse(
-        HttpStatusCodes.BAD_REQUEST.code,
-        HttpStatusCodes.BAD_REQUEST.message,
-        req.path,
-      )
-    );
+    return res
+      .status(HttpStatusCodes.BAD_REQUEST.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.BAD_REQUEST.code,
+          HttpStatusCodes.BAD_REQUEST.message,
+          req.path,
+        ),
+      );
   }
 
   return next(err);

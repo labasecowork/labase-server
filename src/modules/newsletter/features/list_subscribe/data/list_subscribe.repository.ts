@@ -1,24 +1,22 @@
 //src/modules/newsletter/features/list_subscribe/data/list_subscribe.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
-import prisma from "../../../../../config/prisma_client";
-
 export class ListSubscribeRepository {
   async getAllSubscribers() {
-    return prisma.newsletterSubscriber.findMany({
+    return prisma.newsletter_subscriber.findMany({
       select: {
         id: true,
         name: true,
         email: true,
-        createdAt: true,
+        created_at: true,
       },
       orderBy: {
-        createdAt: "desc",
+        created_at: "desc",
       },
     });
   }
 
   async countSubscribers() {
-    return prisma.newsletterSubscriber.count();
+    return prisma.newsletter_subscriber.count();
   }
 }

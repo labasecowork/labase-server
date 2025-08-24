@@ -61,7 +61,7 @@ const controller = new ListAllAttendanceController();
  *         name: type
  *         schema:
  *           type: string
- *           enum: [ENTRY, EXIT]
+ *           enum: [entry, exit]
  *         description: Tipo de asistencia para filtrar
  *     responses:
  *       200:
@@ -92,7 +92,7 @@ const controller = new ListAllAttendanceController();
  *                             type: string
  *                           type:
  *                             type: string
- *                             enum: [ENTRY, EXIT]
+ *                             enum: [entry, exit]
  *                           date:
  *                             type: string
  *                             format: date
@@ -132,7 +132,7 @@ const controller = new ListAllAttendanceController();
 router.get(
   "/",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller))
+  asyncHandler(controller.handle.bind(controller)),
 );
 
 export { router as listAllAttendanceRoutes };

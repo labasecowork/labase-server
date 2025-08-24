@@ -7,7 +7,7 @@ export class ListDeactivatedSpacesRepository {
       where: { disabled: true },
       include: {
         prices: true,
-        spaceBenefits: { include: { benefit: true } },
+        space_benefits: { include: { benefit: true } },
       },
       orderBy: { id: "asc" },
     });

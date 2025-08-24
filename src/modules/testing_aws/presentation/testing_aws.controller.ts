@@ -19,10 +19,10 @@ export const uploadTest = async (req: Request, res: Response) => {
       .json(
         buildHttpResponse(
           HttpStatusCodes.CREATED.code,
-          "✅ Archivo subido correctamente",
+          "Archivo subido correctamente",
           req.path,
-          { key, url }
-        )
+          { key, url },
+        ),
       );
   } catch (error) {
     return handleServerError(res, req, error);

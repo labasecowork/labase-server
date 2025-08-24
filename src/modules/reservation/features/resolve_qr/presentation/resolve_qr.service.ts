@@ -3,7 +3,7 @@ import { ResolveQrDTO } from "../domain/resolve_qr.dto";
 import { ResolveQrRepository } from "../data/resolve_qr.repository";
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { ReservationStatus } from "@prisma/client";
+import { reservation_status } from "@prisma/client";
 
 export class ResolveQrService {
   constructor(private readonly repo = new ResolveQrRepository()) {}
@@ -20,16 +20,16 @@ export class ResolveQrService {
     const now = new Date();
     let status: "upcoming" | "expired" | "in_progress";
 
-    if (now < reservation.startTime) {
+    if (now < reservation.start_time) {
       status = "upcoming";
-    } else if (now > reservation.endTime) {
+    } else if (now > reservation.end_time) {
       status = "expired";
     } else {
       status = "in_progress";
 
-      if (reservation.status === ReservationStatus.CONFIRMED) {
+      if (reservation.status === reservation_status.confirmed) {
         await this.repo.markAsInProgress(reservation.id);
-        reservation.status = ReservationStatus.IN_PROGRESS;
+        reservation.status = reservation_status.in_progress;
       }
     }
 

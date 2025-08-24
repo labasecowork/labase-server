@@ -35,7 +35,7 @@ const upload = multer({ storage: multer.memoryStorage() });
  *                   example: 201
  *                 message:
  *                   type: string
- *                   example: ✅ Archivo subido correctamente
+ *                   example: Archivo subido correctamente
  *                 path:
  *                   type: string
  *                   example: /api/v1/test
@@ -57,4 +57,3 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post("/", upload.single("file"), uploadTest);
 
 export { router as testingRoutes };
-

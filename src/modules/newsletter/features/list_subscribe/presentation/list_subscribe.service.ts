@@ -1,3 +1,4 @@
+//src/modules/newsletter/features/list_subscribe/presentation/list_subscribe.service.ts
 import { ListSubscribeRepository } from "../data/list_subscribe.repository";
 import { ListSubscribeResponseDTO } from "../domain/list_subscribe.dto";
 

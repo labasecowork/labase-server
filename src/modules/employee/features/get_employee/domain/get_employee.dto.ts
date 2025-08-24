@@ -1,5 +1,4 @@
 // src/modules/employee/features/get_employee/domain/get_employee.dto.ts
-
 import { z } from "zod";
 import { GetEmployeeSchema } from "./get_employee.schema";
 

@@ -7,7 +7,7 @@ export const ListMyAttendanceSchema = z
     limit: z.coerce.number().int().positive().max(100).default(10),
     start_date: z.coerce.date().optional(),
     end_date: z.coerce.date().optional(),
-    type: z.enum(["ENTRY", "EXIT"]).optional(),
+    type: z.enum(["entry", "exit"]).optional(),
   })
   .superRefine((data, ctx) => {
     if (data.start_date && data.end_date && data.end_date < data.start_date) {

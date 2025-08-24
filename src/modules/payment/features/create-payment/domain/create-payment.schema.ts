@@ -1,7 +1,6 @@
 // src/modules/payment/features/create-payment/domain/create-payment.schema.ts
 import { z } from "zod";
 
-/* 🔹 Sub-schema reutilizable para la ubicación (dataMap) */
 export const locationDataMap = z.object({
   urlAddress: z.string().url(),
   serviceLocationCityName: z.string().max(50),

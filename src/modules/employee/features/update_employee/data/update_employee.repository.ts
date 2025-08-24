@@ -1,5 +1,4 @@
 // src/modules/employee/features/update_employee/data/update_employee.repository.ts
-
 import prisma from "../../../../../config/prisma_client";
 import { user_type, user_status } from "@prisma/client";
 
@@ -20,7 +19,7 @@ interface UpdateEmployeeData {
 
 export class UpdateEmployeeRepository {
   async findEmployeeById(employeeId: string) {
-    return await prisma.employeeDetails.findUnique({
+    return await prisma.employee_details.findUnique({
       where: { employee_id: employeeId },
       include: {
         user: {

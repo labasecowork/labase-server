@@ -3,12 +3,12 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../../../../config/prisma_client";
 
 export class ListActivatedSpacesRepository {
-  listMany(filters: Prisma.SpaceFindManyArgs) {
+  listMany(filters: Prisma.spaceFindManyArgs) {
     return prisma.space.findMany({
       ...filters,
       include: {
         prices: true,
-        spaceBenefits: { include: { benefit: true } },
+        space_benefits: { include: { benefit: true } },
       },
     });
   }

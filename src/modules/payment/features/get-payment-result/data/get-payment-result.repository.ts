@@ -1,20 +1,20 @@
 // src/modules/payment/features/get-payment-result/data/get-payment-result.repository.ts
-import { PaymentTransaction } from "@prisma/client";
+import { payment_transaction } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 export class GetPaymentResultRepository {
   async findByPurchaseNumber(
-    purchaseNumber: string
-  ): Promise<PaymentTransaction | null> {
-    return prisma.paymentTransaction.findUnique({
-      where: { purchaseNumber },
+    purchase_number: string,
+  ): Promise<payment_transaction | null> {
+    return prisma.payment_transaction.findUnique({
+      where: { purchase_number },
     });
   }
 
-  async findAllByUser(userId: string): Promise<PaymentTransaction[]> {
-    return prisma.paymentTransaction.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
+  async findAllByUser(user_id: string): Promise<payment_transaction[]> {
+    return prisma.payment_transaction.findMany({
+      where: { user_id },
+      orderBy: { created_at: "desc" },
       include: {
         reservation: true,
       },

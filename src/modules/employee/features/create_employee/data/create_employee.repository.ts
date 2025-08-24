@@ -1,5 +1,4 @@
 // src/modules/employee/features/create_employee/data/create_employee.repository.ts
-
 import prisma from "../../../../../config/prisma_client";
 import { user_type, user_status } from "@prisma/client";
 
@@ -52,7 +51,7 @@ export class CreateEmployeeRepository {
       });
 
       // Crear registro de empleado
-      const employee = await tx.employeeDetails.create({
+      const employee = await tx.employee_details.create({
         data: {
           employee_id: user.id,
           work_area_id: data.work_area_id ?? null,

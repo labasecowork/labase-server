@@ -15,7 +15,7 @@ export class EditProfileService {
       if (dbUser.status !== "active") {
         throw new AppError(
           "Inactive users cannot edit profile",
-          HttpStatusCodes.FORBIDDEN.code
+          HttpStatusCodes.FORBIDDEN.code,
         );
       }
     }
@@ -23,10 +23,10 @@ export class EditProfileService {
     const data: Record<string, unknown> = {};
 
     if (dto.firstName) data.first_name = dto.firstName;
-    if (dto.lastName)  data.last_name  = dto.lastName;
-    if (dto.phone)     data.phone      = dto.phone;
+    if (dto.lastName) data.last_name = dto.lastName;
+    if (dto.phone) data.phone = dto.phone;
     if (dto.birthDate) data.birth_date = dto.birthDate;
-    if (dto.gender)    data.gender     = dto.gender;
+    if (dto.gender) data.gender = dto.gender;
 
     if (dto.password) {
       data.password = await bcrypt.hash(dto.password, 10);

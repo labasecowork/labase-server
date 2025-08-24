@@ -14,9 +14,9 @@ export class ArticleCategoryRepository {
   /* CREATE                                                             */
   /* ------------------------------------------------------------------ */
   public async createCategory(
-    data: CreateArticleCategoryDto
+    data: CreateArticleCategoryDto,
   ): Promise<ArticleCategory> {
-    const created = await prisma.articleCategories.create({
+    const created = await prisma.article_categories.create({
       data: {
         name: data.name,
         description: data.description,
@@ -34,7 +34,7 @@ export class ArticleCategoryRepository {
   /* READ – ALL                                                         */
   /* ------------------------------------------------------------------ */
   public async getAllCategories(): Promise<ArticleCategory[]> {
-    const categories = await prisma.articleCategories.findMany();
+    const categories = await prisma.article_categories.findMany();
     return categories.map((c) => ({
       id: c.id,
       name: c.name,
@@ -46,7 +46,7 @@ export class ArticleCategoryRepository {
   /* READ – ONE                                                         */
   /* ------------------------------------------------------------------ */
   public async getCategoryById(id: string): Promise<ArticleCategory | null> {
-    const found = await prisma.articleCategories.findUnique({ where: { id } });
+    const found = await prisma.article_categories.findUnique({ where: { id } });
     return found
       ? { id: found.id, name: found.name, description: found.description }
       : null;
@@ -57,9 +57,9 @@ export class ArticleCategoryRepository {
   /* ------------------------------------------------------------------ */
   public async updateCategory(
     id: string,
-    data: UpdateArticleCategoryDto
+    data: UpdateArticleCategoryDto,
   ): Promise<ArticleCategory> {
-    const updated = await prisma.articleCategories.update({
+    const updated = await prisma.article_categories.update({
       where: { id },
       data,
     });
@@ -75,7 +75,7 @@ export class ArticleCategoryRepository {
   /* DELETE                                                             */
   /* ------------------------------------------------------------------ */
   public async deleteCategory(id: string): Promise<ArticleCategory> {
-    const deleted = await prisma.articleCategories.delete({ where: { id } });
+    const deleted = await prisma.article_categories.delete({ where: { id } });
 
     return {
       id: deleted.id,

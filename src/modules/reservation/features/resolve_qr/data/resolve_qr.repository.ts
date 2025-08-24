@@ -1,11 +1,11 @@
 // src/modules/reservation/features/resolve_qr/data/resolve_qr.repository.ts
 import prisma from "../../../../../config/prisma_client";
-import { ReservationStatus } from "@prisma/client"; 
+import { reservation_status } from "@prisma/client";
 
 export class ResolveQrRepository {
   findReservationByCode(code: string) {
     return prisma.reservation.findUnique({
-      where: { codeQr: code },
+      where: { code_qr: code },
       include: { space: true, user: true },
     });
   }
@@ -13,7 +13,7 @@ export class ResolveQrRepository {
   markAsInProgress(reservationId: string) {
     return prisma.reservation.update({
       where: { id: reservationId },
-      data:  { status: ReservationStatus.IN_PROGRESS },
+      data: { status: reservation_status.in_progress },
     });
   }
 }
