@@ -1,3 +1,4 @@
+//src/config/env/index.ts
 import { config } from "dotenv";
 
 config();
@@ -18,7 +19,8 @@ export const API_KEY_GEMINI = process.env.API_KEY_GEMINI;
 export const JWT_SECRET = process.env.JWT_SECRET;
 
 // QR CODE
-export const QR_CODE_ALPHABET = process.env.QR_CODE_ALPHABET ?? "1234567890abcdef";
+export const QR_CODE_ALPHABET =
+  process.env.QR_CODE_ALPHABET ?? "1234567890abcdef";
 export const QR_CODE_LENGTH = Number(process.env.QR_CODE_LENGTH ?? 10);
 
 // SERVER
@@ -42,3 +44,7 @@ export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 export const SMTP_HOST = process.env.SMTP_HOST;
 export const SMTP_PORT = process.env.SMTP_PORT;
 
+//RENIEC (DECOLECTA)
+export const DECOLECTA_API_KEY = process.env.DECOLECTA_API_KEY;
+export const DECOLECTA_BASE_URL =
+  process.env.DECOLECTA_BASE_URL ?? "https://api.decolecta.com";

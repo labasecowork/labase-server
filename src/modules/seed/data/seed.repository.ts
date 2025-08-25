@@ -488,4 +488,4 @@ export class SeedRepository {
 
     return { message: "Database seeded successfully" };
   }
-} // 👈 esta llave faltaba
+}
