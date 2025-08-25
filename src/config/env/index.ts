@@ -5,6 +5,9 @@ config();
 // ENVIRONMENT
 export const ENVIRONMENT = process.env.ENVIRONMENT;
 
+// TIMEZONE
+export const TIMEZONE = process.env.TIMEZONE ?? "UTC";
+
 // PROJECT ROOT
 export const PROJECT_ROOT = process.env.PROJECT_ROOT;
 
@@ -18,7 +21,8 @@ export const API_KEY_GEMINI = process.env.API_KEY_GEMINI;
 export const JWT_SECRET = process.env.JWT_SECRET;
 
 // QR CODE
-export const QR_CODE_ALPHABET = process.env.QR_CODE_ALPHABET ?? "1234567890abcdef";
+export const QR_CODE_ALPHABET =
+  process.env.QR_CODE_ALPHABET ?? "1234567890abcdef";
 export const QR_CODE_LENGTH = Number(process.env.QR_CODE_LENGTH ?? 10);
 
 // SERVER
@@ -41,4 +45,3 @@ export const EMAIL_USER = process.env.EMAIL_USER;
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 export const SMTP_HOST = process.env.SMTP_HOST;
 export const SMTP_PORT = process.env.SMTP_PORT;
-

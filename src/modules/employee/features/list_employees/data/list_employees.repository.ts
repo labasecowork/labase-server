@@ -7,14 +7,22 @@ interface FindEmployeesParams {
   limit: number;
   status?: user_status;
   search?: string;
+  work_area_id?: string;
+  company_id?: string;
 }
 
 export class ListEmployeesRepository {
   async findEmployees(params: FindEmployeesParams) {
-    const { page, limit, status, search } = params;
+    const { page, limit, status, search, work_area_id, company_id } = params;
     const skip = (page - 1) * limit;
 
     const where = {
+      ...(work_area_id && {
+        work_area_id,
+      }),
+      ...(company_id && {
+        company_id,
+      }),
       ...(status && {
         user: {
           status,

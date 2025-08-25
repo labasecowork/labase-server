@@ -5,7 +5,7 @@ import { CompanyEntity } from "../../../entities/company.entity";
 
 export class CreateCompanyRepository {
   async execute(data: CreateCompanyDTO): Promise<CompanyEntity> {
-    const company = await prisma.company.create({
+    const company = await prisma.companies.create({
       data: {
         name: data.name,
         description: data.description || null,
@@ -22,7 +22,7 @@ export class CreateCompanyRepository {
   }
 
   async checkIfNameExists(name: string): Promise<boolean> {
-    const existingCompany = await prisma.company.findFirst({
+    const existingCompany = await prisma.companies.findFirst({
       where: {
         name: {
           equals: name,

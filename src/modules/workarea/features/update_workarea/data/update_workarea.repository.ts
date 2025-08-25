@@ -5,7 +5,7 @@ import { WorkAreaEntity } from "../../../entities/workarea.entity";
 
 export class UpdateWorkAreaRepository {
   async execute(id: string, data: UpdateWorkAreaDTO): Promise<WorkAreaEntity> {
-    const workarea = await prisma.workArea.update({
+    const workarea = await prisma.work_areas.update({
       where: { id },
       data: {
         ...(data.name && { name: data.name }),
@@ -27,7 +27,7 @@ export class UpdateWorkAreaRepository {
   }
 
   async findById(id: string): Promise<WorkAreaEntity | null> {
-    const workarea = await prisma.workArea.findUnique({
+    const workarea = await prisma.work_areas.findUnique({
       where: { id },
     });
 
@@ -47,7 +47,7 @@ export class UpdateWorkAreaRepository {
     name: string,
     excludeId: string
   ): Promise<boolean> {
-    const existingWorkArea = await prisma.workArea.findFirst({
+    const existingWorkArea = await prisma.work_areas.findFirst({
       where: {
         name: {
           equals: name,

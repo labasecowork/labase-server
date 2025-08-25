@@ -5,7 +5,7 @@ import { WorkAreaEntity } from "../../../entities/workarea.entity";
 
 export class CreateWorkAreaRepository {
   async execute(data: CreateWorkAreaDTO): Promise<WorkAreaEntity> {
-    const workarea = await prisma.workArea.create({
+    const workarea = await prisma.work_areas.create({
       data: {
         name: data.name,
         description: data.description || null,
@@ -24,7 +24,7 @@ export class CreateWorkAreaRepository {
   }
 
   async checkIfNameExists(name: string): Promise<boolean> {
-    const existingWorkArea = await prisma.workArea.findFirst({
+    const existingWorkArea = await prisma.work_areas.findFirst({
       where: {
         name: {
           equals: name,

@@ -27,6 +27,6 @@ export interface ListAllAttendanceResponseDTO {
     page: number;
     limit: number;
     total: number;
-    totalPages: number;
+    total_pages: number;
   };
 }

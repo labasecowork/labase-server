@@ -31,7 +31,7 @@ export class ListCompaniesRepository {
     }
 
     // Obtener todas las empresas
-    const companies = await prisma.company.findMany({
+    const companies = await prisma.companies.findMany({
       where,
       orderBy: {
         created_at: "desc",
