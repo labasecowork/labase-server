@@ -4,9 +4,7 @@ import { AttendanceStatsDTO } from "../domain/attendance_stats.dto";
 import { AttendanceStatsRepository } from "../data/attendance_stats.repository";
 import { TIMEZONE } from "../../../../../config/env";
 
-// Funciones de utilidad para calcular horas
 const toDateTime = (date: string, time: string): Date => {
-  // Asegurar que el formato sea correcto
   const dateStr = `${date}T${time}`;
   console.log(`Creating date from: ${dateStr}`);
   const dateObj = new Date(dateStr);
