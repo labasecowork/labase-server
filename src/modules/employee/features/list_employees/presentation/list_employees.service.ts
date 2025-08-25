@@ -12,6 +12,8 @@ export class ListEmployeesService {
       limit: dto.limit,
       status: dto.status,
       search: dto.search,
+      work_area_id: dto.work_area_id,
+      company_id: dto.company_id,
     });
 
     const totalPages = Math.ceil(result.total / dto.limit);
@@ -41,7 +43,7 @@ export class ListEmployeesService {
         page: dto.page,
         limit: dto.limit,
         total: result.total,
-        totalPages,
+        total_pages: totalPages,
       },
     };
   }

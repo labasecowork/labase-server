@@ -8,6 +8,13 @@ export class ListActivatedSpacesRepository {
       ...filters,
       include: {
         prices: true,
+        space_images: {
+          select: {
+            id: true,
+            url: true,
+            alt: true,
+          },
+        },
         space_benefits: { include: { benefit: true } },
       },
     });

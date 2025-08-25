@@ -5,19 +5,21 @@ import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { isAfter, isSameDay, format } from "date-fns";
 import type { CurrentUser } from "../../../../../utils/authenticated_user";
+import { formatInTimeZone } from "date-fns-tz";
+import { TIMEZONE } from "../../../../../config/env";
 
 export class MarkAttendanceService {
   constructor(private readonly repo = new MarkAttendanceRepository()) {}
 
   async execute(
     dto: MarkAttendanceDTO,
-    user: Pick<CurrentUser, "id" | "role">,
+    user: Pick<CurrentUser, "id" | "role">
   ) {
     // 🔐 Política: solo empleados pueden marcar asistencia
     if (user.role !== "employee") {
       throw new AppError(
         "Solo los empleados pueden marcar asistencia",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -26,20 +28,20 @@ export class MarkAttendanceService {
     if (!employee) {
       throw new AppError(
         "Solo los empleados pueden marcar asistencia",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
     // Última asistencia
     const lastAttendance = await this.repo.getLastAttendanceForEmployee(
-      employee.employee_id,
+      employee.employee_id
     );
 
     const now = new Date();
     const currentDate = new Date(
       now.getFullYear(),
       now.getMonth(),
-      now.getDate(),
+      now.getDate()
     );
     const currentTime = now;
 
@@ -48,13 +50,13 @@ export class MarkAttendanceService {
         if (lastAttendance.type === "entry" && dto.type === "entry") {
           throw new AppError(
             "No puedes marcar entrada después de entrada. Primero debes marcar salida.",
-            HttpStatusCodes.BAD_REQUEST.code,
+            HttpStatusCodes.BAD_REQUEST.code
           );
         }
         if (lastAttendance.type === "exit" && dto.type === "exit") {
           throw new AppError(
             "No puedes marcar salida después de salida. Primero debes marcar entrada.",
-            HttpStatusCodes.BAD_REQUEST.code,
+            HttpStatusCodes.BAD_REQUEST.code
           );
         }
         if (lastAttendance.type === "exit" && dto.type === "entry") {
@@ -64,26 +66,32 @@ export class MarkAttendanceService {
             lastAttendance.date.getDate(),
             lastAttendance.check_time.getHours(),
             lastAttendance.check_time.getMinutes(),
-            lastAttendance.check_time.getSeconds(),
+            lastAttendance.check_time.getSeconds()
           );
           if (!isAfter(currentTime, lastCheckDateTime)) {
             throw new AppError(
               "La nueva entrada debe ser posterior a la última salida",
-              HttpStatusCodes.BAD_REQUEST.code,
+              HttpStatusCodes.BAD_REQUEST.code
             );
           }
         }
       } else {
         if (lastAttendance.type === "entry" && dto.type === "entry") {
           throw new AppError(
-            `Tienes una entrada pendiente del ${format(lastAttendance.date, "dd/MM/yyyy")}. Debes marcar salida primero.`,
-            HttpStatusCodes.BAD_REQUEST.code,
+            `Tienes una entrada pendiente del ${format(
+              lastAttendance.date,
+              "dd/MM/yyyy"
+            )}. Debes marcar salida primero.`,
+            HttpStatusCodes.BAD_REQUEST.code
           );
         }
         if (lastAttendance.type === "exit" && dto.type === "exit") {
           throw new AppError(
-            `Ya marcaste salida el ${format(lastAttendance.date, "dd/MM/yyyy")}. Debes marcar entrada primero.`,
-            HttpStatusCodes.BAD_REQUEST.code,
+            `Ya marcaste salida el ${format(
+              lastAttendance.date,
+              "dd/MM/yyyy"
+            )}. Debes marcar entrada primero.`,
+            HttpStatusCodes.BAD_REQUEST.code
           );
         }
       }
@@ -91,7 +99,7 @@ export class MarkAttendanceService {
       if (dto.type === "exit") {
         throw new AppError(
           "Tu primera marca de asistencia debe ser una entrada",
-          HttpStatusCodes.BAD_REQUEST.code,
+          HttpStatusCodes.BAD_REQUEST.code
         );
       }
     }
@@ -104,11 +112,13 @@ export class MarkAttendanceService {
     });
 
     return {
-      message: `Asistencia marcada exitosamente: ${dto.type === "entry" ? "Entrada" : "Salida"}`,
+      message: `Asistencia marcada exitosamente: ${
+        dto.type === "entry" ? "Entrada" : "Salida"
+      }`,
       attendance_id: attendance.id,
       type: attendance.type,
-      date: format(attendance.date, "yyyy-MM-dd"),
-      check_time: format(attendance.check_time, "HH:mm:ss"),
+      date: formatInTimeZone(attendance.date, TIMEZONE, "yyyy-MM-dd"),
+      check_time: formatInTimeZone(attendance.check_time, TIMEZONE, "HH:mm:ss"),
     };
   }
 }

@@ -16,6 +16,7 @@ export class SeedRepository {
         creation_timestamp: new Date(),
       },
     });
+    console.log("Usuario administrador creado");
 
     // 2. Detalles del admin
     await prisma.admin_details.create({
@@ -25,6 +26,7 @@ export class SeedRepository {
         notes: "Admin inicial del sistema",
       },
     });
+    console.log("Detalles del administrador creado");
 
     // 3. Espacios
     await prisma.space.createMany({
@@ -185,6 +187,7 @@ export class SeedRepository {
         },
       ],
     });
+    console.log("Espacios creados");
 
     const pricesData = [
       // La Base Operativa
@@ -483,6 +486,189 @@ export class SeedRepository {
           mode: priceData.mode as price_mode,
           amount: priceData.amount,
         },
+      });
+    }
+    console.log("Precios de los espacios creados");
+
+    // 1. Crear la empresa
+    const company = await prisma.companies.create({
+      data: {
+        name: "La base",
+        description: "Empresa de prueba para practicantes y áreas",
+      },
+    });
+
+    console.log("Empresa creada:", company);
+
+    // 2. Crear áreas de trabajo
+    const workAreasData = [
+      {
+        name: "Administración",
+        description:
+          "Responsables de dar estructura y orden a la empresa, asegurando que cada área tenga lo necesario para crecer y alcanzar sus metas.",
+        capacity: 10,
+      },
+      {
+        name: "Software",
+        description:
+          "El corazón tecnológico de la empresa: diseñan, construyen y mejoran las herramientas que permiten que todo funcione de forma ágil y moderna.",
+        capacity: 10,
+      },
+      {
+        name: "El Arsenal",
+        description:
+          "El motor comercial que lleva nuestras soluciones al mercado, generando oportunidades y construyendo relaciones sólidas con clientes y aliados.",
+        capacity: 10,
+      },
+      {
+        name: "Legal",
+        description:
+          "Los guardianes de la seguridad jurídica: protegen a la empresa y a sus personas, garantizando decisiones seguras y sostenibles.",
+        capacity: 10,
+      },
+      {
+        name: "Marketing",
+        description:
+          "Encargados de dar voz y presencia a la empresa: comunican nuestro valor, inspiran confianza y acercan nuestra marca a las personas.",
+        capacity: 10,
+      },
+      {
+        name: "Contabilidad",
+        description:
+          "Quienes cuidan la salud financiera de la empresa: gestionan recursos con responsabilidad y aseguran que el esfuerzo de todos se transforme en crecimiento real.",
+        capacity: 10,
+      },
+    ];
+
+    const workAreas = await prisma.$transaction(
+      workAreasData.map((wa) => prisma.work_areas.create({ data: wa }))
+    );
+
+    console.log(
+      "Áreas de trabajo creadas:",
+      workAreas.map((w) => w.name)
+    );
+
+    const workAreaMap = Object.fromEntries(
+      workAreas.map((w) => [w.name, w.id])
+    );
+
+    const employeesData = [
+      {
+        name: "Susell Shecira Villazana Egoavil",
+        email: "practicante8.xpertice@gmail.com",
+        area: "Administración",
+      },
+      {
+        name: "Jhon Junior Maylle Astucuri",
+        email: "practicante9.xpertice@gmail.com",
+        area: "Administración",
+      },
+      {
+        name: "Jacquelin Mayde Rivera Alvarado",
+        email: "practicante7.xpertice@gmail.com",
+        area: "Administración",
+      },
+      {
+        name: "Edwin Atezana Choque",
+        email: "practicante4.xpertice@gmail.com",
+        area: "Administración",
+      },
+      {
+        name: "Sebastian Marcelo Oscanoa Parra",
+        email: "marketing2.xpertice@gmail.com",
+        area: "Administración",
+      },
+      {
+        name: "Leonela Yustina Chalco Quintanilla",
+        email: "ingenieraia6.xpertice@gmail.com",
+        area: "Software",
+      },
+      {
+        name: "Elizabeth Huarcaya Contreras",
+        email: "ingenieraia8.xpertice@gmail.com",
+        area: "Software",
+      },
+      {
+        name: "Fresia Bibiana Damian Ricra",
+        email: "ingenieraia7.xpertice@gmail.com",
+        area: "Software",
+      },
+      {
+        name: "Jean Pierre Chuquillanqui Montoya",
+        email: "ingenieraia5.xpertice@gmail.com",
+        area: "Software",
+      },
+      {
+        name: "Yhefry Gaspar Almonacid",
+        email: "practicantea5.xpertice@gmail.com",
+        area: "Software",
+      },
+      {
+        name: "Alice Mili Inga Espinoza",
+        email: "abogado01.grupoaguirre@gmail.com",
+        area: "Legal",
+      },
+      {
+        name: "Karen Leslie Romero Garcia",
+        email: "practicante2.xpertice@gmail.com",
+        area: "Legal",
+      },
+      {
+        name: "Alvaro Jesus Aquino Naupari",
+        email: "practicantea6.xpertice@gmail.com",
+        area: "Legal",
+      },
+      {
+        name: "Jennyfer Vanesa Chuman Aguirre",
+        email: "abogadocivil.grupoaguirre@gmail.com",
+        area: "Legal",
+      },
+      {
+        name: "Clara Aguirre Gonzalo",
+        email: "caja.grupoaguirre@gmail.com",
+        area: "Legal",
+      },
+      {
+        name: "Rafael Aguirre Gonzalo",
+        email: "manager@xpertice.pe",
+        area: "Marketing",
+      },
+      {
+        name: "Leonardo Daniel Casimiro Daga",
+        email: "practicantea3.xpertice@gmail.com",
+        area: "Marketing",
+      },
+    ];
+
+    for (const emp of employeesData) {
+      const [lastName, ...rest] = emp.name.split(" ");
+      const firstName = rest.join(" ");
+
+      await prisma.$transaction(async (tx) => {
+        const user = await tx.users.create({
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            email: emp.email,
+
+            // Then change
+            password:
+              "$2b$12$X00fWdC0IAfuIafie7ONleA.Uu.4JvUCe0vFaUeC66t.jeETRLNL2",
+            user_type: "employee",
+            status: "active",
+          },
+        });
+
+        await tx.employee_details.create({
+          data: {
+            employee_id: user.id,
+            work_area_id: workAreaMap[emp.area],
+            company_id: company.id,
+          },
+        });
+
+        console.log(`Empleado creado: ${firstName} ${lastName} (${emp.email})`);
       });
     }
 

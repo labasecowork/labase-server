@@ -5,7 +5,7 @@ import { CompanyEntity } from "../../../entities/company.entity";
 
 export class UpdateCompanyRepository {
   async execute(id: string, data: UpdateCompanyDTO): Promise<CompanyEntity> {
-    const company = await prisma.company.update({
+    const company = await prisma.companies.update({
       where: { id },
       data: {
         ...(data.name && { name: data.name }),
@@ -25,7 +25,7 @@ export class UpdateCompanyRepository {
   }
 
   async findById(id: string): Promise<CompanyEntity | null> {
-    const company = await prisma.company.findUnique({
+    const company = await prisma.companies.findUnique({
       where: { id },
     });
 
@@ -44,7 +44,7 @@ export class UpdateCompanyRepository {
     name: string,
     excludeId: string
   ): Promise<boolean> {
-    const existingCompany = await prisma.company.findFirst({
+    const existingCompany = await prisma.companies.findFirst({
       where: {
         name: {
           equals: name,

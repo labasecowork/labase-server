@@ -122,7 +122,7 @@ const controller = new ListAllAttendanceController();
  *                           type: integer
  *                         total:
  *                           type: integer
- *                         totalPages:
+ *                         total_pages:
  *                           type: integer
  *       403:
  *         description: Solo los administradores pueden acceder
@@ -132,7 +132,7 @@ const controller = new ListAllAttendanceController();
 router.get(
   "/",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 
 export { router as listAllAttendanceRoutes };

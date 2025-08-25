@@ -6,6 +6,9 @@ config();
 // ENVIRONMENT
 export const ENVIRONMENT = process.env.ENVIRONMENT;
 
+// TIMEZONE
+export const TIMEZONE = process.env.TIMEZONE ?? "UTC";
+
 // PROJECT ROOT
 export const PROJECT_ROOT = process.env.PROJECT_ROOT;
 

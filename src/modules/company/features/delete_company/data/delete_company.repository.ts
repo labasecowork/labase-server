@@ -4,13 +4,13 @@ import { CompanyEntity } from "../../../entities/company.entity";
 
 export class DeleteCompanyRepository {
   async execute(id: string): Promise<void> {
-    await prisma.company.delete({
+    await prisma.companies.delete({
       where: { id },
     });
   }
 
   async findById(id: string): Promise<CompanyEntity | null> {
-    const company = await prisma.company.findUnique({
+    const company = await prisma.companies.findUnique({
       where: { id },
     });
 
@@ -26,7 +26,7 @@ export class DeleteCompanyRepository {
   }
 
   async hasEmployees(id: string): Promise<boolean> {
-    const employeeCount = await prisma.employeeDetails.count({
+    const employeeCount = await prisma.employee_details.count({
       where: {
         company_id: id,
       },
