@@ -1,3 +1,4 @@
+//src/config/env/index.ts
 import { config } from "dotenv";
 
 config();
@@ -45,3 +46,8 @@ export const EMAIL_USER = process.env.EMAIL_USER;
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 export const SMTP_HOST = process.env.SMTP_HOST;
 export const SMTP_PORT = process.env.SMTP_PORT;
+
+//RENIEC (DECOLECTA)
+export const DECOLECTA_API_KEY = process.env.DECOLECTA_API_KEY;
+export const DECOLECTA_BASE_URL =
+  process.env.DECOLECTA_BASE_URL ?? "https://api.decolecta.com";

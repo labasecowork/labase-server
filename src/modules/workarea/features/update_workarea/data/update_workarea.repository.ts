@@ -45,7 +45,7 @@ export class UpdateWorkAreaRepository {
 
   async checkIfNameExistsExcludingId(
     name: string,
-    excludeId: string
+    excludeId: string,
   ): Promise<boolean> {
     const existingWorkArea = await prisma.work_areas.findFirst({
       where: {
