@@ -7,6 +7,7 @@ import { NEWSLETTER_MESSAGES } from "./newsletter";
 import { PRODUCT_MESSAGES } from "./product";
 import { PAYMENT_MESSAGES } from "./payment";
 import { BRAND_MESSAGES } from "./brand";
+import { VISITOR_MESSAGES } from "./visitor";
 
 export const MESSAGES = {
   ARTICLE: ARTICLE_MESSAGES,
@@ -17,4 +18,5 @@ export const MESSAGES = {
   NEWSLETTER: NEWSLETTER_MESSAGES,
   PRODUCT: PRODUCT_MESSAGES,
   BRAND: BRAND_MESSAGES,
+  VISITOR: VISITOR_MESSAGES,
 };

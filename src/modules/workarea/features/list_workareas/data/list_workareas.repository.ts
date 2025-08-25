@@ -4,7 +4,7 @@ import prisma from "../../../../../config/prisma_client";
 
 export class ListWorkAreasRepository {
   async execute(): Promise<WorkAreaEntity[]> {
-    const workareas = await prisma.workArea.findMany({
+    const workareas = await prisma.work_areas.findMany({
       orderBy: {
         created_at: "desc",
       },
