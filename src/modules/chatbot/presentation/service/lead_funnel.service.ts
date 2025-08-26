@@ -41,8 +41,8 @@ export type Step =
 export type Lead = {
   phone?: string;
   space_name?: string;
-  date?: string; // yyyy-mm-dd
-  time?: string; // hh:mm
+  date?: string;
+  time?: string;
   full_name?: string;
   dni?: string;
   people?: number;
@@ -142,14 +142,14 @@ async function tryLooseExtract(t: string, s: Session, todayISO: string) {
   // 3) Fecha
   if (!s.data.date) {
     const fromText = parseDateFlexible(t, todayISO);
-    const fromAI = ai.entities.date ?? null; // ya puede venir yyyy-mm-dd
+    const fromAI = ai.entities.date ?? null;
     s.data.date = fromText || fromAI || undefined;
   }
 
   // 4) Hora
   if (!s.data.time) {
     const fromText = parseTimeFlexible(t);
-    const fromAI = ai.entities.time ?? null; // podría venir “hh:mm”
+    const fromAI = ai.entities.time ?? null;
     s.data.time = fromText || fromAI || undefined;
   }
 
@@ -305,7 +305,6 @@ export async function handleIncomingText(
     ];
   }
 
-  /* space (acepta mensaje largo con fecha y hora) */
   if (s.step === "space") {
     if (await wantsSkipAI(t)) {
       s.step = "date";
@@ -320,19 +319,15 @@ export async function handleIncomingText(
       ];
     }
 
-    // Intento extraer todo lo posible del mensaje
     await tryLooseExtract(t, s, todayISO);
 
-    // Sugerencia rápida si es “1 persona”
     if (/\b(una persona|1 persona|solo|individual)\b/i.test(t)) {
       const hint =
         chatbotConfig.spaceHints?.onePerson ??
         "Para 1 persona: Unidad (privado 1p). Como individual en compartido: Base Operativa o El Hangar.";
-      // no retornamos aún; continuamos abajo con la lógica
       await Promise.resolve(hint);
     }
 
-    // Normaliza espacio si aún no lo tenemos
     if (!s.data.space_name) {
       const canon = normalizeSpaceName(t);
       if (!canon) {
@@ -342,15 +337,12 @@ export async function handleIncomingText(
           s.retries.space >= MAX_RETRIES
             ? helpFor("space", todayISO, OPEN_START, OPEN_END)
             : "No identifiqué el espacio.\n" +
-              // pequeña tabla compacta
-              "Opciones: Unidad (1p) · Bunker (2–4) · Brigada (2–4) · Base de Mando (2–10) · Base Operativa / El Hangar (individual)\n\n" +
               promptFor("space", todayISO, OPEN_START, OPEN_END);
         return [{ kind: "reply", text: msg }];
       }
       s.data.space_name = canon;
     }
 
-    // Decidir siguiente paso según lo que ya capturamos
     if (!s.data.date) {
       s.step = "date";
       save(from, s);

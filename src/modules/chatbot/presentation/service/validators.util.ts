@@ -1,4 +1,4 @@
-/* Validadores existentes (se mantienen) */
+/* Validadores existentes */
 export function isValidTimeHHmm(s: string) {
   const m = s.match(/^(\d{2}):(\d{2})$/);
   if (!m) return false;
@@ -23,12 +23,14 @@ export function isDateNotPastLima(todayISO: string, yyyy_mm_dd: string) {
   return yyyy_mm_dd >= todayISO;
 }
 
-/* --------- NUEVO: parseo flexible de fechas y horas --------- */
+/* --------- Parseo flexible de fechas y horas --------- */
 export function parseDateFlexible(
   input: string,
   todayISO: string,
 ): string | null {
   const s = input.trim().toLowerCase();
+
+  // relativo
   if (/\b(mañana|manana)\b/.test(s)) {
     const [y, m, d] = todayISO.split("-").map(Number);
     const dt = new Date(Date.UTC(y, m - 1, d));
@@ -38,10 +40,21 @@ export function parseDateFlexible(
     const dd = String(dt.getUTCDate()).padStart(2, "0");
     return `${yy}-${mm}-${dd}`;
   }
-  const m1 = s.match(/\b(\d{2})[/-](\d{2})[/-](\d{4})\b/); // dd-mm-yyyy
-  if (m1) return `${m1[3]}-${m1[2]}-${m1[1]}`;
-  const m2 = s.match(/\b(\d{4})-(\d{2})-(\d{2})\b/); // yyyy-mm-dd
-  if (m2) return m2[0];
+
+  // yyyy-mm-dd o yyyy/mm/dd
+  const ymd = s.match(/\b(\d{4})[/-](\d{2})[/-](\d{2})\b/);
+  if (ymd) {
+    const [, y, m, d] = ymd;
+    return `${y}-${m}-${d}`;
+  }
+
+  // dd-mm-yyyy o dd/mm/yyyy
+  const dmy = s.match(/\b(\d{2})[/-](\d{2})[/-](\d{4})\b/);
+  if (dmy) {
+    const [, d, m, y] = dmy;
+    return `${y}-${m}-${d}`;
+  }
+
   return null;
 }
 
@@ -49,7 +62,7 @@ export function parseTimeFlexible(input: string): string | null {
   let t = input.trim().toLowerCase();
   t = t.replace(/\s+/g, " ");
 
-  // Si envían un rango, quédate con la primera hora
+  // Rango -> tomar la primera hora
   const range = t.match(
     /(.+?)(?:\s*[-–a]\s*)(\d{1,2}(?::\d{2})?\s*(?:a\.?m?\.?|p\.?m?\.?)?|\bmediod[ií]a\b|\bmedianoche\b)/i,
   );
@@ -71,10 +84,6 @@ export function parseTimeFlexible(input: string): string | null {
     if (hh === 12) hh = 0; // 12am -> 00
   } else if (ap.startsWith("p")) {
     if (hh < 12) hh += 12; // 1pm -> 13
-  } else {
-    // Sin am/pm:
-    // - "9" -> 09:00
-    // - "16" -> 16:00
   }
 
   if (hh < 0 || hh > 23 || mm < 0 || mm > 59) return null;
