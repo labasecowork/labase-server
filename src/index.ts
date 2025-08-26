@@ -12,7 +12,7 @@ import { APP_URL, PORT } from "./config/env";
 import { displayWelcomeMessage } from "./utils";
 import { customMorganFormat } from "./utils/cli";
 import { multerErrorHandler } from "./middlewares/multer_error_handler/multer_error_handler";
-import { startWhatsAppBot } from "./modules/chatbot/presentation/whatsapp.bot";
+import { startWhatsAppBot } from "./modules/chatbot/presentation/bot/whatsapp.bot";
 /*import fs from "fs";
 import path from "path";
 
@@ -58,11 +58,11 @@ const main = async () => {
   }
 
   // // ⬇️ INICIA EL BOT AQUÍ, UNA SOLA VEZ
-  // try {
-  //   await startWhatsAppBot();
-  // } catch (e) {
-  //   console.error("[WhatsApp] No inició:", e);
-  // }
+  try {
+    await startWhatsAppBot();
+  } catch (e) {
+    console.error("[WhatsApp] No inició:", e);
+  }
 
   server.listen(PORT, () => {
     displayWelcomeMessage(appUrl);
