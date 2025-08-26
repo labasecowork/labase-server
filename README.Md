@@ -1,65 +1,325 @@
-📘 Grupo Aguirre Backend – Developer Documentation
-✨ Description
+# 📘 LaBase Server - Backend Documentation
 
-El backend gestiona reservas, citas legales, clientes y la lógica central de negocio del Grupo Aguirre Abogados Perú.
-Se basa en Node.js, Express y TypeScript, aplicando Clean Architecture con Vertical Slices para asegurar una separación clara de responsabilidades, escalabilidad y mantenibilidad a largo plazo.
+## ✨ Description
 
-Incluye un asistente legal de WhatsApp que combina whatsapp-web.js (cliente de WhatsApp Web) con Gemini (API de Google Generative Language) para ofrecer respuestas automáticas con contexto legal de Perú, misión, visión y servicios del estudio.
+Backend for LaBase, a workspace management system that includes reservations, user administration, employees, products, and an AI assistant chatbot. Built with Node.js, Express, and TypeScript following Clean Architecture with Vertical Slices to ensure scalability and maintainability.
 
-🛠 Technologies Used
--Node.js (v18 o superior)
--Express (framework web)
--TypeScript (tipado estático)
--Prisma ORM (mapeo con PostgreSQL)
--Zod (validación de datos)
--Axios (cliente HTTP)
--Socket.IO (eventos en tiempo real)
--Bcrypt (hash de contraseñas)
--Swagger (documentación API interactiva)
--Redis (cache y sesiones temporales)
--AWS S3 (almacenamiento de archivos)
--dayjs y date-fns (manejo de fechas)
--nanoid y uuid (identificadores únicos)
--Multer (subida de archivos)
--Nodemailer (envío de correos)
--dotenv (variables de entorno)
--EJS (templates de email)
--Morgan (logger HTTP)
--whatsapp-web.js (integración WhatsApp Business con cliente local)
--qrcode-terminal (render QR para vincular WhatsApp)
--Google Gemini API (IA generativa para el chatbot legal)
+The system includes integration with WhatsApp Business using whatsapp-web.js and Google Gemini to provide automated assistance to users.
 
-⚙️ Requirements
--Node.js v18 o superior (recomendado v20+)
--PostgreSQL (local o en Docker)
--Redis (local)
--Docker (opcional, para entornos containerizados)
--Chromium/Chrome con flags --no-sandbox (requerido por whatsapp-web.js en servidores VPS sin GUI)
+## 🛠 Technologies Used
 
-🚀 Installation and Setup
-1. Clonar el repositorio
+### Backend Core
+- **Node.js** (v18+) - JavaScript runtime
+- **Express** - Web framework for Node.js
+- **TypeScript** - Static typing for JavaScript
+- **Prisma ORM** - Object-relational mapping with PostgreSQL
+- **Zod** - Schema validation and types
+
+### Database and Cache
+- **PostgreSQL** - Main database
+- **Redis** - Cache and temporary sessions
+
+### Authentication and Security
+- **JWT (jsonwebtoken)** - Authentication tokens
+- **Bcrypt** - Password hashing
+
+### External Services
+- **AWS S3** - File storage
+- **Nodemailer** - Email sending
+- **WhatsApp Web.js** - WhatsApp Business integration
+- **Google Gemini API** - Generative AI for chatbot
+
+### Utilities
+- **Socket.IO** - Real-time communication
+- **Swagger** - Interactive API documentation
+- **Multer** - File uploads
+- **EJS** - Email templates
+- **Morgan** - HTTP logger
+- **Day.js & date-fns** - Date handling
+- **Nanoid & UUID** - Unique identifier generation
+
+## ⚙️ System Requirements
+
+- **Node.js** v18 or higher (recommended v20+)
+- **PostgreSQL** 16+ (local or Docker)
+- **Redis** (local or Docker)
+- **Docker** (optional, for containerized development)
+- **Chromium/Chrome** (required by whatsapp-web.js)
+
+## 🚀 Installation and Setup
+
+### 1. Clone the Repository
+```bash
 git clone <REPOSITORY_URL>
-cd aguirre-service
+cd labase-server
+```
 
-2. Instalar dependencias
+### 2. Install Dependencies
+```bash
 npm install
+```
 
-3. Configurar variables de entorno
-Crea un archivo .env basado en .env.example. Incluye:
+### 3. Configure Environment Variables
 
-DATABASE_URL=postgresql://user:password@localhost:5432/aguirre_db
-REDIS_URL=redis://localhost:6379
-API_KEY_GEMINI=tu_api_key
+Create a `.env` file in the project root with the following variables:
+
+```env
+# Environment and server configuration
+ENVIRONMENT=development
+NODE_ENV=development
 PORT=3001
 APP_URL=http://localhost:3001
+SOCKET_URL=http://localhost:3001
+PROJECT_ROOT=/absolute/path/to/project
+TIMEZONE=America/Lima
 
-4. Levantar el servidor
+# Database
+DATABASE_URL=postgresql://root:root@localhost:5432/labase-service
+DIRECT_URL=postgresql://root:root@localhost:5432/labase-service
+
+# Redis
+REDIS_URL=redis://localhost:6379
+
+# JWT
+JWT_SECRET=your_super_secure_jwt_secret_here
+
+# Google Gemini API (for chatbot)
+API_KEY_GEMINI=your_gemini_api_key
+
+# AWS S3 (for file storage)
+AWS_BUCKET_NAME=your-bucket-name
+AWS_BUCKET_REGION=us-east-1
+AWS_KEY_ACCESS=your_access_key
+AWS_KEY_ACCESS_SECRET=your_secret_key
+
+# Email/SMTP (for notifications)
+EMAIL_USER=your_email@example.com
+EMAIL_PASSWORD=your_app_password
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+
+# QR Code (for reservations)
+QR_CODE_ALPHABET=1234567890abcdef
+QR_CODE_LENGTH=10
+
+# RENIEC/Decolecta (document validation)
+DECOLECTA_API_KEY=your_decolecta_api_key
+DECOLECTA_BASE_URL=https://api.decolecta.com
+```
+
+### 4. Configure Database
+
+#### Option A: With Docker (Recommended)
+```bash
+# Start PostgreSQL and Redis
+docker-compose up -d
+
+# Run migrations
+npm run prisma:migrate
+
+# (Optional) Open Prisma Studio
+npm run prisma:studio
+```
+
+#### Option B: Local Installation
+```bash
+# Install PostgreSQL and Redis locally
+# Then run:
+npm run prisma:migrate
+```
+
+### 5. Run the Application
+
+#### Development Mode
+```bash
 npm run dev
+```
 
-* Al iniciar, se mostrará en consola el QR de WhatsApp (usar cámara del teléfono para vincular) *
+#### Production Mode
+```bash
+npm run build
+npm start
+```
 
-🤖 WhatsApp Bot
--Cliente: whatsapp-web.js con LocalAuth.
--IA: Google Gemini con contexto legal del Grupo Aguirre Abogados Perú.
--Atención: 100% remota, sin necesidad de acudir a oficina física.
--Flujo de citas: El bot puede recibir datos del cliente y generar citas provisionales (pendientes de confirmación).
+## 🐳 Using Docker
+
+### Docker Compose (Development)
+```bash
+# Start only services (DB + Redis)
+docker-compose up -d
+
+# Run the app locally
+npm run dev
+```
+
+### Docker Variables
+The `docker-compose.yml` file includes:
+- **PostgreSQL 16** on port 5432
+- **Redis** on port 6379
+- Persistent volumes for data
+
+## 📊 Database Migrations
+
+### Available Prisma Commands
+```bash
+# Generate Prisma client
+npm run prisma:generate
+
+# Create and apply new migration
+npm run prisma:migrate
+
+# Open Prisma Studio (graphical interface)
+npm run prisma:studio
+
+# Complete database reset
+npx prisma migrate reset
+
+# Apply migrations in production
+npx prisma migrate deploy
+```
+
+### Migration Workflow
+
+1. **Modify** the `prisma/schema.prisma` file
+2. **Create migration**:
+   ```bash
+   npx prisma migrate dev --name migration_name
+   ```
+3. **Apply in production**:
+   ```bash
+   npx prisma migrate deploy
+   ```
+
+### Migration Structure
+```
+prisma/
+├── migrations/
+│   ├── 20250824204101_init/
+│   │   └── migration.sql
+│   └── migration_lock.toml
+└── schema.prisma
+```
+
+## 🏗️ Project Structure
+
+```
+src/
+├── config/              # Global configurations
+│   ├── env/            # Environment variables
+│   ├── prisma_client/  # Prisma client
+│   ├── redis/          # Redis configuration
+│   └── socket/         # Socket.IO configuration
+├── constants/          # Global constants
+├── infrastructure/     # External services (AWS, JWT)
+├── middlewares/        # Express middlewares
+├── modules/           # Business modules (See architecture.md)
+├── shared/            # Shared code
+├── utils/             # General utilities
+├── docs/              # Swagger documentation
+├── index.ts           # Entry point
+└── routes.ts          # Main route configuration
+```
+
+## 🤖 WhatsApp Bot
+
+### Features
+- **Client**: whatsapp-web.js with local authentication
+- **AI**: Google Gemini with personalized context
+- **Functionalities**: 
+  - Intelligent automatic responses
+  - Space inquiry management
+  - Reservation assistance
+  - General business information
+
+### Configuration
+1. Ensure `API_KEY_GEMINI` is configured
+2. When starting the application, a QR code will be displayed in console
+3. Scan the QR with WhatsApp on your mobile device
+4. The bot will be active and respond automatically
+
+## 📱 API Documentation
+
+Interactive API documentation is available at:
+```
+http://localhost:3001/api-docs
+```
+
+### Main Endpoints
+- **Auth**: `/api/v1/auth/*` - Authentication and registration
+- **Spaces**: `/api/v1/spaces/*` - Space management
+- **Reservations**: `/api/v1/reservations/*` - Reservation system
+- **Users**: `/api/v1/users/*` - User management
+- **Products**: `/api/v1/products/*` - Product management
+- **Chatbot**: `/api/v1/chatbot/*` - Bot interaction
+
+## 🚀 Available Scripts
+
+```bash
+# Development
+npm run dev              # Server with hot reload
+
+# Production
+npm run build           # Compile TypeScript
+npm start              # Run compiled version
+
+# Database
+npm run prisma:generate # Generate Prisma client
+npm run prisma:migrate  # Run migrations
+npm run prisma:studio   # Open Prisma Studio
+```
+
+## 🔧 Development Configuration
+
+### VSCode (Recommended)
+Install extensions:
+- **Prisma** - Prisma schema support
+- **TypeScript Importer** - Auto-imports
+- **REST Client** - Test endpoints
+
+### Development Variables
+For local development, use the following configurations in `.env`:
+
+```env
+ENVIRONMENT=development
+NODE_ENV=development
+DATABASE_URL=postgresql://root:root@localhost:5432/labase-service
+REDIS_URL=redis://localhost:6379
+APP_URL=http://localhost:3001
+```
+
+## 📋 Project Architecture
+
+For detailed information about architecture, modules, and patterns used, consult:
+
+📖 **[Architecture.md](./architecture.md)** - Complete project architecture guide
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/new-functionality`
+3. Commit changes: `git commit -m 'Add new functionality'`
+4. Push to branch: `git push origin feature/new-functionality`
+5. Create Pull Request
+
+## 📝 Logs and Debugging
+
+### Development Logs
+- Logs appear in console with HTTP request details
+- Use Morgan for automatic request logging
+
+### Debugging
+```bash
+# Debug mode with more information
+DEBUG=* npm run dev
+```
+
+## ⚠️ Important Notes
+
+- **WhatsApp Web**: Requires keeping the session active, don't close the application abruptly
+- **Files**: Images are stored in AWS S3, configure credentials correctly
+- **Redis**: Required for session and cache functionality
+- **Migrations**: Always backup before running migrations in production
+
+---
+
+For more detailed information about architecture and how to create new modules, see [architecture.md](./architecture.md).
