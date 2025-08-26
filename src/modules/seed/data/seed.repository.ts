@@ -1,5 +1,10 @@
 import prisma from "../../../config/prisma_client";
-import { duration_unit, price_mode } from "@prisma/client";
+import {
+  access_type,
+  duration_unit,
+  price_mode,
+  space_type,
+} from "@prisma/client";
 
 export class SeedRepository {
   async seed() {
@@ -29,9 +34,10 @@ export class SeedRepository {
     console.log("Detalles del administrador creado");
 
     // 3. Espacios
-    await prisma.space.createMany({
-      data: [
-        {
+
+    const spacesWithImages = [
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000001",
           name: "La Base Operativa",
           description:
@@ -45,7 +51,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/boperativa.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000002",
           name: "Unidad 01",
           description:
@@ -59,7 +74,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/unidades.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000003",
           name: "Unidad 02",
           description:
@@ -73,7 +97,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/unidades.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000004",
           name: "Unidad 03",
           description:
@@ -87,7 +120,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/unidades.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000005",
           name: "Hangar",
           description:
@@ -101,7 +143,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/hangar.webp",
+            alt: "Imagen del Hangar",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000006",
           name: "Reserva 01",
           description:
@@ -115,7 +166,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/reserbas.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000007",
           name: "Reserva 02",
           description:
@@ -129,7 +189,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/reserbas.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000008",
           name: "Bunker 01",
           description:
@@ -143,7 +212,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/bunker.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-000000000009",
           name: "Bunker 02",
           description:
@@ -157,7 +235,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/bunker.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-00000000000a",
           name: "Brigada",
           description:
@@ -171,7 +258,16 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-        {
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/brigada.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+      {
+        space: {
           id: "00000000-0000-0000-0000-00000000000b",
           name: "Base de Mando",
           description:
@@ -185,8 +281,39 @@ export class SeedRepository {
           disabled: false,
           created_at: new Date(),
         },
-      ],
-    });
+        images: [
+          {
+            url: "https://labase-aws-test.s3.us-east-2.amazonaws.com/public/space/img/bmando.webp",
+            alt: "Imagen de la Base de Mando",
+            position: 0,
+          },
+        ],
+      },
+    ];
+    for (const spaceData of spacesWithImages) {
+      await prisma.$transaction(async (tx) => {
+        // Crear el espacio
+        const space = await tx.space.create({
+          data: {
+            ...spaceData.space,
+            type: spaceData.space.type as space_type,
+            access: spaceData.space.access as access_type,
+          },
+        });
+
+        // Crear las imágenes asociadas
+        if (spaceData.images && spaceData.images.length > 0) {
+          await tx.space_image.createMany({
+            data: spaceData.images.map((img) => ({
+              space_id: space.id,
+              url: img.url,
+              alt: img.alt,
+              position: img.position,
+            })),
+          });
+        }
+      });
+    }
     console.log("Espacios creados");
 
     const pricesData = [

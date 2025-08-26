@@ -32,16 +32,16 @@ export class CreateReservationService {
     if (user.role === "employee") {
       throw new AppError(
         "USER_TYPE_NOT_ALLOWED",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
     // 1) Validaciones de existencia y estado del espacio
-    const space = await this.repo.findSpaceById(dto.spaceId);
+    const space = await this.repo.findSpaceById(dto.space_id);
     if (!space || space.disabled) {
       throw new AppError(
         RESERVATION_MESSAGES.SPACE_NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 
@@ -49,53 +49,53 @@ export class CreateReservationService {
     if (dto.people < space.capacity_min || dto.people > space.capacity_max) {
       throw new AppError(
         RESERVATION_MESSAGES.CAPACITY_OUT_OF_RANGE,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
-    if (dto.fullRoom && !space.allow_full_room) {
+    if (dto.full_room && !space.allow_full_room) {
       throw new AppError(
         RESERVATION_MESSAGES.FULL_ROOM_FORBIDDEN,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
-    if (!dto.fullRoom && !space.allow_by_unit && space.type === "unit") {
+    if (!dto.full_room && !space.allow_by_unit && space.type === "unit") {
       throw new AppError(
         RESERVATION_MESSAGES.UNIT_BOOKING_FORBIDDEN,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
     // 3) Solapamiento / capacidad restante (según modo)
-    if (dto.fullRoom) {
+    if (dto.full_room) {
       const overlap = await this.repo.findOverlaps(
-        dto.spaceId,
-        dto.startTime,
-        dto.endTime,
+        dto.space_id,
+        dto.start_time,
+        dto.end_time
       );
       if (overlap) {
         throw new AppError(
           RESERVATION_MESSAGES.TIME_OVERLAP,
-          HttpStatusCodes.CONFLICT.code,
+          HttpStatusCodes.CONFLICT.code
         );
       }
     } else {
       const booked = await this.repo.sumPeople(
-        dto.spaceId,
-        dto.startTime,
-        dto.endTime,
+        dto.space_id,
+        dto.start_time,
+        dto.end_time
       );
       if (booked + dto.people > space.capacity_max) {
         throw new AppError(
           RESERVATION_MESSAGES.NO_CAPACITY_LEFT,
-          HttpStatusCodes.CONFLICT.code,
+          HttpStatusCodes.CONFLICT.code
         );
       }
     }
 
     // 4) Cálculo de precio (tomar mejor unidad disponible según duración)
-    const mode: "individual" | "group" = dto.fullRoom ? "group" : "individual";
+    const mode: "individual" | "group" = dto.full_room ? "group" : "individual";
     const prices = (
       space.prices as Array<{
         duration: "hour" | "day" | "week" | "month";
@@ -104,10 +104,10 @@ export class CreateReservationService {
       }>
     ).filter((p) => p.mode === mode);
 
-    const months = differenceInMonths(dto.endTime, dto.startTime);
-    const weeks = differenceInWeeks(dto.endTime, dto.startTime);
-    const days = differenceInDays(dto.endTime, dto.startTime);
-    const hours = differenceInHours(dto.endTime, dto.startTime);
+    const months = differenceInMonths(dto.end_time, dto.start_time);
+    const weeks = differenceInWeeks(dto.end_time, dto.start_time);
+    const days = differenceInDays(dto.end_time, dto.start_time);
+    const hours = differenceInHours(dto.end_time, dto.start_time);
 
     const rateOf = (u: "hour" | "day" | "week" | "month") =>
       prices.find((p) => p.duration === u)?.amount ?? null;
@@ -130,7 +130,7 @@ export class CreateReservationService {
     } else {
       throw new AppError(
         RESERVATION_MESSAGES.PRICE_NOT_DEFINED,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
@@ -148,12 +148,12 @@ export class CreateReservationService {
     // 7) Crear reserva (usar snake_case reales)
     const codeQr = generateQrCode();
     const created = await this.repo.create({
-      space: { connect: { id: dto.spaceId } },
+      space: { connect: { id: dto.space_id } },
       user: { connect: { id: user.id } },
-      start_time: dto.startTime,
-      end_time: dto.endTime,
+      start_time: dto.start_time,
+      end_time: dto.end_time,
       people: dto.people,
-      full_room: dto.fullRoom,
+      full_room: dto.full_room,
       code_qr: codeQr,
       price: Number(price),
       status,
@@ -164,16 +164,16 @@ export class CreateReservationService {
     io.emit("RESERVATION_CREATED", {
       reservationId: created.id,
       userId: user.id,
-      startTime: dto.startTime,
-      endTime: dto.endTime,
-      spaceId: dto.spaceId,
+      startTime: dto.start_time,
+      endTime: dto.end_time,
+      spaceId: dto.space_id,
     });
 
     // 9) DTO
     return {
       message: RESERVATION_MESSAGES.CREATED_SUCCESS,
       reservation_id: created.id,
-      codeQr: created.code_qr,
+      code_qr: created.code_qr,
       price,
       status: created.status,
     };
