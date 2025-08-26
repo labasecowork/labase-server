@@ -39,8 +39,7 @@ export function isPureGreeting(text: string) {
 
 export function makeIntro() {
   return `Hola, soy ${BOT_NAME}, asistente virtual de La Base Cowork.
-Puedo darte precios, horarios o ayudarte a reservar.
-Escribe "reservar" para empezar o "cancel" para reiniciar.`;
+Puedo darte informacion de la empresa, lo que hacemos, precios, horarios o ayudarte a reservar.`;
 }
 
 export function markGreeted(from: string) {

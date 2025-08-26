@@ -1,94 +1,43 @@
-// src/modules/chatbot/presentation/service/lead_funnel.service.ts
 import { classifyIntent, generateReply } from "../../data/api/gemini.provider";
 import { chatbotConfig } from "../../data/config/chatbot.config";
+import {
+  fmtDateLima,
+  fmtTimeLima,
+  todayLimaISO,
+  addDaysLima,
+} from "./datetime_lima.util";
+import {
+  isValidTimeHHmm,
+  isWithinOpenHours,
+  isDateNotPastLima,
+  parseDateFlexible,
+  parseTimeFlexible,
+} from "./validators.util";
+import { promptFor, softSkipResponse, helpFor } from "./messages.util";
+import {
+  isReserveKeyword,
+  isCancel,
+  isHelp,
+  backRequested,
+  wantsSkipAI,
+  isFarewell,
+  isWebsiteQuery,
+} from "./controls.util";
 
 const TZ = chatbotConfig.openHours?.timezone ?? "America/Lima";
+const OPEN_START = chatbotConfig.openHours?.start ?? "09:00";
+const OPEN_END = chatbotConfig.openHours?.end ?? "19:30";
 
-function fmtDateLima(d: Date) {
-  return new Intl.DateTimeFormat("es-PE", {
-    timeZone: TZ,
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(d);
-}
-function fmtTimeLima(d: Date) {
-  return new Intl.DateTimeFormat("es-PE", {
-    timeZone: TZ,
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(d);
-}
-function todayLimaISO() {
-  const d = new Date();
-  const [y, m, dd] = new Intl.DateTimeFormat("en-CA", {
-    timeZone: TZ,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  })
-    .formatToParts(d)
-    .filter((p) => p.type !== "literal")
-    .map((p) => p.value);
-  return `${y}-${m}-${dd}`;
-}
-function addDaysLima(baseISO: string, days: number) {
-  const [y, m, d] = baseISO.split("-").map(Number);
-  const dt = new Date(Date.UTC(y, m - 1, d));
-  dt.setUTCDate(dt.getUTCDate() + days);
-  const y2 = dt.getUTCFullYear();
-  const m2 = String(dt.getUTCMonth() + 1).padStart(2, "0");
-  const d2 = String(dt.getUTCDate()).padStart(2, "0");
-  return `${y2}-${m2}-${d2}`;
-}
+const MAX_RETRIES = 3;
 
-function isValidTimeHHmm(s: string) {
-  const m = s.match(/^(\d{2}):(\d{2})$/);
-  if (!m) return false;
-  const hh = Number(m[1]),
-    mm = Number(m[2]);
-  return hh >= 0 && hh <= 23 && mm >= 0 && mm <= 59;
-}
-function toMinutes(s: string) {
-  const [hh, mm] = s.split(":").map(Number);
-  return hh * 60 + mm;
-}
-function isWithinOpenHours(timeHHmm: string) {
-  const start = chatbotConfig.openHours?.start ?? "09:00";
-  const end = chatbotConfig.openHours?.end ?? "19:30";
-  const t = toMinutes(timeHHmm);
-  return t >= toMinutes(start) && t <= toMinutes(end);
-}
-function isDateNotPastLima(yyyy_mm_dd: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(yyyy_mm_dd)) return false;
-  const today = todayLimaISO();
-  return yyyy_mm_dd >= today;
-}
-
-/** Normalizador de espacios */
-function normalizeSpaceName(input: string): string | null {
-  const t = input.normalize("NFKC").trim().toLowerCase();
-  const aliases = chatbotConfig.spaceAliases ?? {};
-  for (const canonical of Object.keys(aliases)) {
-    const list = aliases[canonical];
-    if (list.some((a) => t.includes(a))) return canonical;
-  }
-  const canonMatch = Object.keys(aliases).find((k) => t.includes(k));
-  return canonMatch ?? null;
-}
-
-/** Relative dates: hoy/mañana/ayer */
-function resolveRelativeDate(text: string): string | null {
-  const t = text.toLowerCase();
-  const today = todayLimaISO();
-  if (/\b(hoy)\b/.test(t)) return today;
-  if (/\b(mañana|manana)\b/.test(t)) return addDaysLima(today, 1);
-  if (/\b(ayer)\b/.test(t)) return addDaysLima(today, -1);
-  return null;
-}
-
-type Step = "idle" | "phone" | "space" | "date" | "time" | "review" | "done";
+export type Step =
+  | "idle"
+  | "phone"
+  | "space"
+  | "date"
+  | "time"
+  | "review"
+  | "done";
 export type Lead = {
   phone?: string;
   space_name?: string;
@@ -101,28 +50,59 @@ export type Lead = {
   email?: string;
 };
 
-type Session = { step: Step; data: Lead; updatedAt: number };
+type Session = {
+  step: Step;
+  data: Lead;
+  updatedAt: number;
+  retries: Record<Step, number>;
+  lastPrompt?: string;
+};
 const SESSIONS = new Map<string, Session>();
-const TTL_MS = 1000 * 60 * 30; // 30 min
+const TTL_MS = 1000 * 60 * 30;
 
+/* ---- Sesión ---- */
+function freshSession(): Session {
+  return {
+    step: "idle",
+    data: {},
+    updatedAt: Date.now(),
+    retries: {
+      idle: 0,
+      phone: 0,
+      space: 0,
+      date: 0,
+      time: 0,
+      review: 0,
+      done: 0,
+    },
+  };
+}
 function getSession(chatId: string): Session {
   const now = Date.now();
   const s = SESSIONS.get(chatId);
   if (s && now - s.updatedAt < TTL_MS) return s;
-  const fresh: Session = { step: "idle", data: {}, updatedAt: now };
+  const fresh = freshSession();
   SESSIONS.set(chatId, fresh);
   return fresh;
 }
-function save(chatId: string, s: Session) {
+function save(chatId: string, s: Session, lastPrompt?: string) {
   s.updatedAt = Date.now();
+  if (lastPrompt) s.lastPrompt = lastPrompt;
   SESSIONS.set(chatId, s);
 }
-/** Exporta el step para el bot (bloqueo de saludos) */
-export function getCurrentStepFor(chatId: string): Step {
-  return getSession(chatId).step;
+
+/* ---- Utilidades específicas ---- */
+function normalizeSpaceName(input: string): string | null {
+  const t = input.normalize("NFKC").trim().toLowerCase();
+  const aliases = chatbotConfig.spaceAliases ?? {};
+  for (const canonical of Object.keys(aliases)) {
+    const list = aliases[canonical];
+    if (list.some((a) => t.includes(a))) return canonical;
+  }
+  const canonMatch = Object.keys(aliases).find((k) => t.includes(k));
+  return canonMatch ?? null;
 }
 
-/** Mensaje bonito para admins */
 function prettyLead(l: Lead) {
   const now = new Date();
   const fechaHuman = l.date ? l.date.split("-").reverse().join("/") : "-";
@@ -139,33 +119,89 @@ function prettyLead(l: Lead) {
   ]
     .filter(Boolean)
     .join("\n");
-  const rec = `⏰ Recibida: ${fmtDateLima(now)}, ${fmtTimeLima(now)}`;
+  const rec = `⏰ Recibida: ${fmtDateLima(now, TZ)}, ${fmtTimeLima(now, TZ)}`;
   const code = `#RES${Math.floor(Math.random() * 1e9)
     .toString()
     .padStart(9, "0")}`;
-  return [hdr, body, "", rec, "", code, "#WhatsApp #Roxi #Lead"].join("\n");
+  return [hdr, body, "", rec, "", code, "#Roxi #Lead"].join("\n");
 }
 
-function isReserveKeyword(t: string) {
-  return /\b(reservar|reserva|booking|apartado)\b/i.test(t);
-}
-function isCancel(t: string) {
-  return /\b(cancel|cancelar|reiniciar|reset)\b/i.test(t);
+/* ---- Helpers de extracción laxa (para mensajes largos) ---- */
+async function tryLooseExtract(t: string, s: Session, todayISO: string) {
+  // 1) Intent/entidades por LLM (resiliente)
+  const ai = await classifyIntent({ userText: t });
+
+  // 2) Espacio
+  if (!s.data.space_name) {
+    const fromAI = ai.entities.space_name ?? null;
+    const canon =
+      (fromAI && normalizeSpaceName(fromAI)) || normalizeSpaceName(t);
+    if (canon) s.data.space_name = canon;
+  }
+
+  // 3) Fecha
+  if (!s.data.date) {
+    const fromText = parseDateFlexible(t, todayISO);
+    const fromAI = ai.entities.date ?? null; // ya puede venir yyyy-mm-dd
+    s.data.date = fromText || fromAI || undefined;
+  }
+
+  // 4) Hora
+  if (!s.data.time) {
+    const fromText = parseTimeFlexible(t);
+    const fromAI = ai.entities.time ?? null; // podría venir “hh:mm”
+    s.data.time = fromText || fromAI || undefined;
+  }
+
+  // 5) Teléfono (si lo mandaron junto)
+  if (!s.data.phone && ai.entities.phone) {
+    s.data.phone = ai.entities.phone;
+  }
 }
 
+/* ---- API público ---- */
+export function getCurrentStepFor(chatId: string): Step {
+  return getSession(chatId).step;
+}
+
+/* ---- Motor principal ---- */
 export type Action =
   | { kind: "reply"; text: string }
   | { kind: "send_admin"; text: string; alsoReply?: string }
   | { kind: "handoff_number"; text: string };
+
+function bumpRetries(s: Session) {
+  s.retries[s.step] = (s.retries[s.step] ?? 0) + 1;
+}
 
 export async function handleIncomingText(
   from: string,
   text: string,
 ): Promise<Action[]> {
   const s = getSession(from);
-  const tRaw = text.trim();
+  const tRaw = text?.trim() ?? "";
   const t = tRaw.normalize("NFKC");
+  const todayISO = todayLimaISO(TZ);
 
+  /* Controles universales */
+  if (isWebsiteQuery(t)) {
+    const link = chatbotConfig.websiteUrl;
+    return [
+      {
+        kind: "reply",
+        text: `Nuestra web es ${link}\n\n${promptFor(s.step, todayISO, OPEN_START, OPEN_END)}`,
+      },
+    ];
+  }
+  if (isFarewell(t) && (s.step === "done" || s.step === "idle")) {
+    SESSIONS.delete(from);
+    return [
+      {
+        kind: "reply",
+        text: "¡Listo! Gracias por escribir. Cuando gustes, envía “reservar” para iniciar otra solicitud.",
+      },
+    ];
+  }
   if (isCancel(t)) {
     SESSIONS.delete(from);
     return [
@@ -175,8 +211,35 @@ export async function handleIncomingText(
       },
     ];
   }
+  if (backRequested(t)) {
+    const order: Step[] = [
+      "idle",
+      "phone",
+      "space",
+      "date",
+      "time",
+      "review",
+      "done",
+    ];
+    const idx = order.indexOf(s.step);
+    if (idx > 1) {
+      s.step = order[idx - 1];
+      save(from, s);
+      return [
+        {
+          kind: "reply",
+          text: `Volvemos un paso. ${promptFor(s.step, todayISO, OPEN_START, OPEN_END)}`,
+        },
+      ];
+    }
+  }
+  if (isHelp(t)) {
+    return [
+      { kind: "reply", text: helpFor(s.step, todayISO, OPEN_START, OPEN_END) },
+    ];
+  }
 
-  // Idle: clasificador o keyword
+  /* Idle: clasificador o palabra clave */
   if (s.step === "idle" && !isReserveKeyword(t)) {
     const intent = await classifyIntent({ userText: t });
     if (intent.intent === "reservation_start") {
@@ -185,35 +248,50 @@ export async function handleIncomingText(
       return [
         {
           kind: "reply",
-          text: "Perfecto, iniciemos tu solicitud. ¿Cuál es tu número de celular? (solo dígitos, por favor)",
+          text:
+            "Perfecto, iniciemos tu solicitud.\n" +
+            promptFor("phone", todayISO, OPEN_START, OPEN_END),
         },
       ];
     }
     const reply = await generateReply({ userText: t });
     return [{ kind: "reply", text: reply }];
   }
-
   if (s.step === "idle" && isReserveKeyword(t)) {
     s.step = "phone";
     save(from, s);
     return [
       {
         kind: "reply",
-        text: "Genial. Para contactarte: ¿tu número de celular? (9 dígitos)",
+        text: "Genial. " + promptFor("phone", todayISO, OPEN_START, OPEN_END),
       },
     ];
   }
 
-  // phone
+  /* phone */
   if (s.step === "phone") {
-    const digits = t.replace(/\D+/g, "");
-    if (!/^9\d{8}$/.test(digits)) {
+    if (await wantsSkipAI(t)) {
+      s.step = "space";
+      save(from, s);
       return [
         {
           kind: "reply",
-          text: "Formato no válido. Debe empezar en 9 y tener 9 dígitos. Intenta nuevamente.",
+          text: softSkipResponse(
+            promptFor("space", todayISO, OPEN_START, OPEN_END),
+          ),
         },
       ];
+    }
+    const digits = t.replace(/\D+/g, "");
+    if (!/^9\d{8}$/.test(digits)) {
+      bumpRetries(s);
+      save(from, s);
+      const msg =
+        s.retries.phone >= MAX_RETRIES
+          ? helpFor("phone", todayISO, OPEN_START, OPEN_END)
+          : "Formato no válido. Debe empezar en 9 y tener 9 dígitos.\n" +
+            promptFor("phone", todayISO, OPEN_START, OPEN_END);
+      return [{ kind: "reply", text: msg }];
     }
     s.data.phone = digits;
     s.step = "space";
@@ -221,121 +299,283 @@ export async function handleIncomingText(
     return [
       {
         kind: "reply",
-        text: "¿Qué espacio te interesa? (Unidad, Bunker, Brigada, Base de Mando, Base Operativa, El Hangar)",
+        text:
+          "Gracias ✅. " + promptFor("space", todayISO, OPEN_START, OPEN_END),
       },
     ];
   }
 
-  // space
+  /* space (acepta mensaje largo con fecha y hora) */
   if (s.step === "space") {
-    // Orientar si pregunta por 1 persona
+    if (await wantsSkipAI(t)) {
+      s.step = "date";
+      save(from, s);
+      return [
+        {
+          kind: "reply",
+          text: softSkipResponse(
+            promptFor("date", todayISO, OPEN_START, OPEN_END),
+          ),
+        },
+      ];
+    }
+
+    // Intento extraer todo lo posible del mensaje
+    await tryLooseExtract(t, s, todayISO);
+
+    // Sugerencia rápida si es “1 persona”
     if (/\b(una persona|1 persona|solo|individual)\b/i.test(t)) {
       const hint =
         chatbotConfig.spaceHints?.onePerson ??
         "Para 1 persona: Unidad (privado 1p). Como individual en compartido: Base Operativa o El Hangar.";
-      return [{ kind: "reply", text: `${hint}\n\n¿Cuál prefieres?` }];
+      // no retornamos aún; continuamos abajo con la lógica
+      await Promise.resolve(hint);
     }
-    const canon = normalizeSpaceName(t);
-    if (!canon) {
+
+    // Normaliza espacio si aún no lo tenemos
+    if (!s.data.space_name) {
+      const canon = normalizeSpaceName(t);
+      if (!canon) {
+        bumpRetries(s);
+        save(from, s);
+        const msg =
+          s.retries.space >= MAX_RETRIES
+            ? helpFor("space", todayISO, OPEN_START, OPEN_END)
+            : "No identifiqué el espacio.\n" +
+              // pequeña tabla compacta
+              "Opciones: Unidad (1p) · Bunker (2–4) · Brigada (2–4) · Base de Mando (2–10) · Base Operativa / El Hangar (individual)\n\n" +
+              promptFor("space", todayISO, OPEN_START, OPEN_END);
+        return [{ kind: "reply", text: msg }];
+      }
+      s.data.space_name = canon;
+    }
+
+    // Decidir siguiente paso según lo que ya capturamos
+    if (!s.data.date) {
+      s.step = "date";
+      save(from, s);
       return [
         {
           kind: "reply",
-          text: "No identifiqué el espacio. Opciones: Unidad (1p), Bunker (2–4), Brigada (2–4), Base de Mando (2–10), Base Operativa/El Hangar (individual en compartido). ¿Cuál prefieres?",
+          text:
+            "Anotado 🏢. " + promptFor("date", todayISO, OPEN_START, OPEN_END),
         },
       ];
     }
-    s.data.space_name = canon;
-    s.step = "date";
+    if (!s.data.time) {
+      s.step = "time";
+      save(from, s);
+      return [
+        {
+          kind: "reply",
+          text:
+            "Anotado 🏢. " + promptFor("time", todayISO, OPEN_START, OPEN_END),
+        },
+      ];
+    }
+
+    // Si ya llegaron date + time en el mismo mensaje, validamos y saltamos a review
+    if (!isDateNotPastLima(todayISO, s.data.date)) {
+      s.step = "date";
+      save(from, s);
+      return [
+        {
+          kind: "reply",
+          text: `Esa fecha ya pasó. Elige una a partir de ${todayISO}.\n${promptFor("date", todayISO, OPEN_START, OPEN_END)}`,
+        },
+      ];
+    }
+    if (!isValidTimeHHmm(s.data.time)) {
+      const parsed = parseTimeFlexible(s.data.time);
+      if (!parsed) {
+        s.step = "time";
+        save(from, s);
+        return [
+          {
+            kind: "reply",
+            text: helpFor("time", todayISO, OPEN_START, OPEN_END),
+          },
+        ];
+      }
+      s.data.time = parsed;
+    }
+    if (!isWithinOpenHours(s.data.time, OPEN_START, OPEN_END)) {
+      s.step = "time";
+      save(from, s);
+      return [
+        {
+          kind: "reply",
+          text: `Estamos disponibles entre ${OPEN_START} y ${OPEN_END}. Elige una hora dentro de ese rango.\n${promptFor("time", todayISO, OPEN_START, OPEN_END)}`,
+        },
+      ];
+    }
+    s.step = "review";
     save(from, s);
     return [
       {
         kind: "reply",
-        text: "¿Para qué fecha? (formato yyyy-mm-dd, ej. 2025-09-03). También puedo entender “hoy”, “mañana”.",
+        text:
+          "Perfecto ✅. " + promptFor("review", todayISO, OPEN_START, OPEN_END),
       },
     ];
   }
 
-  // date
+  /* date */
   if (s.step === "date") {
-    const rel = resolveRelativeDate(t);
-    const value = rel ?? t;
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    if (await wantsSkipAI(t)) {
+      s.step = "time";
+      save(from, s);
       return [
         {
           kind: "reply",
-          text: "Formato inválido. Usa yyyy-mm-dd (p. ej. 2025-09-03) o escribe “hoy/mañana”.",
+          text:
+            "Ok, coordinaremos la fecha luego. " +
+            promptFor("time", todayISO, OPEN_START, OPEN_END),
         },
       ];
     }
-    if (!isDateNotPastLima(value)) {
-      return [
-        {
-          kind: "reply",
-          text: `Esa fecha ya pasó. Elige una a partir de hoy (${todayLimaISO()}).`,
-        },
-      ];
+    const value = parseDateFlexible(t, todayISO);
+    if (!value) {
+      bumpRetries(s);
+      save(from, s);
+      const msg =
+        s.retries.date >= MAX_RETRIES
+          ? helpFor("date", todayISO, OPEN_START, OPEN_END)
+          : `Formato inválido.\n${promptFor("date", todayISO, OPEN_START, OPEN_END)}`;
+      return [{ kind: "reply", text: msg }];
+    }
+    if (!isDateNotPastLima(todayISO, value)) {
+      bumpRetries(s);
+      save(from, s);
+      const msg =
+        s.retries.date >= MAX_RETRIES
+          ? helpFor("date", todayISO, OPEN_START, OPEN_END)
+          : `Esa fecha ya pasó. Elige una a partir de ${todayISO}.\n${promptFor("date", todayISO, OPEN_START, OPEN_END)}`;
+      return [{ kind: "reply", text: msg }];
     }
     s.data.date = value;
     s.step = "time";
     save(from, s);
-    const start = chatbotConfig.openHours?.start ?? "09:00";
-    const end = chatbotConfig.openHours?.end ?? "19:30";
     return [
       {
         kind: "reply",
-        text: `¿A qué hora? (HH:mm 24h, entre ${start} y ${end})`,
+        text:
+          "¡Perfecto! 📅 " + promptFor("time", todayISO, OPEN_START, OPEN_END),
       },
     ];
   }
 
-  // time
+  /* time (no envía lead aún; se enviará en review para evitar duplicado) */
   if (s.step === "time") {
-    if (!isValidTimeHHmm(t)) {
-      const start = chatbotConfig.openHours?.start ?? "09:00";
-      const end = chatbotConfig.openHours?.end ?? "19:30";
+    if (await wantsSkipAI(t)) {
+      s.step = "review";
+      save(from, s);
       return [
         {
           kind: "reply",
-          text: `Formato inválido. Usa HH:mm 24h (ej. 15:30). Recuerda: atención ${start}–${end}.`,
-        },
-      ];
-    }
-    if (!isWithinOpenHours(t)) {
-      const start = chatbotConfig.openHours?.start ?? "09:00";
-      const end = chatbotConfig.openHours?.end ?? "19:30";
-      return [
-        {
-          kind: "reply",
-          text: `Estamos disponibles entre ${start} y ${end}. Elige una hora dentro de ese rango.`,
+          text:
+            "Sin problema, la hora la coordinamos luego. " +
+            promptFor("review", todayISO, OPEN_START, OPEN_END),
         },
       ];
     }
 
-    s.data.time = t;
+    const parsed = parseTimeFlexible(t);
+    if (!parsed) {
+      bumpRetries(s);
+      save(from, s);
+      const msg =
+        s.retries.time >= MAX_RETRIES
+          ? helpFor("time", todayISO, OPEN_START, OPEN_END)
+          : `No logré entender la hora.\n${promptFor("time", todayISO, OPEN_START, OPEN_END)}`;
+      return [{ kind: "reply", text: msg }];
+    }
+    if (!isWithinOpenHours(parsed, OPEN_START, OPEN_END)) {
+      bumpRetries(s);
+      save(from, s);
+      const msg =
+        s.retries.time >= MAX_RETRIES
+          ? helpFor("time", todayISO, OPEN_START, OPEN_END)
+          : `Estamos disponibles entre ${OPEN_START} y ${OPEN_END}. Elige una hora dentro de ese rango.\n${promptFor("time", todayISO, OPEN_START, OPEN_END)}`;
+      return [{ kind: "reply", text: msg }];
+    }
+
+    s.data.time = parsed;
     s.step = "review";
     save(from, s);
-
-    const msgAdmin = prettyLead(s.data);
     return [
       {
-        kind: "send_admin",
-        text: msgAdmin,
-        alsoReply: `Listo, he enviado tu solicitud al equipo 👌. Te contactarán a la brevedad. Si prefieres, también puedes escribir o llamar directo al +${chatbotConfig.adminDirectNumber.replace(/@c\.us$/, "")}.`,
+        kind: "reply",
+        text:
+          "Listo ✅. " + promptFor("review", todayISO, OPEN_START, OPEN_END),
       },
     ];
   }
 
+  /* review (enviamos el lead UNA sola vez) */
   if (s.step === "review") {
+    if (await wantsSkipAI(t)) {
+      const msgAdmin = prettyLead(s.data);
+      s.step = "done";
+      save(from, s);
+      return [
+        {
+          kind: "send_admin",
+          text: msgAdmin,
+          alsoReply: "Solicitud enviada al equipo 👌.",
+        },
+        {
+          kind: "handoff_number",
+          text: `Si deseas atención inmediata, contáctanos al +${chatbotConfig.adminDirectNumber.replace(/@c\.us$/, "")}. ¿Necesitas algo más?`,
+        },
+      ];
+    }
+
+    // Heurísticas para opcionales
+    const emailMatch = t.match(/[\w.+-]+@[\w.-]+\.\w+/);
+    const dniMatch = t.match(/\b\d{8}\b/);
+    const peopleMatch = t.match(/\b(\d+)\s*(personas?|pax?)?\b/i);
+
+    if (emailMatch) s.data.email = emailMatch[0];
+    if (dniMatch) s.data.dni = dniMatch[0];
+    if (peopleMatch) {
+      const n = Number(peopleMatch[1]);
+      if (n > 0 && n < 1000) s.data.people = n;
+    }
+
+    // Nombre “suave”: texto sin @ ni dígitos, ≥2 palabras
+    const clean = t.replace(/\s+/g, " ").trim();
+    const looksLikeName =
+      !emailMatch &&
+      !dniMatch &&
+      !/\d|@/.test(clean) &&
+      clean.split(" ").length >= 2 &&
+      clean.length <= 80;
+    if (looksLikeName) {
+      s.data.full_name = clean;
+    } else if (!emailMatch && !dniMatch && !peopleMatch) {
+      // Si no parece nombre, lo tomamos como motivo
+      s.data.purpose = clean;
+    }
+
+    // Enviar lead enriquecido (UNA vez)
+    const msgAdmin = prettyLead(s.data);
     s.step = "done";
     save(from, s);
     return [
       {
+        kind: "send_admin",
+        text: msgAdmin,
+        alsoReply: "Gracias, ya envié tu solicitud al equipo 🙌.",
+      },
+      {
         kind: "handoff_number",
-        text: `Si deseas atención inmediata, contáctanos al +${chatbotConfig.adminDirectNumber.replace(/@c\.us$/, "")}. ¿Necesitas algo más?`,
+        text: `Si deseas atención inmediata, contáctanos al +${chatbotConfig.adminDirectNumber.replace(/@c\.us$/, "")}. ¿Puedo ayudarte con algo más?`,
       },
     ];
   }
 
+  /* done */
   return [
     {
       kind: "reply",

@@ -76,7 +76,13 @@ Internet rápido, café, impresora, salas de reuniones, zonas silenciosas, comun
 
   spaceHints: {
     onePerson:
-      "Para 1 persona: *Unidad (privado 1p)*. También puedes usar *Base Operativa* o *El Hangar* como individual en zona compartida.",
+      "Para 1 persona: *Unidad (privado 1p)*. También *Base Operativa* o *El Hangar* como individual en zona compartida.",
+    twoPeople:
+      "Para 2 personas: *Bunker (2p privado)* o *Reserva dúo* si es algo breve.",
+    upTo4:
+      "Para 3–4 personas: *Bunker (2–4)* o *La Brigada (2–4)*, según privacidad.",
+    teamUpTo10:
+      "Para 5–10 personas: *Base de Mando (2–10)*. Si necesitas más, cuéntame.",
   },
   openHours: {
     timezone: "America/Lima",

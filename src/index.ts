@@ -50,7 +50,7 @@ app.get("/ping", (_, res) => res.send("pong"));
 
 // Start server
 const main = async () => {
-  // ⬇️ Inicia Redis (si falla, registra y no cae el proceso)
+  // ⬇️ Inicia Redis
   try {
     await redisClient.connect();
   } catch (e) {
@@ -68,7 +68,7 @@ const main = async () => {
     displayWelcomeMessage(appUrl);
     console.log(`[HTTP] Server on :${PORT}`);
     console.log(
-      "[WhatsApp] Si usas PM2, mira los logs para ver el QR: pm2 logs labase-server",
+      "[WhatsApp] Recuerda mirar los logs para ver el QR: pm2 logs labase-server",
     );
   });
 };

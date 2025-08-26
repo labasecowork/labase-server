@@ -1,14 +1,10 @@
-// src/modules/chatbot/data/repository/whatsapp.repository.ts
 import qrcode from "qrcode-terminal";
 import type { Message as WaMessage, Chat as WaChat } from "whatsapp-web.js";
 import pkg from "whatsapp-web.js";
 const { Client, LocalAuth } = pkg;
 
-// Cache de grupo + último manejado por chat (antispam simple)
 let GROUP_CACHE = new Map<string, string>();
-const LAST_HANDLED: Map<string, number> = new Map(); // chatId -> epoch ms
-const MIN_REPLY_INTERVAL_MS = 10_000; // 10s entre respuestas al mismo chat
-const MAX_MESSAGE_AGE_MS = 2 * 60_000; // 2 minutos
+const MAX_MESSAGE_AGE_MS = 5 * 60_000;
 
 type Handlers = {
   onReady?: () => void;
@@ -16,6 +12,7 @@ type Handlers = {
 };
 
 let client: InstanceType<typeof Client> | null = null;
+const QUEUE = new Map<string, Promise<void>>();
 
 function ensureReady() {
   if (!client) throw new Error("WhatsApp client no inicializado");
@@ -60,34 +57,35 @@ export async function initWpClient(handlers?: Handlers) {
     console.warn("[WhatsApp] Desconectado:", reason);
   });
 
-  // 👉 clave: guarda la referencia local para que deje de ser opcional
   const onMessage = handlers?.onMessage;
   if (onMessage) {
     client.on("message", async (msg: WaMessage) => {
-      try {
-        // 1) Ignora mensajes propios / vacíos
-        if ((msg as any).fromMe) return;
-        const body = (msg.body ?? "").trim();
-        if (!body) return;
+      // Cola por chat: garantiza orden y evita descartar mensajes rápidos
+      const chatId = msg.from;
+      const prev = QUEUE.get(chatId) ?? Promise.resolve();
 
-        // 2) Ignora muy antiguos
-        const now = Date.now();
-        const msgEpochMs = (msg.timestamp ?? 0) * 1000;
-        if (msgEpochMs && now - msgEpochMs > MAX_MESSAGE_AGE_MS) return;
+      const task = prev
+        .then(async () => {
+          try {
+            if ((msg as any).fromMe) return;
+            const body = (msg.body ?? "").trim();
+            if (!body) return;
 
-        // 3) Antispam por chat
-        const chatId = msg.from;
-        const last = LAST_HANDLED.get(chatId) ?? 0;
-        if (now - last < MIN_REPLY_INTERVAL_MS) return;
+            const now = Date.now();
+            const msgEpochMs = (msg.timestamp ?? 0) * 1000;
+            if (msgEpochMs && now - msgEpochMs > MAX_MESSAGE_AGE_MS) return;
 
-        // 4) Marca como manejado antes de procesar
-        LAST_HANDLED.set(chatId, now);
+            await onMessage(msg);
+          } catch (err) {
+            console.error("[WhatsApp] onMessage error:", err);
+          }
+        })
+        .finally(() => {
+          // limpiar cola cuando termina
+          if (QUEUE.get(chatId) === task) QUEUE.delete(chatId);
+        });
 
-        // 5) Llama al handler real (ya no es opcional)
-        await onMessage(msg);
-      } catch (err) {
-        console.error("[WhatsApp] onMessage error:", err);
-      }
+      QUEUE.set(chatId, task);
     });
   }
 
@@ -134,13 +132,13 @@ export async function sendToGroupByNameSafe(name: string, text: string) {
   try {
     await sendToGroupByName(name, text);
   } catch (e) {
-    // invalida cache y reintenta una vez
     GROUP_CACHE.delete(norm(name));
     const gid = await getGroupIdByName(name);
     if (!gid) throw e;
     await sendText(gid, text);
   }
 }
+
 export async function listAllGroups() {
   ensureReady();
   const chats = await client!.getChats();
