@@ -23,6 +23,16 @@ export class GetEmployeeRepository {
             creation_timestamp: true,
           },
         },
+        work_area: {
+          select: {
+            id: true,
+          },
+        },
+        company: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
