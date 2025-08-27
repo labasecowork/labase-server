@@ -4,6 +4,7 @@ import prisma from "../../../../../config/prisma_client";
 
 export class EditProfileRepository {
   async update(userId: string, data: Prisma.usersUpdateInput) {
+    console.log(data);
     return prisma.users.update({
       where: { id: userId },
       data,
