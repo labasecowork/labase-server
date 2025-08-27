@@ -21,23 +21,20 @@ export class ListEmployeesService {
     return {
       employees: result.employees.map((employee) => ({
         employee_id: employee.employee_id,
-        user: {
-          id: employee.user.id,
-          first_name: employee.user.first_name,
-          last_name: employee.user.last_name,
-          email: employee.user.email,
-          user_type: employee.user.user_type,
-          profile_image: employee.user.profile_image,
-          phone: employee.user.phone,
-          birth_date: employee.user.birth_date
-            ? format(employee.user.birth_date, "yyyy-MM-dd")
-            : null,
-          gender: employee.user.gender,
-          status: employee.user.status,
-          creation_timestamp: employee.user.creation_timestamp
-            ? format(employee.user.creation_timestamp, "yyyy-MM-dd HH:mm:ss")
-            : null,
-        },
+        first_name: employee.user.first_name,
+        last_name: employee.user.last_name,
+        email: employee.user.email,
+        user_type: employee.user.user_type,
+        profile_image: employee.user.profile_image,
+        phone: employee.user.phone,
+        birth_date: employee.user.birth_date
+          ? format(employee.user.birth_date, "yyyy-MM-dd")
+          : null,
+        gender: employee.user.gender,
+        status: employee.user.status,
+        creation_timestamp: employee.user.creation_timestamp
+          ? format(employee.user.creation_timestamp, "yyyy-MM-dd HH:mm:ss")
+          : null,
       })),
       pagination: {
         page: dto.page,

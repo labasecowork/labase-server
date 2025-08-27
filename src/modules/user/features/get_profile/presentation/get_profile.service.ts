@@ -31,7 +31,7 @@ export class GetProfileService {
       gender: parsedGender,
       user_type: profile.user_type,
       status: profile.status,
-      adminDetails: profile.admin_details ?? null,
+      admin_details: profile.admin_details ?? null,
     };
   }
 }

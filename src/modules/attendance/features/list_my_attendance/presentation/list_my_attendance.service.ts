@@ -49,7 +49,7 @@ export class ListMyAttendanceService {
         page: dto.page,
         limit: dto.limit,
         total: result.total,
-        totalPages,
+        total_pages: totalPages,
       },
     };
   }
