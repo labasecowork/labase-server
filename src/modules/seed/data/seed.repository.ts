@@ -34,7 +34,6 @@ export class SeedRepository {
     console.log("Detalles del administrador creado");
 
     // 3. Espacios
-
     const spacesWithImages = [
       {
         space: {
@@ -778,8 +777,6 @@ export class SeedRepository {
             first_name: firstName,
             last_name: lastName,
             email: emp.email,
-
-            // Then change
             password:
               "$2b$12$X00fWdC0IAfuIafie7ONleA.Uu.4JvUCe0vFaUeC66t.jeETRLNL2",
             user_type: "employee",
@@ -798,6 +795,22 @@ export class SeedRepository {
         console.log(`Empleado creado: ${firstName} ${lastName} (${emp.email})`);
       });
     }
+
+    console.log("Empleados creados");
+
+    // 3. Newsletters
+    for (const emp of employeesData) {
+      await prisma.newsletter_subscriber.create({
+        data: {
+          name: emp.name,
+          email: emp.email,
+          created_at: new Date(),
+        },
+      });
+      console.log(`Newsletter creado: ${emp.name} (${emp.email})`);
+    }
+
+    console.log("Newsletters creados");
 
     return { message: "Database seeded successfully" };
   }
