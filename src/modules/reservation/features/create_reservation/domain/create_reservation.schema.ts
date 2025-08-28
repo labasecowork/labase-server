@@ -3,38 +3,38 @@ import { z } from "zod";
 
 export const CreateReservationSchema = z
   .object({
-    spaceId: z.string().uuid("spaceId must be a valid UUID"),
-    startTime: z.coerce.date(),
-    endTime: z.coerce.date(),
+    space_id: z.string().uuid("space_id must be a valid UUID"),
+    start_time: z.coerce.date(),
+    end_time: z.coerce.date(),
     people: z.number().int().positive(),
-    fullRoom: z.boolean().optional().default(false),
+    full_room: z.boolean().optional().default(false),
   })
   .superRefine((data, ctx) => {
-    if (data.endTime <= data.startTime) {
+    if (data.end_time <= data.start_time) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "endTime must be later than startTime",
-        path: ["endTime"],
+        path: ["end_time"],
       });
     }
 
-    const diffMs = data.endTime.getTime() - data.startTime.getTime();
+    const diffMs = data.end_time.getTime() - data.start_time.getTime();
     const oneHourMs = 60 * 60 * 1000;
     if (diffMs < oneHourMs) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "The minimum reservation duration must be 1 hour",
-        path: ["endTime"],
+        path: ["end_time"],
       });
     }
 
     // Prevent reservations in the past (5-minute margin)
     const now = Date.now() - 5 * 60 * 1000;
-    if (data.startTime.getTime() < now) {
+    if (data.start_time.getTime() < now) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "startTime cannot be in the past",
-        path: ["startTime"],
+        message: "start_time cannot be in the past",
+        path: ["start_time"],
       });
     }
   });

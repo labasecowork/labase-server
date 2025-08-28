@@ -5,10 +5,10 @@ export interface GetProfileResponseDto {
   email: string;
   phone: string | null;
   birth_date: Date | null;
-  gender: "M" | "F" | "O" | null;
+  gender: string | null;
   user_type: "admin" | "client" | "employee";
   status: string;
-  adminDetails: {
+  admin_details: {
     role: string;
   } | null;
 }

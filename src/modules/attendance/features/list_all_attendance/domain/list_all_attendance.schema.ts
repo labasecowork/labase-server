@@ -9,6 +9,9 @@ export const ListAllAttendanceSchema = z
     start_date: z.coerce.date().optional(),
     end_date: z.coerce.date().optional(),
     type: z.enum(["ENTRY", "EXIT"]).optional(),
+    search: z.string().optional(),
+    work_area_id: z.string().uuid().optional(),
+    company_id: z.string().uuid().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.start_date && data.end_date && data.end_date < data.start_date) {

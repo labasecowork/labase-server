@@ -10,7 +10,9 @@
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "seed:dev": "tsx src/modules/seed/index.ts",
+    "seed:prod": "ENVIRONMENT=production tsx src/modules/seed/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.802.0",

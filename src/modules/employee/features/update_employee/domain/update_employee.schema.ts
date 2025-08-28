@@ -9,10 +9,9 @@ export const UpdateEmployeeBodySchema = z.object({
   first_name: z.string().min(1, "El nombre es requerido").optional(),
   last_name: z.string().min(1, "El apellido es requerido").optional(),
   email: z.string().email("Email inválido").optional(),
-  password: z
-    .string()
-    .min(6, "La contraseña debe tener al menos 6 caracteres")
-    .optional(),
+  password: z.string().refine((val) => val === "" || val.length >= 6, {
+    message: "La contraseña debe tener al menos 6 caracteres",
+  }),
   user_type: z.enum(["employee"]).optional(),
   profile_image: z.string().url().optional(),
   phone: z.string().optional(),

@@ -7,9 +7,9 @@ export class CheckAvailabilityService {
 
   async execute(dto: CheckAvailabilityDTO) {
     const overlap = await this.repo.findOverlaps(
-      dto.spaceId,
-      dto.startTime,
-      dto.endTime
+      dto.space_id,
+      dto.start_time,
+      dto.end_time
     );
     return { available: !overlap };
   }

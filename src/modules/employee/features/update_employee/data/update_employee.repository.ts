@@ -46,17 +46,36 @@ export class UpdateEmployeeRepository {
   }
 
   async updateEmployee(employeeId: string, data: UpdateEmployeeData) {
-    return await prisma.users.update({
-      where: { id: employeeId },
-      data,
-      select: {
-        id: true,
-        first_name: true,
-        last_name: true,
-        email: true,
-        user_type: true,
-        status: true,
-      },
+    const { work_area_id, company_id, ...userData } = data;
+
+    const employeeDetailsData: { work_area_id?: string; company_id?: string } =
+      {};
+    if (work_area_id !== undefined)
+      employeeDetailsData.work_area_id = work_area_id;
+    if (company_id !== undefined) employeeDetailsData.company_id = company_id;
+
+    return await prisma.$transaction(async (tx) => {
+      const updatedUser = await tx.users.update({
+        where: { id: employeeId },
+        data: userData,
+        select: {
+          id: true,
+          first_name: true,
+          last_name: true,
+          email: true,
+          user_type: true,
+          status: true,
+        },
+      });
+
+      if (Object.keys(employeeDetailsData).length > 0) {
+        await tx.employee_details.update({
+          where: { employee_id: employeeId },
+          data: employeeDetailsData,
+        });
+      }
+
+      return updatedUser;
     });
   }
 }

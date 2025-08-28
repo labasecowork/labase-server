@@ -8,10 +8,6 @@ export class GetProfileService {
   async execute(user: CurrentUser): Promise<GetProfileResponseDto> {
     const profile = await this.repo.getProfile(user.id);
 
-    const gender = profile.gender;
-    const isGenderValid = gender === "M" || gender === "F" || gender === "O";
-    const parsedGender: "M" | "F" | "O" | null = isGenderValid ? gender : null;
-
     if (
       !profile.user_type ||
       (profile.user_type !== "admin" &&
@@ -28,10 +24,10 @@ export class GetProfileService {
       email: profile.email,
       phone: profile.phone,
       birth_date: profile.birth_date,
-      gender: parsedGender,
+      gender: profile.gender,
       user_type: profile.user_type,
       status: profile.status,
-      adminDetails: profile.admin_details ?? null,
+      admin_details: profile.admin_details ?? null,
     };
   }
 }

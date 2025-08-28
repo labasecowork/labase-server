@@ -16,6 +16,9 @@ export class ListAllAttendanceService {
       start_date: dto.start_date,
       end_date: dto.end_date,
       type: dto.type as attendance_type,
+      search: dto.search,
+      work_area_id: dto.work_area_id,
+      company_id: dto.company_id,
     });
 
     const attendances = result.attendances.map((a) => {
