@@ -16,7 +16,9 @@ import { attendanceRouter } from "./modules/attendance";
 import { employeeRouter } from "./modules/employee";
 import { newsletterRouter } from "./modules/newsletter";
 import productRouter, { productBrandRouter } from "./modules/product";
-import { chatbotwhatsapp } from "./modules/chatbot/presentation/send_message.routes";
+
+import { chatbotwhatsapp } from "./modules/chatbot/presentation/routes/send_message.routes";
+import { seedRouter } from "./modules/seed/presentation/seed.routes";
 import { workareaRouter } from "./modules/workarea";
 import { companyRouter } from "./modules/company";
 
