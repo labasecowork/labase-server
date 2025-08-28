@@ -61,7 +61,7 @@ const controller = new GetEmployeeController();
  *                         user_type:
  *                           type: string
  *                           enum: [admin, client]
- *                         profile_image:
+ *                         profile_qimage:
  *                           type: string
  *                           nullable: true
  *                         phone:
@@ -73,7 +73,8 @@ const controller = new GetEmployeeController();
  *                           nullable: true
  *                         gender:
  *                           type: string
- *                           nullable: true
+ *                           enum: [male, female, unspecified]
+ *                           description: Género del usuario
  *                         status:
  *                           type: string
  *                           enum: [active, suspended, pending]
@@ -92,7 +93,7 @@ const controller = new GetEmployeeController();
 router.get(
   "/:id",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller))
+  asyncHandler(controller.handle.bind(controller)),
 );
 
 export { router as getEmployeeRoutes };

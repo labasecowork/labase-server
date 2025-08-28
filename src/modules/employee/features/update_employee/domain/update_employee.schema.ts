@@ -16,7 +16,7 @@ export const UpdateEmployeeBodySchema = z.object({
   profile_image: z.string().url().optional(),
   phone: z.string().optional(),
   birth_date: z.coerce.date().optional(),
-  gender: z.string().optional(),
+  gender: z.enum(["male", "female", "unspecified"]).optional(),
   status: z.enum(["active", "suspended", "pending"]).optional(),
   work_area_id: z.string().uuid().optional(),
   company_id: z.string().uuid().optional(),

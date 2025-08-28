@@ -9,7 +9,7 @@ export function isReserveKeyword(t: string) {
 export function isCancel(t: string) {
   return /\b(cancel|cancelar|reiniciar|reset)\b/i.test(t);
 }
-// ⚠️ “cómo/como” ya no dispara ayuda por sí solo
+// ya no dispara ayuda por sí solo
 export function isHelp(t: string) {
   return /\b(ayuda|help|no\s+entiendo|no\s+s[eé]\s+c[oó]mo|puedes\s+ayudar)\b/i.test(
     t,

@@ -4,18 +4,15 @@ export const EditProfileSchema = z
   .object({
     firstName: z.string().trim().min(1).max(50).optional(),
     lastName: z.string().trim().min(1).max(50).optional(),
-    phone: z.string().trim().min(6).max(20).optional(),
+    phone: z.string().trim().min(9).max(20).optional(),
     birthDate: z.coerce.date().optional(),
-    gender: z.enum(["M", "F", "O"]).optional(),
-    password: z.string().min(6).optional(),
+    gender: z.enum(["male", "female", "unspecified"]).optional(),
+    password: z.string().min(8).optional(),
     confirmPassword: z.string().min(6).optional(),
   })
-  .refine(
-    d => (d.password ? d.confirmPassword === d.password : true),
-    {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    },
-  );
+  .refine((d) => (d.password ? d.confirmPassword === d.password : true), {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export type EditProfileDTO = z.infer<typeof EditProfileSchema>;

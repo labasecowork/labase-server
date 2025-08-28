@@ -96,6 +96,7 @@ const controller = new ListEmployeesController();
  *                                 format: date
  *                               gender:
  *                                 type: string
+ *                                 enum: [male, female, unspecified]
  *                               status:
  *                                 type: string
  *                                 enum: [active, suspended, pending]
@@ -120,7 +121,7 @@ const controller = new ListEmployeesController();
 router.get(
   "/",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller))
+  asyncHandler(controller.handle.bind(controller)),
 );
 
 export { router as listEmployeesRoutes };

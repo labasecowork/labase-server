@@ -1,11 +1,11 @@
-// src/modules/chatbot/presentation/bot/whatsapp.bot.ts
+// src/modules/bot-whatsapp/presentation/bot/whatsapp.bot.ts
 import type { Message } from "whatsapp-web.js";
 import {
   initWpClient,
   sendText,
   sendToGroupByNameSafe,
   getGroupIdByName,
-  listAllGroups, // debug: listar grupos
+  listAllGroups,
 } from "../../data/repository/whatsapp.repository";
 import {
   handleIncomingText,
@@ -42,12 +42,10 @@ export async function startWhatsAppBot() {
         chatbotConfig.adminGroupId ?? chatbotConfig.adminGroupName,
       );
 
-      // Debug: lista todos los grupos e imprime sus IDs si DEBUG_GROUPS=1
       if (process.env.DEBUG_GROUPS === "1") {
         await listAllGroups();
       }
 
-      // Log del ID resuelto por nombre (útil la primera vez)
       if (!chatbotConfig.adminGroupId && chatbotConfig.adminGroupName) {
         const id = await getGroupIdByName(chatbotConfig.adminGroupName);
         console.log("[WhatsApp] Group ID por nombre:", id ?? "no encontrado");
@@ -74,7 +72,7 @@ export async function startWhatsAppBot() {
         const text = (msg.body || "").trim();
         if (!text) return;
 
-        // No saludar si hay flujo activo
+        // no saludar si hay flujo activo
         const step = getCurrentStepFor(msg.from);
         const inFlow = step !== "idle" && step !== "done";
 
@@ -84,7 +82,7 @@ export async function startWhatsAppBot() {
           if (isPureGreeting(text)) return; // evita doble respuesta
         }
 
-        // UX: “escribiendo…” mientras procesas
+        // UX: “escribiendo…”
         await chat.sendStateTyping();
 
         // Funnel / Chat

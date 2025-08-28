@@ -6,7 +6,7 @@ export function buildHttpResponse(
   description: string,
   path?: string,
   data?: any,
-  meta?: any 
+  meta?: any,
 ) {
   const response: any = {
     status,
@@ -20,7 +20,7 @@ export function buildHttpResponse(
   };
 
   if (meta !== undefined) {
-    response.meta = meta; 
+    response.meta = meta;
   }
 
   return response;

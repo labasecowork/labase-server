@@ -117,6 +117,12 @@ enum company_type {
   tenant // Empresa inquilina
 }
 
+enum gender {
+  male // Hombre
+  female // Mujer
+  unspecified // Sin especificar
+}
+
 model users {
   id                 String      @id @default(uuid()) // Identificador único del usuario
   first_name         String // Nombre del usuario
@@ -127,7 +133,7 @@ model users {
   profile_image      String? // Imagen de perfil del usuario
   phone              String? // Número telefónico del usuario
   birth_date         DateTime?   @db.Date // Fecha de nacimiento
-  gender             String? // Género del usuario
+  gender             gender      @default(unspecified) // Género del usuario
   status             user_status // Estado actual del usuario
   creation_timestamp DateTime    @default(now()) // Fecha de creación del registro
 

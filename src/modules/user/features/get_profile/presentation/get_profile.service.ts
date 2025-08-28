@@ -8,9 +8,12 @@ export class GetProfileService {
   async execute(user: CurrentUser): Promise<GetProfileResponseDto> {
     const profile = await this.repo.getProfile(user.id);
 
-    const gender = profile.gender;
-    const isGenderValid = gender === "M" || gender === "F" || gender === "O";
-    const parsedGender: "M" | "F" | "O" | null = isGenderValid ? gender : null;
+    const parsedGender: "male" | "female" | "unspecified" = (() => {
+      const g = String(profile.gender ?? "").toUpperCase();
+      if (g === "M" || g === "MALE") return "male";
+      if (g === "F" || g === "FEMALE") return "female";
+      return "unspecified";
+    })();
 
     if (
       !profile.user_type ||
@@ -20,6 +23,7 @@ export class GetProfileService {
     ) {
       throw new Error("Tipo de usuario inválido en base de datos");
     }
+    const userType: "admin" | "client" | "employee" = profile.user_type;
 
     return {
       id: profile.id,
@@ -29,7 +33,7 @@ export class GetProfileService {
       phone: profile.phone,
       birth_date: profile.birth_date,
       gender: parsedGender,
-      user_type: profile.user_type,
+      user_type: userType,
       status: profile.status,
       adminDetails: profile.admin_details ?? null,
     };

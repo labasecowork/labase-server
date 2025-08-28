@@ -34,7 +34,7 @@ export class RequestPasswordResetRepositoryImpl
           userData.password,
           userData.status,
           userData.creation_timestamp ?? undefined,
-          userData.user_type
+          userData.user_type,
         )
       : null;
   }
@@ -50,7 +50,7 @@ export class RequestPasswordResetRepositoryImpl
       JSON.stringify(temporaryCode),
       {
         EX: 15 * 60,
-      }
+      },
     );
   }
 }

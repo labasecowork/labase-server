@@ -12,13 +12,15 @@ export class CheckAvailabilityController {
     const dto = CheckAvailabilitySchema.parse(req.body);
     const result = await this.service.execute(dto);
 
-    return res.status(HttpStatusCodes.OK.code).json(
-      buildHttpResponse(
-        HttpStatusCodes.OK.code,
-        "Availability checked",
-        req.path,
-        result
-      )
-    );
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          "Availability checked",
+          req.path,
+          result,
+        ),
+      );
   }
 }

@@ -1,4 +1,3 @@
-/* Validadores existentes */
 export function isValidTimeHHmm(s: string) {
   const m = s.match(/^(\d{2}):(\d{2})$/);
   if (!m) return false;
@@ -6,10 +5,12 @@ export function isValidTimeHHmm(s: string) {
     mm = Number(m[2]);
   return hh >= 0 && hh <= 23 && mm >= 0 && mm <= 59;
 }
+
 export function toMinutes(s: string) {
   const [hh, mm] = s.split(":").map(Number);
   return hh * 60 + mm;
 }
+
 export function isWithinOpenHours(
   timeHHmm: string,
   OPEN_START: string,
@@ -18,19 +19,19 @@ export function isWithinOpenHours(
   const t = toMinutes(timeHHmm);
   return t >= toMinutes(OPEN_START) && t <= toMinutes(OPEN_END);
 }
+
 export function isDateNotPastLima(todayISO: string, yyyy_mm_dd: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(yyyy_mm_dd)) return false;
   return yyyy_mm_dd >= todayISO;
 }
 
-/* --------- Parseo flexible de fechas y horas --------- */
+/* ---------- Parseo flexible ---------- */
 export function parseDateFlexible(
   input: string,
   todayISO: string,
 ): string | null {
   const s = input.trim().toLowerCase();
 
-  // relativo
   if (/\b(mañana|manana)\b/.test(s)) {
     const [y, m, d] = todayISO.split("-").map(Number);
     const dt = new Date(Date.UTC(y, m - 1, d));
@@ -59,10 +60,9 @@ export function parseDateFlexible(
 }
 
 export function parseTimeFlexible(input: string): string | null {
-  let t = input.trim().toLowerCase();
-  t = t.replace(/\s+/g, " ");
+  let t = input.trim().toLowerCase().replace(/\s+/g, " ");
 
-  // Rango -> tomar la primera hora
+  // Rango "3-4pm" → tomar la primera hora
   const range = t.match(
     /(.+?)(?:\s*[-–a]\s*)(\d{1,2}(?::\d{2})?\s*(?:a\.?m?\.?|p\.?m?\.?)?|\bmediod[ií]a\b|\bmedianoche\b)/i,
   );
@@ -81,9 +81,9 @@ export function parseTimeFlexible(input: string): string | null {
   const ap = (m[3] || "").toLowerCase();
 
   if (ap.startsWith("a")) {
-    if (hh === 12) hh = 0; // 12am -> 00
+    if (hh === 12) hh = 0;
   } else if (ap.startsWith("p")) {
-    if (hh < 12) hh += 12; // 1pm -> 13
+    if (hh < 12) hh += 12;
   }
 
   if (hh < 0 || hh > 23 || mm < 0 || mm > 59) return null;

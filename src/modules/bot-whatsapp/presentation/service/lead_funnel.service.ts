@@ -60,7 +60,6 @@ type Session = {
 const SESSIONS = new Map<string, Session>();
 const TTL_MS = 1000 * 60 * 30;
 
-/* ---- Sesión ---- */
 function freshSession(): Session {
   return {
     step: "idle",
@@ -91,7 +90,6 @@ function save(chatId: string, s: Session, lastPrompt?: string) {
   SESSIONS.set(chatId, s);
 }
 
-/* ---- Utilidades específicas ---- */
 function normalizeSpaceName(input: string): string | null {
   const t = input.normalize("NFKC").trim().toLowerCase();
   const aliases = chatbotConfig.spaceAliases ?? {};
@@ -126,12 +124,10 @@ function prettyLead(l: Lead) {
   return [hdr, body, "", rec, "", code, "#Roxi #Lead"].join("\n");
 }
 
-/* ---- Helpers de extracción laxa (para mensajes largos) ---- */
 async function tryLooseExtract(t: string, s: Session, todayISO: string) {
   // 1) Intent/entidades por LLM (resiliente)
   const ai = await classifyIntent({ userText: t });
 
-  // 2) Espacio
   if (!s.data.space_name) {
     const fromAI = ai.entities.space_name ?? null;
     const canon =
@@ -139,32 +135,27 @@ async function tryLooseExtract(t: string, s: Session, todayISO: string) {
     if (canon) s.data.space_name = canon;
   }
 
-  // 3) Fecha
   if (!s.data.date) {
     const fromText = parseDateFlexible(t, todayISO);
     const fromAI = ai.entities.date ?? null;
     s.data.date = fromText || fromAI || undefined;
   }
 
-  // 4) Hora
   if (!s.data.time) {
     const fromText = parseTimeFlexible(t);
     const fromAI = ai.entities.time ?? null;
     s.data.time = fromText || fromAI || undefined;
   }
 
-  // 5) Teléfono (si lo mandaron junto)
   if (!s.data.phone && ai.entities.phone) {
     s.data.phone = ai.entities.phone;
   }
 }
 
-/* ---- API público ---- */
 export function getCurrentStepFor(chatId: string): Step {
   return getSession(chatId).step;
 }
 
-/* ---- Motor principal ---- */
 export type Action =
   | { kind: "reply"; text: string }
   | { kind: "send_admin"; text: string; alsoReply?: string }
@@ -183,7 +174,6 @@ export async function handleIncomingText(
   const t = tRaw.normalize("NFKC");
   const todayISO = todayLimaISO(TZ);
 
-  /* Controles universales */
   if (isWebsiteQuery(t)) {
     const link = chatbotConfig.websiteUrl;
     return [
@@ -366,7 +356,6 @@ export async function handleIncomingText(
       ];
     }
 
-    // Si ya llegaron date + time en el mismo mensaje, validamos y saltamos a review
     if (!isDateNotPastLima(todayISO, s.data.date)) {
       s.step = "date";
       save(from, s);
@@ -412,7 +401,6 @@ export async function handleIncomingText(
     ];
   }
 
-  /* date */
   if (s.step === "date") {
     if (await wantsSkipAI(t)) {
       s.step = "time";
@@ -457,7 +445,6 @@ export async function handleIncomingText(
     ];
   }
 
-  /* time (no envía lead aún; se enviará en review para evitar duplicado) */
   if (s.step === "time") {
     if (await wantsSkipAI(t)) {
       s.step = "review";
@@ -504,7 +491,6 @@ export async function handleIncomingText(
     ];
   }
 
-  /* review (enviamos el lead UNA sola vez) */
   if (s.step === "review") {
     if (await wantsSkipAI(t)) {
       const msgAdmin = prettyLead(s.data);
@@ -523,7 +509,6 @@ export async function handleIncomingText(
       ];
     }
 
-    // Heurísticas para opcionales
     const emailMatch = t.match(/[\w.+-]+@[\w.-]+\.\w+/);
     const dniMatch = t.match(/\b\d{8}\b/);
     const peopleMatch = t.match(/\b(\d+)\s*(personas?|pax?)?\b/i);
@@ -535,7 +520,6 @@ export async function handleIncomingText(
       if (n > 0 && n < 1000) s.data.people = n;
     }
 
-    // Nombre “suave”: texto sin @ ni dígitos, ≥2 palabras
     const clean = t.replace(/\s+/g, " ").trim();
     const looksLikeName =
       !emailMatch &&
@@ -546,11 +530,9 @@ export async function handleIncomingText(
     if (looksLikeName) {
       s.data.full_name = clean;
     } else if (!emailMatch && !dniMatch && !peopleMatch) {
-      // Si no parece nombre, lo tomamos como motivo
       s.data.purpose = clean;
     }
 
-    // Enviar lead enriquecido (UNA vez)
     const msgAdmin = prettyLead(s.data);
     s.step = "done";
     save(from, s);
@@ -567,7 +549,6 @@ export async function handleIncomingText(
     ];
   }
 
-  /* done */
   return [
     {
       kind: "reply",
