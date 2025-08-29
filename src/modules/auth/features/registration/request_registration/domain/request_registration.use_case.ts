@@ -21,7 +21,7 @@ export class RequestRegistrationUseCase {
     const existingUser = await this.repository.getEmail(data.email);
     if (existingUser) {
       throw new AppError(
-        "Email is already in use",
+        "El correo electrónico ya está en uso, por favor verifica que el correo electrónico sea correcto.",
         HttpStatusCodes.BAD_REQUEST.code
       );
     }

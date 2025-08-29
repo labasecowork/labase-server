@@ -14,30 +14,17 @@ export class VerifyCodeRegistrationController {
   constructor(private readonly service: VerifyCodeRegistrationService) {}
 
   async verifyCodeRegistration(req: Request, res: Response): Promise<Response> {
-    try {
-      const data = VerifyCodeRegistrationSchema.parse(req.body);
-      const result = await this.service.verifyCodeRegistration(data);
+    const data = VerifyCodeRegistrationSchema.parse(req.body);
+    const result = await this.service.verifyCodeRegistration(data);
 
-      return res
-        .status(HttpStatusCodes.CREATED.code)
-        .json(
-          buildHttpResponse(
-            HttpStatusCodes.CREATED.code,
-            result.message,
-            req.path
-          )
-        );
-    } catch (error) {
-      if (error instanceof AppError) {
-        return res
-          .status(error.statusCode)
-          .json(buildHttpResponse(error.statusCode, error.message, req.path));
-      }
-      if (error instanceof ZodError) {
-        const createdError = handleZodError(error, req);
-        return res.status(createdError.status).json(createdError);
-      }
-      return handleServerError(res, req, error);
-    }
+    return res
+      .status(HttpStatusCodes.CREATED.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.CREATED.code,
+          result.message,
+          req.path
+        )
+      );
   }
 }

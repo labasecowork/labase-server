@@ -18,7 +18,10 @@ export class RequestPasswordResetUseCase {
   ): Promise<RequestPasswordResetResponseDTO> {
     const user = await this.repository.getEmail(data.email);
     if (!user) {
-      throw new AppError("User not found", HttpStatusCodes.NOT_FOUND.code);
+      throw new AppError(
+        "El usuario no existe, por favor verifica que el correo electrónico sea correcto.",
+        HttpStatusCodes.NOT_FOUND.code
+      );
     }
 
     const code = generateVerificationCode();

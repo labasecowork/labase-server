@@ -4,8 +4,10 @@ import { z } from "zod";
 export const ResendRegistrationSchema = z.object({
   email: z
     .string({
-      required_error: "Email is required",
+      required_error: "El correo electrónico es obligatorio",
     })
-    .email("Invalid email format")
+    .email(
+      "El formato del correo electrónico no es válido, revisa que esté escrito correctamente"
+    )
     .trim(),
 });

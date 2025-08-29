@@ -1,18 +1,13 @@
 // src/middlewares/async_handler/index.ts
 import { Request, Response, NextFunction } from "express";
-import { buildHttpResponse } from "../../utils/build_http_response";
-import { HttpStatusCodes } from "../../constants/http_status_codes";
+import { handleServerError } from "../../utils/error_handler";
 
 export const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => any | Promise<any>,
+  fn: (req: Request, res: Response, next: NextFunction) => any | Promise<any>
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    fn(req, res, next).catch(
-      (error: any) => {
-        return res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR.code).json(
-          buildHttpResponse(HttpStatusCodes.INTERNAL_SERVER_ERROR.code, error.message, req.path)
-        );
-      }
-    );
+    fn(req, res, next).catch((error: any) => {
+      return handleServerError(res, req, error);
+    });
   };
 };

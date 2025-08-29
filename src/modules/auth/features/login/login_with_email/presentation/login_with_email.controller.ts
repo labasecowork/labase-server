@@ -10,22 +10,18 @@ export class LoginController {
   constructor(private readonly loginService: LoginService) {}
 
   async login(req: Request, res: Response): Promise<Response> {
-    try {
-      const data = LoginSchema.parse(req.body);
-      const result = await this.loginService.login(data);
+    const data = LoginSchema.parse(req.body);
+    const result = await this.loginService.login(data);
 
-      return res
-        .status(HttpStatusCodes.OK.code)
-        .json(
-          buildHttpResponse(
-            HttpStatusCodes.OK.code,
-            "Login successful",
-            req.path,
-            result
-          )
-        );
-    } catch (error) {
-      return handleServerError(res, req, error);
-    }
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          "Login successful",
+          req.path,
+          result
+        )
+      );
   }
 }

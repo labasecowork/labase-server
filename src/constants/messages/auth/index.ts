@@ -1,25 +1,27 @@
 export const AUTH_MESSAGES = {
   REQUEST_REGISTRATION: {
-    ERROR_REQUIRED_NAME: "The key name is required",
-    ERROR_INVALID_NAME_MIN_LENGTH:
-      "The key name must be at least 2 characters long",
+    ERROR_REQUIRED_NAME: "El nombre es obligatorio",
+    ERROR_INVALID_NAME_MIN_LENGTH: "El nombre debe tener al menos 2 caracteres",
 
-    ERROR_REQUIRED_LAST_NAME: "The key last_name is required",
+    ERROR_REQUIRED_LAST_NAME: "El apellido es obligatorio",
     ERROR_INVALID_LAST_NAME_MIN_LENGTH:
-      "The key last_name must be at least 2 characters long",
+      "El apellido debe tener al menos 2 caracteres",
 
-    ERROR_REQUIRED_EMAIL: "The key email is required",
-    ERROR_INVALID_EMAIL: "The key email must be a valid email",
+    ERROR_REQUIRED_EMAIL: "El correo electrónico es obligatorio",
+    ERROR_INVALID_EMAIL:
+      "El formato del correo electrónico no es válido, revisa que esté escrito correctamente",
 
-    ERROR_REQUIRED_PASSWORD: "The key password is required",
+    ERROR_REQUIRED_PASSWORD: "La contraseña es obligatoria",
     ERROR_REQUIRED_PASSWORD_MIN_LENGTH:
-      "The key password must be at least 6 characters long",
+      "La contraseña debe tener al menos 8 caracteres",
 
-    ERROR_REQUIRED_CONFIRM_PASSWORD: "The key confirm_password is required",
+    ERROR_REQUIRED_CONFIRM_PASSWORD:
+      "La confirmación de contraseña es obligatoria",
     ERROR_REQUIRED_CONFIRM_PASSWORD_MIN_LENGTH:
-      "The key confirm_password must be at least 6 characters long",
+      "La confirmación de contraseña debe tener al menos 6 caracteres",
 
-    ERROR_PASSWORD_NOT_MATCH: "Passwords do not match",
+    ERROR_PASSWORD_NOT_MATCH:
+      "Las contraseñas no coinciden, vuelve a intentar por favor",
     ERROR_ALREADY_REGISTER: "",
     ERROR_INTERNAL_SERVER_ERROR: "",
     SUCCESS: "",

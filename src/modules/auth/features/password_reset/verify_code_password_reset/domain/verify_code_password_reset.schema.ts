@@ -3,15 +3,17 @@ import { z } from "zod";
 export const VerifyCodePasswordResetSchema = z.object({
   code: z
     .string({
-      required_error: "Verification code is required",
+      required_error: "El código de verificación es obligatorio",
     })
-    .max(4, "Verification code must be 4 characters long")
-    .min(4, "Verification code must be 4 characters long")
+    .max(4, "El código de verificación debe tener exactamente 4 caracteres")
+    .min(4, "El código de verificación debe tener exactamente 4 caracteres")
     .trim(),
   email: z
     .string({
-      required_error: "Email is required",
+      required_error: "El correo electrónico es obligatorio",
     })
-    .email("Invalid email format")
+    .email(
+      "El formato del correo electrónico no es válido, revisa que esté escrito correctamente"
+    )
     .trim(),
 });

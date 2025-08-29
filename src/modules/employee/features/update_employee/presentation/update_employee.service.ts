@@ -16,12 +16,12 @@ export class UpdateEmployeeService {
   async execute(
     employeeId: string,
     dto: UpdateEmployeeBodyDTO,
-    user: CurrentUser,
+    user: CurrentUser
   ) {
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden actualizar empleados",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -29,19 +29,19 @@ export class UpdateEmployeeService {
     if (!employee) {
       throw new AppError(
         "Empleado no encontrado",
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 
     if (dto.email) {
       const existingUser = await this.repo.findUserByEmail(
         dto.email,
-        employee.user.id,
+        employee.user.id
       );
       if (existingUser) {
         throw new AppError(
           "Ya existe otro usuario con este email",
-          HttpStatusCodes.CONFLICT.code,
+          HttpStatusCodes.CONFLICT.code
         );
       }
     }
@@ -51,7 +51,7 @@ export class UpdateEmployeeService {
     if (dto.first_name) updateData.first_name = dto.first_name;
     if (dto.last_name) updateData.last_name = dto.last_name;
     if (dto.email) updateData.email = dto.email;
-    if (dto.user_type) updateData.user_type = "employee";
+    updateData.user_type = "employee";
     if (dto.profile_image !== undefined)
       updateData.profile_image = dto.profile_image;
     if (dto.phone !== undefined) updateData.phone = dto.phone;

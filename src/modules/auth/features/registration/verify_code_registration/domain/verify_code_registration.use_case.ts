@@ -18,14 +18,14 @@ export class VerifyCodeRegistrationUseCase {
 
     if (!storedCode && !userData) {
       throw new AppError(
-        "This code not exists",
+        "Código no encontrado, por favor verifica que el código sea correcto.",
         HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
     if (!userData || !storedCode) {
       throw new AppError(
-        "This code is expired",
+        "Código expirado, por favor verifica que el código sea correcto.",
         HttpStatusCodes.BAD_REQUEST.code
       );
     }
@@ -34,7 +34,7 @@ export class VerifyCodeRegistrationUseCase {
 
     if (code !== data.code) {
       throw new AppError(
-        "Invalid verification code",
+        "Código de verificación inválido, por favor verifica que el código sea correcto.",
         HttpStatusCodes.UNAUTHORIZED.code
       );
     }

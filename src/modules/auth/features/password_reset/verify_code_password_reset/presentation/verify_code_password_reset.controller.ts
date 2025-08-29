@@ -9,21 +9,17 @@ export class VerifyCodePasswordResetController {
   constructor(private readonly service: VerifyCodePasswordResetService) {}
 
   async verifyCodePasswordReset(req: Request, res: Response) {
-    try {
-      const data = VerifyCodePasswordResetSchema.parse(req.body);
-      const result = await this.service.verifyCodePasswordReset(data);
+    const data = VerifyCodePasswordResetSchema.parse(req.body);
+    const result = await this.service.verifyCodePasswordReset(data);
 
-      return res
-        .status(HttpStatusCodes.CREATED.code)
-        .json(
-          buildHttpResponse(
-            HttpStatusCodes.CREATED.code,
-            result.message,
-            req.path
-          )
-        );
-    } catch (error) {
-      return handleServerError(res, req, error);
-    }
+    return res
+      .status(HttpStatusCodes.CREATED.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.CREATED.code,
+          result.message,
+          req.path
+        )
+      );
   }
 }

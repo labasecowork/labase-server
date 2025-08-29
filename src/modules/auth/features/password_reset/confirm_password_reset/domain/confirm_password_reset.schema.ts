@@ -3,22 +3,27 @@ import { z } from "zod";
 export const ConfirmPasswordResetSchema = z.object({
   email: z
     .string({
-      required_error: "Email is required",
+      required_error: "El correo electrónico es obligatorio",
     })
-    .email("Invalid email address")
+    .email(
+      "El formato del correo electrónico no es válido, revisa que esté escrito correctamente"
+    )
     .trim(),
   password: z
     .string({
-      required_error: "Password is required",
+      required_error: "La contraseña es obligatoria",
     })
-    .min(8, "Password must be at least 8 characters long")
-    .max(20, "Password must be less than 20 characters long")
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .max(20, "La contraseña no puede tener más de 20 caracteres")
     .trim(),
   confirm_password: z
     .string({
-      required_error: "Confirm password is required",
+      required_error: "La confirmación de contraseña es obligatoria",
     })
-    .min(8, "Confirm password must be at least 8 characters long")
-    .max(20, "Confirm password must be less than 20 characters long")
+    .min(8, "La confirmación de contraseña debe tener al menos 8 caracteres")
+    .max(
+      20,
+      "La confirmación de contraseña no puede tener más de 20 caracteres"
+    )
     .trim(),
 });

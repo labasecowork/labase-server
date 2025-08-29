@@ -4,13 +4,15 @@ import { z } from "zod";
 export const VerifyCodeRegistrationSchema = z.object({
   code: z
     .string({
-      required_error: "Verification code is required",
+      required_error: "El código de verificación es obligatorio",
     })
     .trim(),
   email: z
     .string({
-      required_error: "Email is required",
+      required_error: "El correo electrónico es obligatorio",
     })
-    .email("Invalid email format")
+    .email(
+      "El formato del correo electrónico no es válido, revisa que esté escrito correctamente"
+    )
     .trim(),
 });

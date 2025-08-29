@@ -4,14 +4,16 @@ import { z } from "zod";
 export const LoginSchema = z.object({
   email: z
     .string({
-      required_error: "Email is required",
+      required_error: "El correo electrónico es obligatorio",
     })
-    .email("Invalid email format")
+    .email(
+      "El formato del correo electrónico no es válido, revisa que esté escrito correctamente"
+    )
     .trim(),
   password: z
     .string({
-      required_error: "Password is required",
+      required_error: "La contraseña es obligatoria",
     })
-    .min(6, "Password must have at least 6 characters")
+    .min(6, "La contraseña debe tener al menos 6 caracteres")
     .trim(),
 });

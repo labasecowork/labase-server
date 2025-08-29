@@ -13,21 +13,24 @@ export class LoginUseCase {
   async execute(data: LoginDTO): Promise<LoginResponseDTO> {
     const user = await this.loginRepository.getEmail(data.email);
     if (!user) {
-      throw new AppError("User not found", HttpStatusCodes.NOT_FOUND.code);
+      throw new AppError(
+        "El usuario no existe, revisa que el correo electrónico sea correcto.",
+        HttpStatusCodes.NOT_FOUND.code
+      );
     }
 
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
       throw new AppError(
-        "Invalid credentials",
-        HttpStatusCodes.UNAUTHORIZED.code,
+        "Credenciales inválidas, revisa que el correo electrónico y la contraseña sean correctos.",
+        HttpStatusCodes.UNAUTHORIZED.code
       );
     }
 
     if (!user.isVerified()) {
       throw new AppError(
-        "User is not verified",
-        HttpStatusCodes.UNAUTHORIZED.code,
+        "El usuario no está verificado, por favor verifica tu correo electrónico.",
+        HttpStatusCodes.UNAUTHORIZED.code
       );
     }
 
@@ -46,7 +49,6 @@ export class LoginUseCase {
 
     let role = "";
 
-    console.log("user.user_type", user);
     if (user.user_type === "admin") {
       role = adminRole ?? "";
     } else if (user.user_type === "employee") {

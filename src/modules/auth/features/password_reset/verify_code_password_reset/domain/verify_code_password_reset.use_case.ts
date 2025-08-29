@@ -13,13 +13,19 @@ export class VerifyCodePasswordResetUseCase {
   ): Promise<VerifyCodePasswordResetResponseDTO> {
     const storedCode = await this.repository.getTemporaryCode(data.email);
     if (!storedCode) {
-      throw new AppError("Code not found", HttpStatusCodes.BAD_REQUEST.code);
+      throw new AppError(
+        "Código no encontrado, por favor verifica que el código sea correcto.",
+        HttpStatusCodes.BAD_REQUEST.code
+      );
     }
 
     const code = JSON.parse(storedCode).code;
 
     if (code !== data.code) {
-      throw new AppError("Invalid code", HttpStatusCodes.BAD_REQUEST.code);
+      throw new AppError(
+        "Código inválido, por favor verifica que el código sea correcto.",
+        HttpStatusCodes.BAD_REQUEST.code
+      );
     }
 
     await this.repository.removeTemporaryCode(data.email);

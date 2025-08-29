@@ -11,12 +11,12 @@ export class ConfirmPasswordResetUseCase {
   constructor(private readonly repository: ConfirmPasswordResetRepository) {}
 
   async execute(
-    data: ConfirmPasswordResetDTO,
+    data: ConfirmPasswordResetDTO
   ): Promise<ConfirmPasswordResetResponseDTO> {
     if (data.password !== data.confirm_password) {
       throw new AppError(
-        "Passwords do not match",
-        HttpStatusCodes.BAD_REQUEST.code,
+        "Las contraseñas no coinciden, por favor verifica que las contraseñas coincidan.",
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
     const password = await bcrypt.hash(data.password, 10);
