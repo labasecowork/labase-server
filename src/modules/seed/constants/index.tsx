@@ -665,3 +665,19 @@ export const pricesData = [
     amount: 490,
   },
 ];
+
+export const visitorsData = [
+  {
+    dni: "1234567890",
+    ruc: "1234567890",
+    first_name: "John",
+    last_name: "Doe",
+    phone: "1234567890",
+    email: "test@test.com",
+    company: "Test",
+    user_id: "1234567890",
+    space_id: "1234567890",
+    entry_time: new Date(),
+    exit_time: new Date(),
+  },
+];

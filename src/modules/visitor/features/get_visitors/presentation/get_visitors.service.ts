@@ -14,7 +14,7 @@ export class GetVisitorsService {
     if (!v)
       throw new AppError(
         MESSAGES.VISITOR.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     return v;
   }
@@ -44,8 +44,13 @@ export class GetVisitorsService {
     ]);
 
     return {
-      items,
-      meta: { page, limit, total, totalPages: Math.ceil(total / limit) || 1 },
+      visitors: items,
+      pagination: {
+        page,
+        limit,
+        total,
+        total_pages: Math.ceil(total / limit) || 1,
+      },
     };
   }
 }
