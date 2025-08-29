@@ -1,6 +1,7 @@
 import prisma from "../../../config/prisma_client";
 import {
   access_type,
+  article_status,
   duration_unit,
   price_mode,
   space_type,
@@ -10,6 +11,10 @@ import {
   pricesData,
   spacesWithImages,
   workAreasData,
+  fakeClientsData,
+  fakeReservationsData,
+  categoriesArticles,
+  articlesData,
 } from "../constants";
 
 export class SeedRepository {
@@ -18,6 +23,8 @@ export class SeedRepository {
     await this.createSpacesAndPrices();
     await this.createNewsletters();
     await this.createEmployeesWithAssignments();
+    await this.createCategoriesArticles();
+    await this.createArticles();
     // TODO: Crear semilla a partir del excel de visitantes
 
     return { message: "Database seeded successfully for production" };
@@ -28,8 +35,11 @@ export class SeedRepository {
     await this.createClientUser();
     await this.createSpacesAndPrices();
     await this.createNewsletters();
-    // TODO: Crear semilla de visitantes con datos falsos
     await this.createEmployeesWithAssignments();
+    await this.createCategoriesArticles();
+    await this.createArticles();
+    await this.createFakeClientsAndReservations();
+    // TODO: Crear semilla de visitantes con datos falsos
 
     return { message: "Database seeded successfully for development" };
   }
@@ -190,5 +200,65 @@ export class SeedRepository {
     }
 
     console.log("Empleados creados");
+  }
+
+  async createCategoriesArticles() {
+    for (const category of categoriesArticles) {
+      await prisma.article_categories.create({
+        data: {
+          id: category.id,
+          name: category.name,
+          description: category.description,
+        },
+      });
+    }
+    console.log("Categorías de artículos creadas");
+  }
+
+  async createArticles() {
+    for (const article of articlesData) {
+      await prisma.articles.create({
+        data: {
+          ...article,
+          status: article.status as article_status,
+        },
+      });
+    }
+    console.log("Artículos creados");
+  }
+
+  async createFakeClientsAndReservations() {
+    // Crear clientes falsos
+    for (const clientData of fakeClientsData) {
+      await prisma.users.create({
+        data: {
+          ...clientData,
+          user_type: clientData.user_type as "client",
+          status: clientData.status as "active",
+          gender: clientData.gender as "male" | "female" | "unspecified",
+          creation_timestamp: new Date(),
+        },
+      });
+
+      await prisma.user_details.create({
+        data: {
+          user_id: clientData.id,
+          status: clientData.status as "active",
+        },
+      });
+    }
+    console.log("Clientes falsos creados");
+
+    // Crear reservas falsas
+    for (const reservationData of fakeReservationsData) {
+      await prisma.reservation.create({
+        data: {
+          ...reservationData,
+          status: reservationData.status as "confirmed",
+          created_at: new Date(),
+        },
+      });
+    }
+    console.log("Reservas falsas creadas");
   }
 }
