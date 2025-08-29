@@ -12,8 +12,15 @@ export class GetProfileController {
     const currentUser = await getAuthenticatedUser(req);
     const data = await this.svc.execute(currentUser);
 
-    return res.status(HttpStatusCodes.OK.code).json(
-      buildHttpResponse(HttpStatusCodes.OK.code, "Perfil obtenido correctamente", req.path, data)
-    );
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          "Perfil obtenido correctamente",
+          req.path,
+          data
+        )
+      );
   }
 }

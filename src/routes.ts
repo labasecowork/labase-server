@@ -17,8 +17,6 @@ import { employeeRouter } from "./modules/employee";
 import { newsletterRouter } from "./modules/newsletter";
 import productRouter, { productBrandRouter } from "./modules/product";
 import { chatbotwhatsapp } from "./modules/bot-whatsapp/presentation/routes/send_message.routes";
-
-import { seedRouter } from "./modules/seed/presentation/seed.routes";
 import { workareaRouter } from "./modules/workarea";
 import { companyRouter } from "./modules/company";
 
@@ -51,7 +49,6 @@ router.use(`${API_VERSION}/`, employeeRouter);
 router.use(`${API_VERSION}/products`, productRouter);
 router.use(`${API_VERSION}/product-brands`, productBrandRouter);
 
-router.use(`${API_VERSION}/seed`, seedRouter);
 router.use(`${API_VERSION}/`, workareaRouter);
 router.use(`${API_VERSION}/`, companyRouter);
 

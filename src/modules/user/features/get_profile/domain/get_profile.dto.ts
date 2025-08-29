@@ -8,7 +8,7 @@ export interface GetProfileResponseDto {
   gender: "male" | "female" | "unspecified";
   user_type: "admin" | "client" | "employee";
   status: string;
-  adminDetails: {
+  admin_details: {
     role: string;
   } | null;
 }

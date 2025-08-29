@@ -20,7 +20,7 @@ export class CreateVisitorRepository {
     space_id: string;
     entry_time: Date;
     exit_time?: Date | null;
-  }) {
+}) {
     return prisma.visitors.create({ data });
   }
 }

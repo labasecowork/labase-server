@@ -1,4 +1,4 @@
-// src/modules/bot-whatsapp/domain/send_message.schema.ts
+// src/modules/chatbot/domain/send_message.schema.ts
 import { z } from "zod";
 
 export const SendMessageSchema = z.object({
