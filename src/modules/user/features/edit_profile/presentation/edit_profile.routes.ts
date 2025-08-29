@@ -30,15 +30,15 @@ const ctrl = new EditProfileController();
  *           example: "1995-10-02"
  *         gender:
  *           type: string
- *           enum: [M, F, O]
- *           example: "F"
+ *           enum: [male, female, unspecified]
+ *           example: "female"
  *         password:
  *           type: string
- *           minLength: 6
+ *           minLength: 8
  *           example: "nuevaClave123"
  *         confirmPassword:
  *           type: string
- *           minLength: 6
+ *           minLength: 8
  *           example: "nuevaClave123"
  *
  *     User:
@@ -109,7 +109,6 @@ const ctrl = new EditProfileController();
  *       500:
  *         description: Internal Server Error
  */
-
 
 router.put("/", authenticateToken, asyncHandler(ctrl.handle.bind(ctrl)));
 

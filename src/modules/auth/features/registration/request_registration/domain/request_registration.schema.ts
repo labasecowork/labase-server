@@ -17,7 +17,7 @@ export const RequestRegistrationSchema = z
       })
       .min(
         2,
-        AUTH_MESSAGES.REQUEST_REGISTRATION.ERROR_INVALID_LAST_NAME_MIN_LENGTH
+        AUTH_MESSAGES.REQUEST_REGISTRATION.ERROR_INVALID_LAST_NAME_MIN_LENGTH,
       )
       .trim(),
     email: z
@@ -34,8 +34,8 @@ export const RequestRegistrationSchema = z
           AUTH_MESSAGES.REQUEST_REGISTRATION.ERROR_REQUIRED_PASSWORD,
       })
       .min(
-        6,
-        AUTH_MESSAGES.REQUEST_REGISTRATION.ERROR_REQUIRED_PASSWORD_MIN_LENGTH
+        8,
+        AUTH_MESSAGES.REQUEST_REGISTRATION.ERROR_REQUIRED_PASSWORD_MIN_LENGTH,
       )
       .trim(),
     confirm_password: z
@@ -46,7 +46,7 @@ export const RequestRegistrationSchema = z
       .min(
         6,
         AUTH_MESSAGES.REQUEST_REGISTRATION
-          .ERROR_REQUIRED_CONFIRM_PASSWORD_MIN_LENGTH
+          .ERROR_REQUIRED_CONFIRM_PASSWORD_MIN_LENGTH,
       )
       .trim(),
   })

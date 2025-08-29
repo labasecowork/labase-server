@@ -70,9 +70,9 @@ const controller = new ListMyReservationsController();
  *         description: Error interno del servidor
  */
 router.get(
-  "/reservations",
+  "/",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller))
+  asyncHandler(controller.handle.bind(controller)),
 );
 
 export { router as listMyReservationsRoutes };

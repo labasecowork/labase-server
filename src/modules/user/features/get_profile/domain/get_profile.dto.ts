@@ -5,7 +5,7 @@ export interface GetProfileResponseDto {
   email: string;
   phone: string | null;
   birth_date: Date | null;
-  gender: string | null;
+  gender: "male" | "female" | "unspecified";
   user_type: "admin" | "client" | "employee";
   status: string;
   admin_details: {

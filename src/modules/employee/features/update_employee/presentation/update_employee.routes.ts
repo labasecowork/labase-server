@@ -75,8 +75,9 @@ const controller = new UpdateEmployeeController();
  *                 example: "1990-01-15"
  *               gender:
  *                 type: string
+ *                 enum: [male, female, unspecified]
  *                 description: Género
- *                 example: "Masculino"
+ *                 example: "female"
  *               status:
  *                 type: string
  *                 enum: [active, suspended, pending]
@@ -132,7 +133,7 @@ const controller = new UpdateEmployeeController();
 router.patch(
   "/:id",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller))
+  asyncHandler(controller.handle.bind(controller)),
 );
 
 export { router as updateEmployeeRoutes };

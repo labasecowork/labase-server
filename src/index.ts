@@ -4,15 +4,18 @@ import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./docs/swagger";
 import routes from "./routes";
-// import https from "https";
 import http from "http";
+// import https from "https";
 import { initSocket } from "./config/socket";
 import { redisClient } from "./config/redis";
 import { APP_URL, PORT } from "./config/env";
 import { displayWelcomeMessage } from "./utils";
 import { customMorganFormat } from "./utils/cli";
 import { multerErrorHandler } from "./middlewares/multer_error_handler/multer_error_handler";
-import { startWhatsAppBot } from "./modules/chatbot/presentation/bot/whatsapp.bot";
+import { startWhatsAppBot } from "./modules/bot-whatsapp/presentation/bot/whatsapp.bot";
+import { globalErrorHandler } from "./middlewares/global_error_handler";
+import { buildHttpResponse } from "./utils/build_http_response";
+import { HttpStatusCodes } from "./constants/http_status_codes";
 /*import fs from "fs";
 import path from "path";
 
@@ -45,30 +48,46 @@ app.use(routes);
 // Multer error handler
 app.use(multerErrorHandler as express.ErrorRequestHandler);
 
+// 404
+app.use((req, res) => {
+  return res
+    .status(HttpStatusCodes.NOT_FOUND.code)
+    .json(
+      buildHttpResponse(
+        HttpStatusCodes.NOT_FOUND.code,
+        "Route not found",
+        req.path,
+      ),
+    );
+});
+
+// Global Error Handler
+app.use(globalErrorHandler);
+
 // Test route
 app.get("/ping", (_, res) => res.send("pong"));
 
 // Start server
 const main = async () => {
-  // ⬇️ Inicia Redis (si falla, registra y no cae el proceso)
+  // Redis
   try {
     await redisClient.connect();
   } catch (e) {
     console.error("[Redis] No conectó:", e);
   }
 
-  // // ⬇️ INICIA EL BOT AQUÍ, UNA SOLA VEZ
-  try {
-    await startWhatsAppBot();
-  } catch (e) {
-    console.error("[WhatsApp] No inició:", e);
-  }
+  // Whatsapp bot
+  // try {
+  //   await startWhatsAppBot();
+  // } catch (e) {
+  //   console.error("[WhatsApp] No inició:", e);
+  // }
 
   server.listen(PORT, () => {
     displayWelcomeMessage(appUrl);
     console.log(`[HTTP] Server on :${PORT}`);
     console.log(
-      "[WhatsApp] Si usas PM2, mira los logs para ver el QR: pm2 logs labase-server",
+      "[WhatsApp] Mirar los logs para ver el QR: pm2 logs labase-server",
     );
   });
 };

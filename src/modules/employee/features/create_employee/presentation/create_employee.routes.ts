@@ -69,8 +69,9 @@ const controller = new CreateEmployeeController();
  *                 example: "1990-01-15"
  *               gender:
  *                 type: string
+ *                 enum: [male, female, unspecified]
  *                 description: Género (opcional)
- *                 example: "Masculino"
+ *                 example: "female"
  *     responses:
  *       201:
  *         description: Empleado creado correctamente
@@ -120,7 +121,7 @@ const controller = new CreateEmployeeController();
 router.post(
   "/",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller))
+  asyncHandler(controller.handle.bind(controller)),
 );
 
 export { router as createEmployeeRoutes };

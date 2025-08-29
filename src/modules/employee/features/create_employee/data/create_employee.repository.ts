@@ -1,6 +1,8 @@
 // src/modules/employee/features/create_employee/data/create_employee.repository.ts
 import prisma from "../../../../../config/prisma_client";
-import { user_type, user_status } from "@prisma/client";
+import { Prisma, user_type, user_status } from "@prisma/client";
+
+type Gender = Prisma.usersCreateInput["gender"];
 
 interface CreateEmployeeData {
   first_name: string;
@@ -11,22 +13,17 @@ interface CreateEmployeeData {
   profile_image?: string;
   phone?: string;
   birth_date?: Date;
-  gender?: string;
+  gender?: Gender;
   work_area_id?: string;
   company_id?: string;
 }
-
 export class CreateEmployeeRepository {
   async findUserByEmail(email: string) {
-    return await prisma.users.findUnique({
-      where: { email },
-    });
+    return await prisma.users.findUnique({ where: { email } });
   }
 
   async createEmployee(data: CreateEmployeeData) {
-    // Crear usuario y empleado en una transacción
     return await prisma.$transaction(async (tx) => {
-      // Crear usuario
       const user = await tx.users.create({
         data: {
           first_name: data.first_name,
@@ -37,8 +34,8 @@ export class CreateEmployeeRepository {
           profile_image: data.profile_image,
           phone: data.phone,
           birth_date: data.birth_date,
-          gender: data.gender,
           status: "active" as user_status,
+          ...(data.gender && { gender: data.gender }),
         },
         select: {
           id: true,
@@ -46,11 +43,11 @@ export class CreateEmployeeRepository {
           last_name: true,
           email: true,
           user_type: true,
+          gender: true,
           status: true,
         },
       });
 
-      // Crear registro de empleado
       const employee = await tx.employee_details.create({
         data: {
           employee_id: user.id,

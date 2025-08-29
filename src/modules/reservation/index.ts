@@ -11,13 +11,13 @@ import { cancelReservationRoutes } from "./features/cancel_reservation";
 
 export const reservationRouter = Router();
 
-reservationRouter.use("/reservations", createReservationRoutes);
-reservationRouter.use("/reservations", getReservationsRoutes);
-reservationRouter.use("/reservations", checkAvailabilityRoutes);
+reservationRouter.use("/", createReservationRoutes);
+reservationRouter.use("/", getReservationsRoutes);
+reservationRouter.use("/", checkAvailabilityRoutes);
 reservationRouter.use("/me", listMyReservationsRoutes);
-reservationRouter.use("/reservations", resolveQrRoutes);
-reservationRouter.use("/reservations", detailReservationRoutes);
-reservationRouter.use("/reservations/:id/cancel", cancelReservationRoutes);
+reservationRouter.use("/", resolveQrRoutes);
+reservationRouter.use("/", detailReservationRoutes);
+reservationRouter.use("/", cancelReservationRoutes);
 
 /**
  * MATCHES:

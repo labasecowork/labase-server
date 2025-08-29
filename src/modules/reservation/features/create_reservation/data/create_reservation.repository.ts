@@ -18,7 +18,7 @@ export class CreateReservationRepository {
         start_time: { lt: end },
         end_time: { gt: start },
       },
-      select: { id: true }, // Más liviano
+      select: { id: true },
     });
   }
 

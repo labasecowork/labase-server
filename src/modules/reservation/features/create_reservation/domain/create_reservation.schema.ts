@@ -1,4 +1,4 @@
-// src/modules/reservation/features/create_reservation/domain/dtos/create_reservation.schema.ts
+// src/modules/reservation/features/create_reservation/domain/create_reservation.schema.ts
 import { z } from "zod";
 
 export const CreateReservationSchema = z

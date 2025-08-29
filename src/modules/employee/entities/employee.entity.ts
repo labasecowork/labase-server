@@ -10,7 +10,7 @@ export interface EmployeeEntity {
     profile_image: string | null;
     phone: string | null;
     birth_date: Date | null;
-    gender: string | null;
+    gender: "male" | "female" | "unspecified";
     status: "active" | "suspended" | "pending";
     creation_timestamp: Date | null;
   };

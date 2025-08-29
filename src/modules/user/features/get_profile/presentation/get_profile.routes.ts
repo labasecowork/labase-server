@@ -39,9 +39,9 @@ const ctrl = new GetProfileController();
  *           example: "1995-10-02"
  *         gender:
  *           type: string
- *           enum: [M, F, O]
+ *           enum: [male, female, unspecified]
  *           nullable: true
- *           example: "F"
+ *           example: "female"
  *         user_type:
  *           type: string
  *           enum: [admin, client]

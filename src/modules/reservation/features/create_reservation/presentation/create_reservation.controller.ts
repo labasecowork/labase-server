@@ -24,7 +24,7 @@ export class CreateReservationController {
         req.path,
         {
           reservation_id: result.reservation_id,
-          codeQr: result.codeQr,
+          codeQr: result.code_qr,
           price: result.price,
           status: result.status,
           user,

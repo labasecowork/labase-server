@@ -1,6 +1,6 @@
 // src/modules/employee/features/update_employee/data/update_employee.repository.ts
 import prisma from "../../../../../config/prisma_client";
-import { user_type, user_status } from "@prisma/client";
+import { user_type, user_status, $Enums } from "@prisma/client";
 
 interface UpdateEmployeeData {
   first_name?: string;
@@ -11,7 +11,7 @@ interface UpdateEmployeeData {
   profile_image?: string;
   phone?: string;
   birth_date?: Date;
-  gender?: string;
+  gender?: $Enums.gender;
   status?: user_status;
   work_area_id?: string;
   company_id?: string;

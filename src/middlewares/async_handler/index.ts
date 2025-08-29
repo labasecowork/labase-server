@@ -1,10 +1,10 @@
-//src/middlewares/async_handler/index.ts
+// src/middlewares/async_handler/index.ts
 import { Request, Response, NextFunction } from "express";
 import { buildHttpResponse } from "../../utils/build_http_response";
 import { HttpStatusCodes } from "../../constants/http_status_codes";
 
 export const asyncHandler = (
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<any>
+  fn: (req: Request, res: Response, next: NextFunction) => any | Promise<any>,
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
     fn(req, res, next).catch(

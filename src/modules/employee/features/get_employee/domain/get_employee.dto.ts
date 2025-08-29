@@ -15,7 +15,7 @@ export interface GetEmployeeResponseDTO {
     profile_image: string | null;
     phone: string | null;
     birth_date: string | null;
-    gender: string | null;
+    gender: "male" | "female" | "unspecified";
     status: "active" | "suspended" | "pending";
     creation_timestamp: string | null;
   };
