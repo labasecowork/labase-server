@@ -9,6 +9,7 @@ The system includes integration with WhatsApp Business using whatsapp-web.js and
 ## 🛠 Technologies Used
 
 ### Backend Core
+
 - **Node.js** (v18+) - JavaScript runtime
 - **Express** - Web framework for Node.js
 - **TypeScript** - Static typing for JavaScript
@@ -16,20 +17,24 @@ The system includes integration with WhatsApp Business using whatsapp-web.js and
 - **Zod** - Schema validation and types
 
 ### Database and Cache
+
 - **PostgreSQL** - Main database
 - **Redis** - Cache and temporary sessions
 
 ### Authentication and Security
+
 - **JWT (jsonwebtoken)** - Authentication tokens
 - **Bcrypt** - Password hashing
 
 ### External Services
+
 - **AWS S3** - File storage
 - **Nodemailer** - Email sending
 - **WhatsApp Web.js** - WhatsApp Business integration
 - **Google Gemini API** - Generative AI for chatbot
 
 ### Utilities
+
 - **Socket.IO** - Real-time communication
 - **Swagger** - Interactive API documentation
 - **Multer** - File uploads
@@ -49,12 +54,14 @@ The system includes integration with WhatsApp Business using whatsapp-web.js and
 ## 🚀 Installation and Setup
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <REPOSITORY_URL>
 cd labase-server
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 npm install
 ```
@@ -63,79 +70,52 @@ npm install
 
 Create a `.env` file in the project root with the following variables:
 
-```env
-# Environment and server configuration
-ENVIRONMENT=development
-NODE_ENV=development
-PORT=3001
-APP_URL=http://localhost:3001
-SOCKET_URL=http://localhost:3001
-PROJECT_ROOT=/absolute/path/to/project
-TIMEZONE=America/Lima
-
-# Database
-DATABASE_URL=postgresql://root:root@localhost:5432/labase-service
-DIRECT_URL=postgresql://root:root@localhost:5432/labase-service
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# JWT
-JWT_SECRET=your_super_secure_jwt_secret_here
-
-# Google Gemini API (for chatbot)
-API_KEY_GEMINI=your_gemini_api_key
-
-# AWS S3 (for file storage)
-AWS_BUCKET_NAME=your-bucket-name
-AWS_BUCKET_REGION=us-east-1
-AWS_KEY_ACCESS=your_access_key
-AWS_KEY_ACCESS_SECRET=your_secret_key
-
-# Email/SMTP (for notifications)
-EMAIL_USER=your_email@example.com
-EMAIL_PASSWORD=your_app_password
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-
-# QR Code (for reservations)
-QR_CODE_ALPHABET=1234567890abcdef
-QR_CODE_LENGTH=10
-
-# RENIEC/Decolecta (document validation)
-DECOLECTA_API_KEY=your_decolecta_api_key
-DECOLECTA_BASE_URL=https://api.decolecta.com
-```
-
 ### 4. Configure Database
 
 #### Option A: With Docker (Recommended)
+
 ```bash
 # Start PostgreSQL and Redis
 docker-compose up -d
 
-# Run migrations
-npm run prisma:migrate
+# Restart database (only in local)
+npx prisma migrate reset --force
+
+# Create first migration
+npx prisma migrate dev --name init
 
 # (Optional) Open Prisma Studio
 npm run prisma:studio
 ```
 
 #### Option B: Local Installation
+
 ```bash
 # Install PostgreSQL and Redis locally
 # Then run:
-npm run prisma:migrate
+# Restart database (only in local)
+npx prisma migrate reset --force
+
+# Create first migration
+npx prisma migrate dev --name init
 ```
 
-### 5. Run the Application
+### 5. Run the seed (only for development)
+
+```bash
+npm run seed:dev
+```
+
+### 6. Run the Application
 
 #### Development Mode
+
 ```bash
 npm run dev
 ```
 
 #### Production Mode
+
 ```bash
 npm run build
 npm start
@@ -144,6 +124,7 @@ npm start
 ## 🐳 Using Docker
 
 ### Docker Compose (Development)
+
 ```bash
 # Start only services (DB + Redis)
 docker-compose up -d
@@ -153,7 +134,9 @@ npm run dev
 ```
 
 ### Docker Variables
+
 The `docker-compose.yml` file includes:
+
 - **PostgreSQL 16** on port 5432
 - **Redis** on port 6379
 - Persistent volumes for data
@@ -161,6 +144,7 @@ The `docker-compose.yml` file includes:
 ## 📊 Database Migrations
 
 ### Available Prisma Commands
+
 ```bash
 # Generate Prisma client
 npm run prisma:generate
@@ -191,6 +175,7 @@ npx prisma migrate deploy
    ```
 
 ### Migration Structure
+
 ```
 prisma/
 ├── migrations/
@@ -223,15 +208,17 @@ src/
 ## 🤖 WhatsApp Bot
 
 ### Features
+
 - **Client**: whatsapp-web.js with local authentication
 - **AI**: Google Gemini with personalized context
-- **Functionalities**: 
+- **Functionalities**:
   - Intelligent automatic responses
   - Space inquiry management
   - Reservation assistance
   - General business information
 
 ### Configuration
+
 1. Ensure `API_KEY_GEMINI` is configured
 2. When starting the application, a QR code will be displayed in console
 3. Scan the QR with WhatsApp on your mobile device
@@ -240,11 +227,13 @@ src/
 ## 📱 API Documentation
 
 Interactive API documentation is available at:
+
 ```
 http://localhost:3001/api-docs
 ```
 
 ### Main Endpoints
+
 - **Auth**: `/api/v1/auth/*` - Authentication and registration
 - **Spaces**: `/api/v1/spaces/*` - Space management
 - **Reservations**: `/api/v1/reservations/*` - Reservation system
@@ -271,12 +260,15 @@ npm run prisma:studio   # Open Prisma Studio
 ## 🔧 Development Configuration
 
 ### VSCode (Recommended)
+
 Install extensions:
+
 - **Prisma** - Prisma schema support
 - **TypeScript Importer** - Auto-imports
 - **REST Client** - Test endpoints
 
 ### Development Variables
+
 For local development, use the following configurations in `.env`:
 
 ```env
@@ -304,10 +296,12 @@ For detailed information about architecture, modules, and patterns used, consult
 ## 📝 Logs and Debugging
 
 ### Development Logs
+
 - Logs appear in console with HTTP request details
 - Use Morgan for automatic request logging
 
 ### Debugging
+
 ```bash
 # Debug mode with more information
 DEBUG=* npm run dev
