@@ -29,8 +29,7 @@ const lookupCtrl = new LookupVisitorController();
  *               last_name: { type: string, example: "DELGADO CUELLAR" }
  *               phone: { type: string, example: "999888777" }
  *               email: { type: string, example: "rdelgado@example.com" }
- *               company: { type: string, example: "REXTIE S.A.C." }
- *               employee_id: { type: string, format: uuid }
+ *               client_id: { type: string, format: uuid }
  *               space_id: { type: string, format: uuid }
  *               entry_time: { type: string, format: date-time }
  *               exit_time: { type: string, format: date-time }
@@ -39,7 +38,7 @@ const lookupCtrl = new LookupVisitorController();
  *               value:
  *                 first_name: "Juan"
  *                 last_name: "Pérez"
- *                 employee_id: "uuid-emp"
+ *                 client_id: "uuid-client"
  *                 space_id: "uuid-space"
  *                 entry_time: "2025-08-08T15:30:00.000Z"
  *             with_lookup_dni:
@@ -47,11 +46,10 @@ const lookupCtrl = new LookupVisitorController();
  *                 dni: "46027897"
  *                 first_name: "ROXANA KARINA"
  *                 last_name: "DELGADO CUELLAR"
- *                 employee_id: "uuid-emp"
+ *                 client_id: "uuid-client"
  *                 space_id: "uuid-space"
  *                 entry_time: "2025-08-08T15:30:00.000Z"
  */
-
 router.post(
   "/",
   authenticateToken,

@@ -17,7 +17,7 @@ export class CreateVisitorService {
       );
     }
 
-    const host = await this.repo.findHostByEmployeeId(dto.employee_id);
+    const host = await this.repo.findHostByClientId(dto.client_id);
     if (!host) {
       throw new AppError(
         MESSAGES.VISITOR.HOST_NOT_FOUND,
@@ -40,8 +40,7 @@ export class CreateVisitorService {
       last_name: dto.last_name,
       phone: dto.phone ?? null,
       email: dto.email ?? null,
-      company: dto.company ?? null,
-      employee_id: dto.employee_id,
+      client_id: dto.client_id, // ← nuevo campo
       space_id: dto.space_id,
       entry_time: new Date(dto.entry_time),
       exit_time: dto.exit_time ? new Date(dto.exit_time) : null,

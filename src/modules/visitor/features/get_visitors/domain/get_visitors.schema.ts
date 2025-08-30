@@ -12,27 +12,25 @@ export const GetVisitorsQuerySchema = z
       .preprocess((v) => toNumber(v, 1), z.number().int().positive())
       .default(1),
     limit: z
-      .preprocess((v) => {
-        const n = toNumber(v, 10);
-        return Math.min(n, 100);
-      }, z.number().int().positive())
+      .preprocess(
+        (v) => Math.min(toNumber(v, 10), 100),
+        z.number().int().positive(),
+      )
       .default(10),
     search: z
       .string()
       .transform((s) => s?.trim() || "")
       .optional(),
-    employee_id: z.string().uuid().optional(),
+    client_id: z.string().uuid().optional(), // ← antes employee_id
     space_id: z.string().uuid().optional(),
     date_from: z.string().datetime().optional(),
     date_to: z.string().datetime().optional(),
   })
   .refine(
-    (v) => {
-      if (v.date_from && v.date_to) {
-        return new Date(v.date_to).getTime() >= new Date(v.date_from).getTime();
-      }
-      return true;
-    },
+    (v) =>
+      v.date_from && v.date_to
+        ? new Date(v.date_to) >= new Date(v.date_from)
+        : true,
     { message: "date_to must be >= date_from", path: ["date_to"] },
   );
 

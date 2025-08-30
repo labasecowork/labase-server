@@ -11,16 +11,17 @@ export class GetVisitorsService {
 
   async getOne(id: string) {
     const v = await this.repo.findById(id);
-    if (!v)
+    if (!v) {
       throw new AppError(
         MESSAGES.VISITOR.NOT_FOUND,
         HttpStatusCodes.NOT_FOUND.code
       );
+    }
     return v;
   }
 
   async getAll(query: z.infer<typeof GetVisitorsQuerySchema>) {
-    const { page, limit, search, employee_id, space_id, date_from, date_to } =
+    const { page, limit, search, client_id, space_id, date_from, date_to } =
       query;
     const skip = (page - 1) * limit;
 
@@ -29,14 +30,14 @@ export class GetVisitorsService {
         skip,
         take: limit,
         search,
-        employee_id,
+        client_id,
         space_id,
         date_from: date_from ? new Date(date_from) : undefined,
         date_to: date_to ? new Date(date_to) : undefined,
       }),
       this.repo.count({
         search,
-        employee_id,
+        client_id,
         space_id,
         date_from: date_from ? new Date(date_from) : undefined,
         date_to: date_to ? new Date(date_to) : undefined,

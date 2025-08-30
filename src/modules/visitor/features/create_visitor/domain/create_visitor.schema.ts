@@ -15,8 +15,7 @@ export const CreateVisitorSchema = z
     last_name: z.string().min(1),
     phone: z.string().optional(),
     email: z.string().email().optional(),
-    company: z.string().optional(),
-    employee_id: z.string().uuid(),
+    client_id: z.string().uuid(), // ← host ahora es cliente
     space_id: z.string().uuid(),
     entry_time: z.string().datetime(),
     exit_time: z.string().datetime().optional(),
