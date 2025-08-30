@@ -23,22 +23,23 @@ export class EditVisitorService {
     }
 
     const existing = await this.repo.findById(id);
-    if (!existing)
+    if (!existing) {
       throw new AppError(
         MESSAGES.VISITOR.NOT_FOUND,
         HttpStatusCodes.NOT_FOUND.code,
       );
+    }
 
     if (body.space_id) {
       const space = await this.repo.findSpaceById(body.space_id);
-      if (!space)
+      if (!space) {
         throw new AppError(
           MESSAGES.VISITOR.SPACE_NOT_FOUND,
           HttpStatusCodes.BAD_REQUEST.code,
         );
+      }
     }
 
-    // Evitar pisar salida si ya se registró
     if (existing.exit_time && body.exit_time) {
       throw new AppError(
         MESSAGES.VISITOR.ALREADY_CHECKED_OUT,
@@ -49,7 +50,6 @@ export class EditVisitorService {
     const updated = await this.repo.update(id, {
       phone: body.phone ?? null,
       email: body.email ?? null,
-      company: body.company ?? null,
       exit_time: body.exit_time ? new Date(body.exit_time) : undefined,
       space_id: body.space_id ?? undefined,
     });

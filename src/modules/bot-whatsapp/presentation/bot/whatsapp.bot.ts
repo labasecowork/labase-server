@@ -19,7 +19,7 @@ import {
   isPureGreeting,
 } from "../ui/greeting";
 
-// Marca de tiempo del arranque (WA da timestamps en segundos)
+// Marca de tiempo del arranque
 const BOOT_EPOCH = Math.floor(Date.now() / 1000);
 
 // Evita procesar dos veces el mismo mensaje
@@ -56,14 +56,11 @@ export async function startWhatsAppBot() {
       try {
         if (msg.fromMe) return;
 
-        // ignora mensajes previos al arranque (replay de históricos)
         if ((msg.timestamp ?? 0) < BOOT_EPOCH) return;
 
-        // ignora grupos
         const chat = await msg.getChat();
         if ((chat as any).isGroup) return;
 
-        // ignora duplicados exactos
         const key =
           (msg.id as any)?._serialized ?? `${msg.from}:${msg.timestamp}`;
         if (SEEN.has(key)) return;
@@ -72,20 +69,17 @@ export async function startWhatsAppBot() {
         const text = (msg.body || "").trim();
         if (!text) return;
 
-        // no saludar si hay flujo activo
         const step = getCurrentStepFor(msg.from);
         const inFlow = step !== "idle" && step !== "done";
 
         if (!inFlow && shouldGreet(msg.from, text)) {
           await sendText(msg.from, makeIntro());
           markGreeted(msg.from);
-          if (isPureGreeting(text)) return; // evita doble respuesta
+          if (isPureGreeting(text)) return;
         }
 
-        // UX: “escribiendo…”
         await chat.sendStateTyping();
 
-        // Funnel / Chat
         const actions = await handleIncomingText(msg.from, text);
         for (const a of actions) {
           if (a.kind === "reply" || a.kind === "handoff_number") {

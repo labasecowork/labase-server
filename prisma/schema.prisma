@@ -143,6 +143,7 @@ model users {
   reservations         reservation[]         @relation("user_reservations") // Reservas realizadas por el usuario
   payment_transactions payment_transaction[] @relation("user_payments")
   articles             articles[]            @relation("user_articles")
+  client_details       client_details?
 
   @@map("users") // (opcional; ya está en snake_case)
 }
@@ -187,6 +188,9 @@ model companies {
   updated_at  DateTime @updatedAt
 
   employees employee_details[]
+
+  clients  client_details[]
+  visitors visitors[]
 
   @@map("companies")
 }
@@ -415,24 +419,40 @@ model product_brand {
 }
 
 model visitors {
-  id          String    @id @default(uuid()) // Identificador único
-  dni         String?   @unique // DNI (si es persona natural)
-  ruc         String?   @unique // RUC (si es empresa/independiente)
-  first_name  String // NOMBRE
-  last_name   String // APELLIDO
-  phone       String? // número telefónico
-  email       String? // correo
-  company     String? // empresa a la que pertenece el visitante (opcional)
-  employee_id String // empleado anfitrión (FK a employee_details)
-  space_id    String // espacio visitado (FK a space)
-  entry_time  DateTime // hora de entrada (ISO)
-  exit_time   DateTime? // hora de salida (ISO, opcional si aún no sale)
-  created_at  DateTime  @default(now()) // fecha de registro
+  id         String    @id @default(uuid()) // Identificador único
+  dni        String?   @unique // DNI (si es persona natural)
+  ruc        String?   @unique // RUC (si es empresa/independiente)
+  first_name String // Nombre
+  last_name  String // Apellido
+  phone      String? // Teléfono
+  email      String? // Correo
+  client_id  String // A quién visita (FK a client_details)
+  company_id String? // Compañía del cliente (redundante pero útil p/queries)
+  space_id   String // Espacio visitado (FK a space)
+  entry_time DateTime // Hora de entrada
+  exit_time  DateTime? // Hora de salida (opcional)
+  created_at DateTime  @default(now())
 
-  employee employee_details @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
-  space    space            @relation(fields: [space_id], references: [id], onDelete: Cascade)
+  client                      client_details    @relation(fields: [client_id], references: [client_id], onDelete: Cascade)
+  company                     companies?        @relation(fields: [company_id], references: [id], onDelete: SetNull)
+  space                       space             @relation(fields: [space_id], references: [id], onDelete: Cascade)
+  employee_details            employee_details? @relation(fields: [employee_detailsEmployee_id], references: [employee_id])
+  employee_detailsEmployee_id String?
 
-  @@index([employee_id, created_at])
+  @@index([client_id, created_at])
   @@index([space_id, created_at])
+  @@index([company_id])
   @@map("visitors")
+}
+
+model client_details {
+  client_id String @id
+  user      users  @relation(fields: [client_id], references: [id], onDelete: Cascade)
+
+  company_id String?
+  company    companies? @relation(fields: [company_id], references: [id], onDelete: SetNull)
+  visitors   visitors[]
+
+  @@index([company_id])
+  @@map("client_details")
 }

@@ -49,7 +49,7 @@ router.use(`${API_VERSION}/`, attendanceRouter);
 router.use(`${API_VERSION}/`, employeeRouter);
 
 router.use(`${API_VERSION}/products`, productRouter);
-router.use(`${API_VERSION}/product-brands`, productBrandRouter);
+router.use(`${API_VERSION}/products-brands`, productBrandRouter);
 
 router.use(`${API_VERSION}/seed`, seedRouter);
 router.use(`${API_VERSION}/`, workareaRouter);
