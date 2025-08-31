@@ -7,6 +7,13 @@ export class DetailSpaceRepository {
       where: { id },
       include: {
         prices: true,
+        space_images: {
+          select: {
+            id: true,
+            url: true,
+            alt: true,
+          },
+        },
         space_benefits: {
           include: { benefit: true },
         },

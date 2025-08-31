@@ -2,10 +2,14 @@
 import { z } from "zod";
 
 export const GetReservationsSchema = z.object({
-  limit:    z.coerce.number().int().positive().default(10),
-  page:     z.coerce.number().int().positive().default(1),
-  from:     z.string().datetime().optional(),
-  to:       z.string().datetime().optional(),
-  spaceId:  z.string().uuid().optional(),
+  limit: z.coerce.number().int().positive().default(10),
+  page: z.coerce.number().int().positive().default(1),
+  from: z.string().datetime().optional(),
+  to: z.string().datetime().optional(),
+  spaceId: z.string().uuid().optional(),
   fullRoom: z.coerce.boolean().optional(),
+  status: z
+    .enum(["pending", "confirmed", "cancelled", "in_progress"])
+    .optional(),
+  search: z.string().min(1).optional(),
 });

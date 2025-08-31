@@ -34,7 +34,7 @@ router.use(`${API_VERSION}/users`, userRouter);
 router.use(`${API_VERSION}/spaces`, spaceRouter);
 
 // reservation define sus subrutas
-router.use(`${API_VERSION}/reservationss`, reservationRouter);
+router.use(`${API_VERSION}/reservations`, reservationRouter);
 
 router.use(`${API_VERSION}/newsletter`, newsletterRouter);
 router.use(`${API_VERSION}/bulk_email`, bulkEmailRoutes);

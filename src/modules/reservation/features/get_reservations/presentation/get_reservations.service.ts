@@ -7,12 +7,24 @@ export class GetReservationsService {
   constructor(private readonly repo = new GetReservationsRepository()) {}
 
   async execute(dto: GetReservationsDTO) {
-    const { page = 1, limit = 10, from, to, spaceId, fullRoom } = dto;
+    const {
+      page = 1,
+      limit = 10,
+      from,
+      to,
+      spaceId,
+      fullRoom,
+      status,
+      search,
+    } = dto;
 
+    console.log(new Date(from!));
+    console.log(new Date(to!));
     // Prisma usa snake_case
     const where: Prisma.reservationWhereInput = {
       ...(spaceId && { space_id: spaceId }),
       ...(fullRoom !== undefined && { full_room: fullRoom }),
+      ...(status && { status }),
       ...(from || to
         ? {
             start_time: {
@@ -21,6 +33,22 @@ export class GetReservationsService {
             },
           }
         : {}),
+      ...(search && {
+        OR: [
+          { purchase_number: { contains: search, mode: "insensitive" } },
+          { code_qr: { contains: search, mode: "insensitive" } },
+          {
+            user: {
+              OR: [
+                { first_name: { contains: search, mode: "insensitive" } },
+                { last_name: { contains: search, mode: "insensitive" } },
+                { email: { contains: search, mode: "insensitive" } },
+              ],
+            },
+          },
+          { space: { name: { contains: search, mode: "insensitive" } } },
+        ],
+      }),
     };
 
     const skip = (page - 1) * limit;
@@ -29,7 +57,7 @@ export class GetReservationsService {
       this.repo.findMany({
         where,
         include: {
-          user: { select: { first_name: true, last_name: true } },
+          user: { select: { first_name: true, last_name: true, email: true } },
           space: { select: { name: true } },
         },
         orderBy: { start_time: "desc" },
@@ -43,14 +71,12 @@ export class GetReservationsService {
 
     return {
       data,
-      page,
-      limit,
-      total,
-      pages,
-      hasNext: page < pages,
-      hasPrev: page > 1,
-      nextPage: page < pages ? page + 1 : null,
-      prevPage: page > 1 ? page - 1 : null,
+      pagination: {
+        page,
+        limit,
+        total,
+        total_pages: pages,
+      },
     };
   }
 }
