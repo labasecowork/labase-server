@@ -2,8 +2,7 @@
 import { Router } from "express";
 
 import { createSpaceRoutes } from "./features/create_space";
-import { listActivatedSpacesRoutes } from "./features/list_spaces";
-import { listDeactivatedSpacesRoutes } from "./features/list_spaces";
+import { listSpacesRoutes } from "./features/list_spaces";
 import { detailSpaceRoutes } from "./features/detail_space";
 import { editSpaceRoutes } from "./features/edit_space";
 import { deactivateSpaceRoutes } from "./features/deactivate_space";
@@ -22,8 +21,7 @@ spaceRouter.use("/benefits", benefitRoutes);
  */
 
 spaceRouter.use("/", createSpaceRoutes);
-spaceRouter.use("/", listActivatedSpacesRoutes);
-spaceRouter.use("/deactivated", listDeactivatedSpacesRoutes);
+spaceRouter.use("/", listSpacesRoutes);
 spaceRouter.use("/", detailSpaceRoutes);
 spaceRouter.use("/", editSpaceRoutes);
 spaceRouter.use("/:id/deactivate", deactivateSpaceRoutes);
@@ -32,7 +30,6 @@ spaceRouter.use("/:id/activate", activateSpaceRoutes);
  *  MATCHES:
  *  POST  /api/v1/spaces                 → crear espacio
  *  GET   /api/v1/spaces                 → listar espacios
- *  GET   /api/v1/spaces/deactivated     → lista epsacios desabilitados
  *  GET   /api/v1/spaces/:id             → detalle de espacio
  *  PUT   /api/v1/spaces/:id             → editar espacio
  *  PATCH /api/v1/spaces/:id/deactivate  → desactivar espacio
