@@ -26,8 +26,8 @@ export class CreateSpaceController {
 
     if (authUser.role !== "admin") {
       throw new AppError(
-        "USER_TYPE_NOT_ALLOWED",
-        HttpStatusCodes.FORBIDDEN.code,
+        "Solo los administradores pueden crear espacios.",
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -47,17 +47,17 @@ export class CreateSpaceController {
             description: dto.description,
             type: dto.type,
             access: dto.access,
-            capacityMin: dto.capacityMin,
-            capacityMax: dto.capacityMax,
-            allowByUnit: dto.allowByUnit,
-            allowFullRoom: dto.allowFullRoom,
+            capacityMin: dto.capacity_min,
+            capacityMax: dto.capacity_max,
+            allowByUnit: dto.allow_by_unit,
+            allowFullRoom: dto.allow_full_room,
             prices: dto.prices,
-            benefitIds: dto.benefitIds,
+            benefitIds: dto.benefit_ids,
             images: imageUrls,
           },
           user: authUser,
-        },
-      ),
+        }
+      )
     );
   }
 }

@@ -17,8 +17,8 @@ export class CreateSpaceService {
   async execute(dto: CreateSpaceDTO, user: CurrentUser, imageUrls: string[]) {
     if (user.role !== "admin") {
       throw new AppError(
-        SPACE_MESSAGES.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        "Solo los administradores pueden crear espacios.",
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -27,10 +27,10 @@ export class CreateSpaceService {
       description: dto.description,
       type: dto.type,
       access: dto.access,
-      capacity_min: dto.capacityMin,
-      capacity_max: dto.capacityMax,
-      allow_by_unit: dto.allowByUnit,
-      allow_full_room: dto.allowFullRoom,
+      capacity_min: dto.capacity_min,
+      capacity_max: dto.capacity_max,
+      allow_by_unit: dto.allow_by_unit,
+      allow_full_room: dto.allow_full_room,
       disabled: false,
 
       space_images: imageUrls.length
@@ -50,9 +50,9 @@ export class CreateSpaceService {
         })),
       },
 
-      space_benefits: dto.benefitIds?.length
+      space_benefits: dto.benefit_ids?.length
         ? {
-            create: dto.benefitIds.map((id) => ({
+            create: dto.benefit_ids.map((id) => ({
               benefit: { connect: { id } },
             })),
           }
@@ -60,7 +60,7 @@ export class CreateSpaceService {
     });
 
     return {
-      message: SPACE_MESSAGES.CREATED_SUCCESS,
+      message: "Espacio creado correctamente.",
       space_id: created.id,
     };
   }

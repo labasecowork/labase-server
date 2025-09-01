@@ -101,6 +101,6 @@ router.post(
   "/",
   authenticateToken,
   upload.array("images", 5),
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 export { router as createSpaceRoutes };

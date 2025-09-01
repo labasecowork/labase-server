@@ -19,14 +19,14 @@ export function handleZodError(error: ZodError, req: Request) {
         code: e.code,
         message: e.message,
       })),
-    },
+    }
   );
 }
 
 export const handleServerError = (
   res: Response,
   req: Request,
-  error: unknown,
+  error: unknown
 ) => {
   if (error instanceof ZodError) {
     const payload = handleZodError(error, req);
@@ -44,9 +44,15 @@ export const handleServerError = (
     (error instanceof Error && error.name === "PrismaClientValidationError")
   ) {
     return res.status(400).json(
-      buildHttpResponse(400, "Bad Request", req.path, undefined, {
-        details: error.message,
-      }),
+      buildHttpResponse(
+        400,
+        "Sucedio una validación en los datos, por favor verifique los datos.",
+        req.path,
+        undefined,
+        {
+          details: error.message,
+        }
+      )
     );
   }
 
@@ -59,11 +65,11 @@ export const handleServerError = (
       .json(
         buildHttpResponse(
           400,
-          (error as Prisma.PrismaClientKnownRequestError).code,
+          "Sucedio un error en la base de datos, contacta al administrador para mas detalles.",
           req.path,
           undefined,
-          (error as any).meta ?? undefined,
-        ),
+          (error as any).meta ?? undefined
+        )
       );
   }
 
@@ -75,9 +81,9 @@ export const handleServerError = (
         process.env.NODE_ENV === "production"
           ? "Internal Server Error"
           : error instanceof Error
-            ? (error.stack ?? error.message)
-            : String(error),
-        req.path,
-      ),
+          ? error.stack ?? error.message
+          : String(error),
+        req.path
+      )
     );
 };

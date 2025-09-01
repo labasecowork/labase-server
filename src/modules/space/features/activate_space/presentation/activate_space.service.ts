@@ -10,7 +10,10 @@ export class ActivateSpaceService {
     try {
       return await this.repo.update(id);
     } catch {
-      throw new AppError("SPACE_NOT_FOUND", HttpStatusCodes.NOT_FOUND.code);
+      throw new AppError(
+        "Espacio no encontrado, por favor verifique el ID.",
+        HttpStatusCodes.NOT_FOUND.code
+      );
     }
   }
 }
