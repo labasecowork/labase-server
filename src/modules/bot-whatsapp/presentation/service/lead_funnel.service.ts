@@ -125,7 +125,6 @@ function prettyLead(l: Lead) {
 }
 
 async function tryLooseExtract(t: string, s: Session, todayISO: string) {
-  // 1) Intent/entidades por LLM (resiliente)
   const ai = await classifyIntent({ userText: t });
 
   if (!s.data.space_name) {
@@ -229,7 +228,6 @@ export async function handleIncomingText(
     ];
   }
 
-  /* Idle: clasificador o palabra clave */
   if (s.step === "idle" && !isReserveKeyword(t)) {
     const intent = await classifyIntent({ userText: t });
     if (intent.intent === "reservation_start") {
@@ -258,7 +256,6 @@ export async function handleIncomingText(
     ];
   }
 
-  /* phone */
   if (s.step === "phone") {
     if (await wantsSkipAI(t)) {
       s.step = "space";

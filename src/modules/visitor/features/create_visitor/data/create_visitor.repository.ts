@@ -2,12 +2,20 @@
 import prisma from "../../../../../config/prisma_client";
 
 export class CreateVisitorRepository {
-  findHostByEmployeeId(employee_id: string) {
-    return prisma.employee_details.findUnique({ where: { employee_id } });
+  findHostByClientId(client_id: string) {
+    return prisma.client_details.findUnique({
+      where: { client_id },
+      include: {
+        user: true,
+        company: true,
+      },
+    });
   }
+
   findSpaceById(space_id: string) {
     return prisma.space.findUnique({ where: { id: space_id } });
   }
+
   create(data: {
     dni?: string | null;
     ruc?: string | null;
@@ -15,8 +23,7 @@ export class CreateVisitorRepository {
     last_name: string;
     phone?: string | null;
     email?: string | null;
-    company?: string | null;
-    employee_id: string;
+    client_id: string;
     space_id: string;
     entry_time: Date;
     exit_time?: Date | null;
