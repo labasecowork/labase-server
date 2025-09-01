@@ -9,6 +9,7 @@ export class EditSpaceRepository {
       include: {
         space_images: { select: { id: true, url: true } },
         space_benefits: { select: { benefit_id: true } },
+        prices: true,
       },
     });
   }
