@@ -2,7 +2,7 @@
 import { Router } from "express";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
-import { CreateVisitorController } from "../../create_visitor/service/create_visitor.controller";
+import { CreateVisitorController } from "../../create_visitor/presentation/create_visitor.controller";
 import { LookupVisitorController } from "../../lookup_visitor/presentation/lookup.controller";
 
 const router = Router();
@@ -53,7 +53,7 @@ const lookupCtrl = new LookupVisitorController();
 router.post(
   "/",
   authenticateToken,
-  asyncHandler(createCtrl.handle.bind(createCtrl)),
+  asyncHandler(createCtrl.handle.bind(createCtrl))
 );
 
 /**
@@ -74,7 +74,7 @@ router.post(
 router.get(
   "/lookup",
   authenticateToken,
-  asyncHandler(lookupCtrl.handle.bind(lookupCtrl)),
+  asyncHandler(lookupCtrl.handle.bind(lookupCtrl))
 );
 
 export { router as createAndLookupVisitorRoutes };

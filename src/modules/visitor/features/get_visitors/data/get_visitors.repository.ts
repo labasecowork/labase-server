@@ -15,7 +15,7 @@ export type FindParams = {
 const insensitive = "insensitive" as const;
 
 function buildSearchWhere(
-  search?: string,
+  search?: string
 ): Prisma.visitorsWhereInput | undefined {
   if (!search) return undefined;
   return {
@@ -24,29 +24,13 @@ function buildSearchWhere(
       { last_name: { contains: search, mode: insensitive } },
 
       {
-        client: {
-          is: {
-            user: {
-              is: { first_name: { contains: search, mode: insensitive } },
-            },
-          },
+        user: {
+          is: { first_name: { contains: search, mode: insensitive } },
         },
       },
       {
-        client: {
-          is: {
-            user: {
-              is: { last_name: { contains: search, mode: insensitive } },
-            },
-          },
-        },
-      },
-
-      {
-        client: {
-          is: {
-            company: { is: { name: { contains: search, mode: insensitive } } },
-          },
+        user: {
+          is: { last_name: { contains: search, mode: insensitive } },
         },
       },
     ],
@@ -58,11 +42,11 @@ export class GetVisitorsRepository {
     return prisma.visitors.findUnique({
       where: { id },
       include: {
-        client: {
+        user: {
           select: {
-            client_id: true,
-            user: { select: { id: true, first_name: true, last_name: true } },
-            company: { select: { id: true, name: true } },
+            id: true,
+            first_name: true,
+            last_name: true,
           },
         },
         space: { select: { id: true, name: true } },
@@ -94,11 +78,11 @@ export class GetVisitorsRepository {
       orderBy: { created_at: "desc" },
       include: {
         space: { select: { id: true, name: true } },
-        client: {
+        user: {
           select: {
-            client_id: true,
-            user: { select: { id: true, first_name: true, last_name: true } },
-            company: { select: { id: true, name: true } },
+            id: true,
+            first_name: true,
+            last_name: true,
           },
         },
       },
