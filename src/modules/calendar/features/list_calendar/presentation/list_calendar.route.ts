@@ -20,6 +20,6 @@
      *       200:
      *         description: Lista de eventos
      */
-    router.get("/", authenticateToken, asyncHandler(controller.handle.bind(controller)));
+    router.get("/", authenticateToken, asyncHandler((req, res) => controller.handle(req, res)));
 
     export { router as listCalendarRoutes };

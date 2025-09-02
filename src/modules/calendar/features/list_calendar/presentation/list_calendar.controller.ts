@@ -1,6 +1,9 @@
 // src/modules/calendar/features/list_calendar/presentation/list_calendar.controller.ts
 import { Request, Response } from "express";
-import { ListCalendarSchema, ListCalendarDTO } from "../domain/list_calendar.schema";
+import {
+  ListCalendarSchema,
+  ListCalendarDTO,
+} from "../domain/list_calendar.schema";
 import { ListCalendarService } from "./list_calendar.service";
 import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
@@ -11,25 +14,20 @@ export class ListCalendarController {
   constructor(private readonly svc = new ListCalendarService()) {}
 
   async handle(req: Request, res: Response) {
-    try {
-      const user = await getAuthenticatedUser(req);
+    const user = await getAuthenticatedUser(req);
 
-      const dto: ListCalendarDTO = ListCalendarSchema.parse(req.query);
+    const dto: ListCalendarDTO = ListCalendarSchema.parse(req.query);
+    const events = await this.svc.execute(user, dto);
 
-      const events = await this.svc.execute(user, dto);
-
-      return res
-        .status(HttpStatusCodes.OK.code)
-        .json(
-          buildHttpResponse(
-            HttpStatusCodes.OK.code,
-            HttpStatusCodes.OK.message,
-            req.path,
-            events
-          )
-        );
-    } catch (error) {
-      return handleServerError(res, req, error);
-    }
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          HttpStatusCodes.OK.message,
+          req.path,
+          events
+        )
+      );
   }
 }

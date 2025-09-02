@@ -1,5 +1,4 @@
 // src/modules/calendar/features/list_calendar/data/list_calendar.repository.ts
-import { PrismaClient } from "@prisma/client";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
@@ -12,30 +11,22 @@ export class ListCalendarRepository {
    * Obtiene los eventos de la semana actual (lunes–domingo).
    * @param userId Si se pasa, filtra solo las reservas de ese usuario.
    */
-  async getWeeklyEvents(userId?: string) {
+  async getWeeklyEvents() {
     const startOfWeek = dayjs().startOf("week").add(1, "day");
     const endOfWeek = dayjs().endOf("week").add(1, "day");
 
     const reservations = await prisma.reservation.findMany({
       where: {
-        ...(userId ? { userId } : {}),
-        OR: [
-          {
-            start_time: { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() },
-          },
-          { end_time: { gte: startOfWeek.toDate(), lte: endOfWeek.toDate() } },
-          {
-            start_time: { lte: startOfWeek.toDate() },
-            end_time: { gte: endOfWeek.toDate() },
-          },
-        ],
+        start_time: {
+          gte: startOfWeek.toDate(),
+        },
       },
       include: {
         user: { select: { first_name: true, last_name: true } },
         space: { select: { name: true } },
       },
     });
-
+    console.log(this._expandByDay(reservations));
     return this._expandByDay(reservations);
   }
 
@@ -51,13 +42,13 @@ export class ListCalendarRepository {
 
     const reservations = await prisma.reservation.findMany({
       where: {
-        ...(userId ? { userId } : {}),
-        OR: [
-          { start_time: { gte: start.toDate(), lte: end.toDate() } },
-          { end_time: { gte: start.toDate(), lte: end.toDate() } },
+        ...(userId ? { user_id: userId } : {}),
+        AND: [
           {
-            start_time: { lte: start.toDate() },
-            end_time: { gte: end.toDate() },
+            start_time: { lte: end.toDate() },
+          },
+          {
+            end_time: { gte: start.toDate() },
           },
         ],
       },
@@ -80,7 +71,7 @@ export class ListCalendarRepository {
       end_time: Date;
       user: { first_name: string; last_name: string };
       space: { name: string };
-    }>,
+    }>
   ) {
     const events: Array<{
       id: string;
@@ -109,7 +100,7 @@ export class ListCalendarRepository {
           cliente: `${r.user.first_name} ${r.user.last_name}`,
           startTime: sameStartDay ? start.format("HH:mm") : "09:00",
           endTime: sameEndDay ? end.format("HH:mm") : "18:00",
-          day: (date.day() + 6) % 7,
+          day: date.date(), // day() devuelve 0-6 (domingo-sábado)
         });
       }
     }

@@ -7,12 +7,10 @@ export class ListCalendarService {
   constructor(private readonly repo = new ListCalendarRepository()) {}
 
   async execute(user: CurrentUser, dto: ListCalendarDTO) {
-    const isAdmin = user.role === "admin";
-
     if (dto.from || dto.to) {
-      return this.repo.getEventsBetween(dto.from, dto.to, isAdmin ? undefined : user.id);
+      return this.repo.getEventsBetween(dto.from, dto.to, user.id);
     }
 
-    return this.repo.getWeeklyEvents(isAdmin ? undefined : user.id);
+    return this.repo.getWeeklyEvents();
   }
 }
