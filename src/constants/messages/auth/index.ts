@@ -22,8 +22,10 @@ export const AUTH_MESSAGES = {
 
     ERROR_PASSWORD_NOT_MATCH:
       "Las contraseñas no coinciden, vuelve a intentar por favor",
-    ERROR_ALREADY_REGISTER: "",
-    ERROR_INTERNAL_SERVER_ERROR: "",
-    SUCCESS: "",
+
+    ERROR_ALREADY_REGISTER: "El usuario ya se encuentra registrado",
+    ERROR_INTERNAL_SERVER_ERROR:
+      "Ocurrió un error interno en el servidor, por favor intenta nuevamente",
+    SUCCESS: "El registro se ha completado exitosamente",
   },
 };

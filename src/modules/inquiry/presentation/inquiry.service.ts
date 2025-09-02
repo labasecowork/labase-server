@@ -1,11 +1,11 @@
 import { sendEmail } from "../../../utils/email_sender";
-import { PublicContactDTO } from "../domain/public_contact.dto";
+import { inquiryDTO } from "../domain/inquiry.dto";
 import { EMAIL_USER } from "../../../config/env";
 import path from "path";
 import ejs from "ejs";
 
-export const publicContactService = async (
-  dto: PublicContactDTO
+export const inquiryService = async (
+  dto: inquiryDTO
 ): Promise<void> => {
   if (!EMAIL_USER) {
     throw new Error("EMAIL_USER is not defined in environment variables");

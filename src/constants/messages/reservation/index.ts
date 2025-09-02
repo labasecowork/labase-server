@@ -1,17 +1,27 @@
 // src/constants/messages/reservation/index.ts
 export const RESERVATION_MESSAGES = {
-  CREATED_SUCCESS: "Reservation created successfully",
-  SPACE_NOT_FOUND: "The space does not exist or is inactive",
-  CAPACITY_OUT_OF_RANGE: "The number of people is out of range",
-  FULL_ROOM_FORBIDDEN: "Full-room reservation is not allowed for this space",
-  UNIT_BOOKING_FORBIDDEN: "Unit booking is not allowed for this space",
-  TIME_OVERLAP: "There is an overlapping reservation in that time interval",
-  NO_CAPACITY_LEFT: "No capacity left for the selected time interval",
-  PRICE_NOT_DEFINED: "Price not defined for the selected duration",
-  NOT_FOUND: "Reservation not found",
-  FORBIDDEN: "You do not have permission to view this reservation.",
-  ALREADY_CANCELLED: "Reservation is already cancelled",
-  IN_PROGRESS_CANNOT_CANCEL: "Reservation in progress cannot be cancelled",
-  STATUS_INVALID_FOR_CANCEL: "Reservation status is not valid for cancellation",
-  CANCELLED_SUCCESS: "Reservation cancelled successfully",
-};
+  CREATED_SUCCESS: "La reserva se ha creado correctamente",
+
+  SPACE_NOT_FOUND: "El espacio no existe o está inactivo",
+  CAPACITY_OUT_OF_RANGE: "El número de personas está fuera de rango",
+  FULL_ROOM_FORBIDDEN:
+    "No se permite la reserva de sala completa para este espacio",
+  UNIT_BOOKING_FORBIDDEN: "No se permite la reserva por unidad en este espacio",
+
+  TIME_OVERLAP: "Ya existe una reserva en ese intervalo de tiempo",
+  NO_CAPACITY_LEFT:
+    "No hay capacidad disponible para el intervalo de tiempo seleccionado",
+  PRICE_NOT_DEFINED:
+    "No se ha definido un precio para la duración seleccionada",
+
+  NOT_FOUND: "La reserva no existe",
+  FORBIDDEN: "No tienes permiso para ver esta reserva",
+
+  ALREADY_CANCELLED: "La reserva ya está cancelada",
+  IN_PROGRESS_CANNOT_CANCEL:
+    "No se puede cancelar una reserva que está en curso",
+  STATUS_INVALID_FOR_CANCEL:
+    "El estado de la reserva no es válido para su cancelación",
+
+  CANCELLED_SUCCESS: "La reserva se ha cancelado correctamente",
+} as const;

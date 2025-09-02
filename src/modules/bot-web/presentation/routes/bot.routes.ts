@@ -3,7 +3,7 @@ import { BotController } from "../controllers/bot.controllers";
 import { asyncHandler } from "../../../../middlewares/async_handler";
 
 const router = Router();
-const botController = new BotController();
+const Controller = new BotController();
 
 /**
  * Enviar mensaje al bot
@@ -108,7 +108,7 @@ const botController = new BotController();
  */
 router.post(
   "/send-message",
-  asyncHandler((req, res) => botController.sendMessage(req, res))
+  asyncHandler(Controller.sendMessage.bind(Controller))
 );
 
-export default router;
+export { router as botRoutes };

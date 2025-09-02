@@ -6,13 +6,13 @@ export function buildHttpResponse(
   description: string,
   path?: string,
   data?: any,
-  meta?: any,
+  meta?: any
 ) {
   const response: any = {
     status,
     message:
       Object.values(HttpStatusCodes).find((s) => s.code === status)?.message ||
-      "Unknown Error",
+      "Error desconocido",
     description,
     timestamp: new Date().toISOString(),
     path: path || undefined,

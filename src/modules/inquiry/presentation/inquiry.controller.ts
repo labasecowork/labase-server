@@ -1,14 +1,14 @@
-// src/modules/public_contact/presentation/public_contact.controller.ts
+// src/modules/inquiry/presentation/inquiry.controller.ts
 import { Request, Response } from "express";
 import { HttpStatusCodes } from "../../../constants/http_status_codes";
 import { buildHttpResponse } from "../../../utils";
-import { publicContactSchema } from "../domain/public_contact.schema";
-import { publicContactService } from "./public_contact.service";
+import { inquirySchema } from "../domain/inquiry.schema";
+import { inquiryService } from "./inquiry.service";
 
-export class PublicContactController {
+export class inquiryController {
   async handle(req: Request, res: Response): Promise<Response> {
-    const dto = publicContactSchema.parse(req.body);
-    await publicContactService(dto);
+    const dto = inquirySchema.parse(req.body);
+    await inquiryService(dto);
 
     return res
       .status(HttpStatusCodes.OK.code)
@@ -17,8 +17,8 @@ export class PublicContactController {
           HttpStatusCodes.OK.code,
           "Message sent successfully",
           req.path,
-          null,
-        ),
+          null
+        )
       );
   }
 }
