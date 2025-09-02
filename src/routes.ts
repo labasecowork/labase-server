@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-import botRoutes from "./modules/bot-web/presentation/routes/bot.routes";
+import { botRoutes } from "./modules/bot-web/presentation/routes/bot.routes";
 import { authRouter } from "./modules/auth/auth.routes";
 import { spaceRouter } from "./modules/space";
 import { reservationRouter } from "./modules/reservation";
 import { userRouter } from "./modules/user";
-import { publicContactRoutes } from "./modules/public_contact/presentation/public_contact.routes";
-import { bulkEmailRoutes } from "./modules/bulk_email/presentation/bulk_email.routes";
+import { inquiryRoutes } from "./modules/inquiry/presentation/inquiry.routes";
+import { bulkEmailRoutes } from "./modules/bulk-email/presentation/bulk-email.routes";
 import calendarRouter from "./modules/calendar/index";
 import testingRouter from "./modules/testing_aws";
 import { paymentRoutes } from "./modules/payment";
@@ -33,13 +33,12 @@ router.use(`${API_VERSION}/auth`, authRouter);
 router.use(`${API_VERSION}/users`, userRouter);
 router.use(`${API_VERSION}/spaces`, spaceRouter);
 
-// reservation define sus subrutas
 router.use(`${API_VERSION}/reservations`, reservationRouter);
 
 router.use(`${API_VERSION}/newsletter`, newsletterRouter);
 router.use(`${API_VERSION}/bulk_email`, bulkEmailRoutes);
 router.use(`${API_VERSION}/calendar`, calendarRouter);
-router.use(`${API_VERSION}/form`, publicContactRoutes);
+router.use(`${API_VERSION}/form`, inquiryRoutes);
 router.use(`${API_VERSION}/`, testingRouter);
 router.use(`${API_VERSION}/payment`, paymentRoutes);
 

@@ -1,14 +1,14 @@
-// src/modules/communication/features/public_contact/presentation/public_contact.routes.ts
+// src/modules/communication/features/inquiry/presentation/inquiry.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../middlewares/async_handler";
-import { PublicContactController } from "./public_contact.controller";
+import { inquiryController } from "./inquiry.controller";
 
 const router = Router();
-const controller = new PublicContactController();
+const controller = new inquiryController();
 
 /**
  * @openapi
- * /api/v1/communication/public_contact:
+ * /api/v1/form/:
  *   post:
  *     summary: Enviar mensaje desde formulario de contacto público
  *     tags:
@@ -61,11 +61,11 @@ const controller = new PublicContactController();
  *                   example: Mensaje enviado correctamente
  *                 path:
  *                   type: string
- *                   example: /api/v1/communication/public_contact
+ *                   example: /api/v1/form
  *                 data:
  *                   type: string
  *                   nullable: true
  */
 router.post("/", asyncHandler(controller.handle.bind(controller)));
 
-export { router as publicContactRoutes };
+export { router as inquiryRoutes };

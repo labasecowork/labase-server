@@ -1,19 +1,17 @@
 // src/constants/messages/brand.ts
 export const BRAND_MESSAGES = {
-  CREATED_SUCCESS: "Brand created successfully",
-  UPDATED_SUCCESS: "Brand updated successfully",
-  DELETED_SUCCESS: "Brand deleted successfully",
-  LIST_SUCCESS: "Brands retrieved successfully",
-  DETAIL_SUCCESS: "Brand retrieved successfully",
-  NOT_FOUND: "The brand does not exist",
-  ALREADY_EXISTS: "A brand with this name already exists",
-  FORBIDDEN: "You do not have permission to perform this action",
-  BRAND_CREATED_SUCCESS: "Brand created correctly",
-  BRAND_UPDATED_SUCCESS: "Brand updated correctly",
-  BRAND_DELETED_SUCCESS: "Brand deleted correctly",
-  BRAND_NOT_FOUND: "Brand not found",
-  BRAND_HAS_PRODUCTS:
-    "The brand cannot be deleted because it has associated products",
-  DUPLICATED_NAME: "Brand name already exists",
-  HAS_PRODUCTS: "Brand has associated products",
+  CREATED_SUCCESS: "La marca se ha creado correctamente",
+  UPDATED_SUCCESS: "La marca se ha actualizado correctamente",
+  DELETED_SUCCESS: "La marca se ha eliminado correctamente",
+  LIST_SUCCESS: "Las marcas se han obtenido correctamente",
+  DETAIL_SUCCESS: "La marca se ha obtenido correctamente",
+
+  NOT_FOUND: "La marca no existe",
+  ALREADY_EXISTS: "Ya existe una marca con este nombre",
+  DUPLICATED_NAME: "El nombre de la marca ya existe",
+
+  HAS_PRODUCTS:
+    "La marca no puede ser eliminada porque tiene productos asociados",
+
+  FORBIDDEN: "No tienes permiso para realizar esta acción",
 } as const;

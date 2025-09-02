@@ -8,7 +8,7 @@ import {
   DecolectaClient,
   normalizeReniecToVisitor,
   normalizeSunatToVisitor,
-} from "../../../../../shared/decolecta/decolecta.client";
+} from "../../../../../shared/person-data/person-data";
 import { MESSAGES } from "../../../../../constants/messages";
 
 const QuerySchema = z
