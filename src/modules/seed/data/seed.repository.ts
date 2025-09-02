@@ -15,6 +15,7 @@ import {
   fakeReservationsData,
   categoriesArticles,
   articlesData,
+  fakeVisitorsData,
 } from "../constants";
 
 export class SeedRepository {
@@ -39,7 +40,7 @@ export class SeedRepository {
     await this.createCategoriesArticles();
     await this.createArticles();
     await this.createFakeClientsAndReservations();
-    // TODO: Crear semilla de visitantes con datos falsos
+    await this.createFakeVisitors();
 
     return { message: "Database seeded successfully for development" };
   }
@@ -260,5 +261,26 @@ export class SeedRepository {
       });
     }
     console.log("Reservas falsas creadas");
+  }
+
+  async createFakeVisitors() {
+    for (const visitorData of fakeVisitorsData) {
+      await prisma.visitors.create({
+        data: {
+          dni: visitorData.dni || null,
+          ruc: visitorData.ruc || null,
+          first_name: visitorData.first_name,
+          last_name: visitorData.last_name,
+          phone: visitorData.phone,
+          email: visitorData.email,
+          user_id: visitorData.user_id,
+          space_id: visitorData.space_id,
+          entry_time: visitorData.entry_time,
+          exit_time: visitorData.exit_time,
+          created_at: new Date(),
+        },
+      });
+    }
+    console.log("Visitantes falsos creados");
   }
 }
