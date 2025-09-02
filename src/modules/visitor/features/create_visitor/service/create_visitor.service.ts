@@ -13,7 +13,7 @@ export class CreateVisitorService {
     if (user.role !== "admin") {
       throw new AppError(
         MESSAGES.VISITOR.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -21,7 +21,7 @@ export class CreateVisitorService {
     if (!host) {
       throw new AppError(
         MESSAGES.VISITOR.HOST_NOT_FOUND,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
@@ -29,7 +29,7 @@ export class CreateVisitorService {
     if (!space) {
       throw new AppError(
         MESSAGES.VISITOR.SPACE_NOT_FOUND,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
@@ -40,7 +40,7 @@ export class CreateVisitorService {
       last_name: dto.last_name,
       phone: dto.phone ?? null,
       email: dto.email ?? null,
-      client_id: dto.client_id,
+      user_id: dto.client_id,
       space_id: dto.space_id,
       entry_time: new Date(dto.entry_time),
       exit_time: dto.exit_time ? new Date(dto.exit_time) : null,

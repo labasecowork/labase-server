@@ -3,12 +3,13 @@ import prisma from "../../../../../config/prisma_client";
 
 export class CreateVisitorRepository {
   findHostByClientId(client_id: string) {
-    return prisma.client_details.findUnique({
-      where: { client_id },
-      include: {
-        user: true,
-        company: true,
-      },
+    console.log(
+      prisma.users.findUnique({
+        where: { id: client_id },
+      })
+    );
+    return prisma.users.findUnique({
+      where: { id: client_id },
     });
   }
 
@@ -23,11 +24,11 @@ export class CreateVisitorRepository {
     last_name: string;
     phone?: string | null;
     email?: string | null;
-    client_id: string;
+    user_id: string;
     space_id: string;
     entry_time: Date;
     exit_time?: Date | null;
-}) {
+  }) {
     return prisma.visitors.create({ data });
   }
 }
