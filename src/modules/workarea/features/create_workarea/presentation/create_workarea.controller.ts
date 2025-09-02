@@ -3,7 +3,6 @@ import { Response } from "express";
 import { CreateWorkAreaService } from "./create_workarea.service";
 import { CreateWorkAreaSchema } from "../domain/create_workarea.schema";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
-import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";

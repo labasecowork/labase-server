@@ -1,12 +1,16 @@
 export const VISITOR_MESSAGES = {
-  CREATED_SUCCESS: "Visitor created successfully",
-  UPDATED_SUCCESS: "Visitor updated successfully",
-  DELETED_SUCCESS: "Visitor deleted successfully",
-  NOT_FOUND: "Visitor not found",
-  FORBIDDEN: "You are not allowed to perform this action",
-  HOST_NOT_FOUND: "Host (employee) not found",
-  SPACE_NOT_FOUND: "Space not found",
-  ALREADY_CHECKED_OUT: "Visitor already has an exit time",
-  LOOKUP_NOT_FOUND: "No record found for given ID",
-  LOOKUP_BAD_REQUEST: "Invalid ID format",
-};
+  CREATED_SUCCESS: "El visitante se ha creado correctamente",
+  UPDATED_SUCCESS: "El visitante se ha actualizado correctamente",
+  DELETED_SUCCESS: "El visitante se ha eliminado correctamente",
+
+  NOT_FOUND: "El visitante no existe",
+  FORBIDDEN: "No tienes permiso para realizar esta acción",
+
+  HOST_NOT_FOUND: "El anfitrión (empleado) no existe",
+  SPACE_NOT_FOUND: "El espacio no existe",
+
+  ALREADY_CHECKED_OUT: "El visitante ya tiene registrada una hora de salida",
+
+  LOOKUP_NOT_FOUND: "No se encontró ningún registro con el ID proporcionado",
+  LOOKUP_BAD_REQUEST: "El formato del ID no es válido",
+} as const;

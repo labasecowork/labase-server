@@ -40,7 +40,7 @@ export class CreateVisitorService {
       last_name: dto.last_name,
       phone: dto.phone ?? null,
       email: dto.email ?? null,
-      client_id: dto.client_id, // ← nuevo campo
+      client_id: dto.client_id,
       space_id: dto.space_id,
       entry_time: new Date(dto.entry_time),
       exit_time: dto.exit_time ? new Date(dto.exit_time) : null,

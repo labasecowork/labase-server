@@ -30,9 +30,9 @@ export async function sendEmail(
       ],
     });
 
-    console.log(`Email sent: ${info.messageId}`);
+    //console.log(`Email sent: ${info.messageId}`);
   } catch (error) {
-    console.error("Failed to send email:", error);
-    throw new Error("Email sending failed");
+    //console.error("Failed to send email:", error);
+    throw new Error("Error al enviar el correo electrónico");
   }
 }

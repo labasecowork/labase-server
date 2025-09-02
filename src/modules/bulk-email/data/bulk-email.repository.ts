@@ -1,4 +1,4 @@
-//src/modules/bulk_email/data/bulk_email.repository.ts
+//src/modules/bulk-email/data/bulk-email.repository.ts
 import prisma from "../../../config/prisma_client";
 
 export class EmailRepository {

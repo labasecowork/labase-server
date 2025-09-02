@@ -1,14 +1,14 @@
-// src/modules/bulk_email/presentation/bulk_email.routes.ts
+// src/modules/bulk-email/presentation/bulk-email.routes.ts
 import { Router } from "express";
 import { authenticateToken } from "../../../middlewares/authenticate_token";
 import { asyncHandler } from "../../../middlewares/async_handler";
-import { EmailController } from "./bulk_email.controller";
+import { EmailController } from "./bulk-email.controller";
 
 const router = Router();
 const controller = new EmailController();
 /**
  * @openapi
- * /api/v1/bulk_email:
+ * /api/v1/bulk-email:
  *   post:
  *     tags:
  *       - Email
