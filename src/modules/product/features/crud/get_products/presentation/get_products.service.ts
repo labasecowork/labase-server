@@ -12,7 +12,7 @@ export class GetProductsService {
     if (!product) {
       throw new AppError(
         MESSAGES.PRODUCT.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
     return product;
@@ -34,12 +34,12 @@ export class GetProductsService {
     ]);
 
     return {
-      items,
-      meta: {
+      products: items,
+      pagination: {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit) || 1,
+        total_pages: Math.ceil(total / limit) || 1,
       },
     };
   }

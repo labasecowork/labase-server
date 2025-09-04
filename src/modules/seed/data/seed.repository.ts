@@ -5,6 +5,7 @@ import {
   duration_unit,
   price_mode,
   space_type,
+  unit_of_measure,
 } from "@prisma/client";
 import {
   employeesData,
@@ -16,6 +17,8 @@ import {
   categoriesArticles,
   articlesData,
   fakeVisitorsData,
+  brandList,
+  productList,
 } from "../constants";
 
 export class SeedRepository {
@@ -41,6 +44,8 @@ export class SeedRepository {
     await this.createArticles();
     await this.createFakeClientsAndReservations();
     await this.createFakeVisitors();
+    const brands = await this.createFakeBrands();
+    await this.createFakeProducts(brands);
 
     return { message: "Database seeded successfully for development" };
   }
@@ -282,5 +287,65 @@ export class SeedRepository {
       });
     }
     console.log("Visitantes falsos creados");
+  }
+
+  async createFakeBrands(): Promise<
+    { id: string; name: string; created_at: Date }[]
+  > {
+    const createdBrands = await Promise.all(
+      brandList.map(async (brandData) => {
+        const brand = await prisma.product_brand.upsert({
+          where: { name: brandData.name },
+          update: {},
+          create: brandData,
+        });
+
+        console.log(`Marca procesada: ${brand.name}`);
+        return brand;
+      })
+    );
+
+    console.log(`Total marcas procesadas: ${createdBrands.length}`);
+    return createdBrands;
+  }
+
+  async createFakeProducts(
+    brands: { id: string; name: string }[]
+  ): Promise<any[]> {
+    const brandMap = new Map(brands.map((brand) => [brand.name, brand.id]));
+
+    const createdProducts: any[] = [];
+
+    for (const productData of productList) {
+      const brandId = brandMap.get(productData.brand_name);
+
+      if (!brandId) {
+        console.warn(
+          `Marca no encontrada: ${productData.brand_name} para producto: ${productData.name}`
+        );
+        continue;
+      }
+
+      const { brand_name, ...productWithoutBrandName } = productData;
+
+      const product = await prisma.products.create({
+        data: {
+          ...productWithoutBrandName,
+          brand_id: brandId,
+          unit_of_measure: productData.unit_of_measure as unit_of_measure,
+        },
+        include: {
+          brand: { select: { id: true, name: true } },
+        },
+      });
+
+      createdProducts.push(product);
+      console.log(
+        `Producto creado: ${product.name} - ${product.brand.name} (Cantidad: ${product.quantity})`
+      );
+    }
+
+    console.log(`Total productos creados: ${createdProducts.length}`);
+    return createdProducts;
   }
 }
