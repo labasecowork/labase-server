@@ -4,6 +4,7 @@ export const VISITOR_MESSAGES = {
   DELETED_SUCCESS: "El visitante se ha eliminado correctamente",
 
   NOT_FOUND: "El visitante no existe",
+  COMPANY_NOT_FOUND: "La compañia no existe",
   FORBIDDEN: "No tienes permiso para realizar esta acción",
 
   HOST_NOT_FOUND: "El anfitrión (empleado) no existe",

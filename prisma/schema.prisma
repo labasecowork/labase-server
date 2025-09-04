@@ -143,7 +143,8 @@ model users {
   reservations         reservation[]         @relation("user_reservations") // Reservas realizadas por el usuario
   payment_transactions payment_transaction[] @relation("user_payments")
   articles             articles[]            @relation("user_articles")
-  client_details       client_details?
+
+  hosted_visitors visitors[] @relation("visitor_host")
 
   @@map("users") // (opcional; ya está en snake_case)
 }
@@ -189,7 +190,6 @@ model companies {
 
   employees employee_details[]
 
-  clients  client_details[]
   visitors visitors[]
 
   @@map("companies")
@@ -420,39 +420,28 @@ model product_brand {
 
 model visitors {
   id         String    @id @default(uuid()) // Identificador único
-  dni        String?   @unique // DNI (si es persona natural)
-  ruc        String?   @unique // RUC (si es empresa/independiente)
+  dni        String?   // DNI (si es persona natural)
+  ruc        String?   // RUC (si es empresa/independiente)
   first_name String // Nombre
   last_name  String // Apellido
   phone      String? // Teléfono
   email      String? // Correo
-  client_id  String // A quién visita (FK a client_details)
+  host_user_id String // A quién visita (FK a client_details)
   company_id String? // Compañía del cliente (redundante pero útil p/queries)
-  space_id   String // Espacio visitado (FK a space)
+  space_id   String // Espacio visitado (FK a space)WWWSW
   entry_time DateTime // Hora de entrada
   exit_time  DateTime? // Hora de salida (opcional)
   created_at DateTime  @default(now())
 
-  client                      client_details    @relation(fields: [client_id], references: [client_id], onDelete: Cascade)
+  host         users      @relation("visitor_host", fields: [host_user_id], references: [id], onDelete: Cascade)
+
   company                     companies?        @relation(fields: [company_id], references: [id], onDelete: SetNull)
   space                       space             @relation(fields: [space_id], references: [id], onDelete: Cascade)
   employee_details            employee_details? @relation(fields: [employee_detailsEmployee_id], references: [employee_id])
   employee_detailsEmployee_id String?
 
-  @@index([client_id, created_at])
+  @@index([host_user_id, created_at]) 
   @@index([space_id, created_at])
   @@index([company_id])
   @@map("visitors")
-}
-
-model client_details {
-  client_id String @id
-  user      users  @relation(fields: [client_id], references: [id], onDelete: Cascade)
-
-  company_id String?
-  company    companies? @relation(fields: [company_id], references: [id], onDelete: SetNull)
-  visitors   visitors[]
-
-  @@index([company_id])
-  @@map("client_details")
 }

@@ -6,7 +6,7 @@ export type FindParams = {
   skip: number;
   take: number;
   search?: string;
-  client_id?: string;
+  host_user_id?: string;
   space_id?: string;
   date_from?: Date;
   date_to?: Date;
@@ -15,40 +15,21 @@ export type FindParams = {
 const insensitive = "insensitive" as const;
 
 function buildSearchWhere(
-  search?: string,
+  search?: string
 ): Prisma.visitorsWhereInput | undefined {
   if (!search) return undefined;
   return {
     OR: [
       { first_name: { contains: search, mode: insensitive } },
       { last_name: { contains: search, mode: insensitive } },
-
-      {
-        client: {
-          is: {
-            user: {
-              is: { first_name: { contains: search, mode: insensitive } },
-            },
-          },
-        },
-      },
-      {
-        client: {
-          is: {
-            user: {
-              is: { last_name: { contains: search, mode: insensitive } },
-            },
-          },
-        },
-      },
-
-      {
-        client: {
-          is: {
-            company: { is: { name: { contains: search, mode: insensitive } } },
-          },
-        },
-      },
+      { email: { contains: search, mode: insensitive } },
+      { dni: { contains: search, mode: insensitive } },
+      { ruc: { contains: search, mode: insensitive } },
+      { host: { is: { first_name: { contains: search, mode: insensitive } } } },
+      { host: { is: { last_name: { contains: search, mode: insensitive } } } },
+      { host: { is: { email: { contains: search, mode: insensitive } } } },
+      { company: { is: { name: { contains: search, mode: insensitive } } } },
+      { space: { is: { name: { contains: search, mode: insensitive } } } },
     ],
   };
 }
@@ -58,23 +39,21 @@ export class GetVisitorsRepository {
     return prisma.visitors.findUnique({
       where: { id },
       include: {
-        client: {
-          select: {
-            client_id: true,
-            user: { select: { id: true, first_name: true, last_name: true } },
-            company: { select: { id: true, name: true } },
-          },
+        host: {
+          select: { id: true, first_name: true, last_name: true, email: true },
         },
+        company: { select: { id: true, name: true } },
         space: { select: { id: true, name: true } },
       },
     });
   }
 
   findMany(p: FindParams) {
-    const { skip, take, search, client_id, space_id, date_from, date_to } = p;
+    const { skip, take, search, host_user_id, space_id, date_from, date_to } =
+      p;
 
     const where: Prisma.visitorsWhereInput = {
-      ...(client_id ? { client_id } : {}),
+      ...(host_user_id ? { host_user_id } : {}),
       ...(space_id ? { space_id } : {}),
       ...(buildSearchWhere(search) ?? {}),
       ...(date_from || date_to
@@ -91,25 +70,22 @@ export class GetVisitorsRepository {
       skip,
       take,
       where,
-      orderBy: { created_at: "desc" },
+      orderBy: { entry_time: "desc" },
       include: {
-        space: { select: { id: true, name: true } },
-        client: {
-          select: {
-            client_id: true,
-            user: { select: { id: true, first_name: true, last_name: true } },
-            company: { select: { id: true, name: true } },
-          },
+        host: {
+          select: { id: true, first_name: true, last_name: true, email: true },
         },
+        company: { select: { id: true, name: true } },
+        space: { select: { id: true, name: true } },
       },
     });
   }
 
   count(p: Omit<FindParams, "skip" | "take">) {
-    const { search, client_id, space_id, date_from, date_to } = p;
+    const { search, host_user_id, space_id, date_from, date_to } = p;
 
     const where: Prisma.visitorsWhereInput = {
-      ...(client_id ? { client_id } : {}),
+      ...(host_user_id ? { host_user_id } : {}),
       ...(space_id ? { space_id } : {}),
       ...(buildSearchWhere(search) ?? {}),
       ...(date_from || date_to

@@ -1,3 +1,5 @@
+// src/modules/product/features/get_products/presentation/get_products.service.ts
+import { Pagination } from "../../../../../../utils/pagination";
 import { GetProductsRepository } from "../data/get_products.repository";
 import { AppError } from "../../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
@@ -12,35 +14,34 @@ export class GetProductsService {
     if (!product) {
       throw new AppError(
         MESSAGES.PRODUCT.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
     return product;
   }
 
   async getAll(query: GetProductsQueryDTO) {
-    const { page, limit, search, brand_id, brand_name } = query;
-    const skip = (page - 1) * limit;
+    // Centraliza parseo y límites aquí
+    const { page, limit, skip } = Pagination.getPaginationParams(query);
 
     const [items, total] = await Promise.all([
       this.repo.findMany({
         skip,
         take: limit,
-        search,
-        brandId: brand_id,
-        brandName: brand_name,
+        search: query.search,
+        brandId: query.brand_id,
+        brandName: query.brand_name,
       }),
-      this.repo.count({ search, brandId: brand_id, brandName: brand_name }),
+      this.repo.count({
+        search: query.search,
+        brandId: query.brand_id,
+        brandName: query.brand_name,
+      }),
     ]);
 
     return {
       items,
-      meta: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit) || 1,
-      },
+      meta: Pagination.buildPaginationMeta(total, page, limit),
     };
   }
 }

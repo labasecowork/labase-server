@@ -24,8 +24,8 @@ export class CreateVisitorController {
           id: result.id,
           first_name: dto.first_name,
           last_name: dto.last_name,
-        },
-      ),
+        }
+      )
     );
   }
 }

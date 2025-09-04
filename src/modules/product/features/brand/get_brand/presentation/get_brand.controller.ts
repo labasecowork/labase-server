@@ -21,8 +21,8 @@ export class GetBrandController {
           HttpStatusCodes.OK.code,
           "Brand detail",
           req.path,
-          data,
-        ),
+          data
+        )
       );
   }
 
@@ -34,12 +34,7 @@ export class GetBrandController {
     return res
       .status(HttpStatusCodes.OK.code)
       .json(
-        buildHttpResponse(
-          HttpStatusCodes.OK.code,
-          "Brand list",
-          req.path,
-          data,
-        ),
+        buildHttpResponse(HttpStatusCodes.OK.code, "Brand list", req.path, data)
       );
   }
 }

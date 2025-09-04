@@ -23,37 +23,22 @@ const lookupCtrl = new LookupVisitorController();
  *           schema:
  *             type: object
  *             properties:
- *               dni: { type: string, example: "46027897" }
- *               ruc: { type: string, example: "20601030013" }
- *               first_name: { type: string, example: "ROXANA KARINA" }
- *               last_name: { type: string, example: "DELGADO CUELLAR" }
- *               phone: { type: string, example: "999888777" }
- *               email: { type: string, example: "rdelgado@example.com" }
- *               client_id: { type: string, format: uuid }
- *               space_id: { type: string, format: uuid }
- *               entry_time: { type: string, format: date-time }
- *               exit_time: { type: string, format: date-time }
- *           examples:
- *             manual:
- *               value:
- *                 first_name: "Juan"
- *                 last_name: "Pérez"
- *                 client_id: "uuid-client"
- *                 space_id: "uuid-space"
- *                 entry_time: "2025-08-08T15:30:00.000Z"
- *             with_lookup_dni:
- *               value:
- *                 dni: "46027897"
- *                 first_name: "ROXANA KARINA"
- *                 last_name: "DELGADO CUELLAR"
- *                 client_id: "uuid-client"
- *                 space_id: "uuid-space"
- *                 entry_time: "2025-08-08T15:30:00.000Z"
+ *               dni:          { type: string, example: "46027897" }
+ *               ruc:          { type: string, example: "20601030013" }
+ *               first_name:   { type: string, example: "ROXANA KARINA" }
+ *               last_name:    { type: string, example: "DELGADO CUELLAR" }
+ *               phone:        { type: string, example: "999888777" }
+ *               email:        { type: string, example: "rdelgado@example.com" }
+ *               host_user_id: { type: string, format: uuid, example: "22222222-2222-2222-2222-222222222222" }
+ *               company_id:   { type: string, format: uuid, example: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", description: "Si no se envía, se usará la empresa del anfitrión (si tiene)" }
+ *               space_id:     { type: string, format: uuid, example: "00000000-0000-0000-0000-00000000000b" }
+ *               entry_time:   { type: string, format: date-time, example: "2025-08-28T15:30:00.000Z" }
+ *               exit_time:    { type: string, format: date-time, example: "2025-08-28T18:00:00.000Z" }
  */
 router.post(
   "/",
   authenticateToken,
-  asyncHandler(createCtrl.handle.bind(createCtrl)),
+  asyncHandler(createCtrl.handle.bind(createCtrl))
 );
 
 /**
@@ -74,7 +59,7 @@ router.post(
 router.get(
   "/lookup",
   authenticateToken,
-  asyncHandler(lookupCtrl.handle.bind(lookupCtrl)),
+  asyncHandler(lookupCtrl.handle.bind(lookupCtrl))
 );
 
 export { router as createAndLookupVisitorRoutes };

@@ -13,30 +13,15 @@ export class GetBrandService {
     if (!brand) {
       throw new AppError(
         MESSAGES.PRODUCT.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
     return brand;
   }
 
   async getAll(query: GetBrandQueryDTO) {
-    const { page, limit, search } = query;
-    const skip = (page - 1) * limit;
-
-    // Ejecutamos en paralelo porque NO dependen entre sí
-    const [items, total] = await Promise.all([
-      this.repo.findMany({ skip, take: limit, search }),
-      this.repo.count(search),
-    ]);
-
-    return {
-      items,
-      meta: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit) || 1,
-      },
-    };
+    const { search } = query;
+    return this.repo.findMany(search);
   }
 }
+  
