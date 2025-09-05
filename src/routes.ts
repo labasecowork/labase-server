@@ -15,7 +15,7 @@ import articleCategoryRouter from "./modules/article/presentation/routes/article
 import { attendanceRouter } from "./modules/attendance";
 import { employeeRouter } from "./modules/employee";
 import { newsletterRouter } from "./modules/newsletter";
-import productRouter, { productBrandRouter } from "./modules/product";
+import productRouter from "./modules/inventory";
 import { chatbotwhatsapp } from "./modules/bot-whatsapp/presentation/routes/send_message.routes";
 import { workareaRouter } from "./modules/workarea";
 import { companyRouter } from "./modules/company";
@@ -45,8 +45,7 @@ router.use(`${API_VERSION}/payment`, paymentRoutes);
 router.use(`${API_VERSION}/`, attendanceRouter);
 router.use(`${API_VERSION}/`, employeeRouter);
 
-router.use(`${API_VERSION}/products`, productRouter);
-router.use(`${API_VERSION}/products-brands`, productBrandRouter);
+router.use(`${API_VERSION}/inventory`, productRouter);
 
 router.use(`${API_VERSION}/`, workareaRouter);
 router.use(`${API_VERSION}/`, companyRouter);

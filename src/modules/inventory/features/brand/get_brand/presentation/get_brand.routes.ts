@@ -8,7 +8,7 @@ const controller = new GetBrandController();
 
 /**
  * @openapi
- * /api/v1/product-brands:
+ * /api/v1/products/brands:
  *   get:
  *     tags:
  *       - ProductBrand
