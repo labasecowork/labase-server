@@ -2,6 +2,7 @@ import prisma from "../../../config/prisma_client";
 import {
   access_type,
   article_status,
+  attendance_type,
   duration_unit,
   price_mode,
   space_type,
@@ -20,6 +21,12 @@ import {
   brandList,
   productList,
 } from "../constants";
+import {
+  getWorkDays,
+  generateAttendanceStats,
+  printAttendanceStats,
+  AttendanceRecord,
+} from "../utils";
 
 export class SeedRepository {
   async seedProduction() {
@@ -44,6 +51,7 @@ export class SeedRepository {
     await this.createArticles();
     await this.createFakeClientsAndReservations();
     await this.createFakeVisitors();
+    await this.createAttendanceRecords();
     const brands = await this.createFakeBrands();
     await this.createFakeProducts(brands);
 
@@ -347,5 +355,144 @@ export class SeedRepository {
 
     console.log(`Total productos creados: ${createdProducts.length}`);
     return createdProducts;
+  }
+
+  async createAttendanceRecords(): Promise<void> {
+    const TARGET_RECORDS = 300;
+
+    const fetchEmployees = async () => {
+      return await prisma.employee_details.findMany({
+        select: { employee_id: true },
+      });
+    };
+
+    const insertAttendanceRecords = async (records: AttendanceRecord[]) => {
+      await prisma.attendance.createMany({
+        data: records,
+      });
+    };
+
+    try {
+      const employees = await fetchEmployees();
+      const workDays = getWorkDays(90, 60);
+
+      if (employees.length === 0) {
+        console.log("No hay empleados.");
+        return;
+      }
+
+      const totalCombinations = employees.length * workDays.length;
+      const maxPossibleRecords = totalCombinations * 4;
+      if (TARGET_RECORDS > maxPossibleRecords) {
+        console.error(`Objetivo inalcanzable de ${TARGET_RECORDS} registros.`);
+        console.error(
+          `Con ${employees.length} empleados y ${workDays.length} días, el máximo es ~${maxPossibleRecords}.`
+        );
+        return;
+      }
+
+      const allRecords: AttendanceRecord[] = [];
+      const processedEmployeeDays = new Set<string>();
+
+      while (allRecords.length < TARGET_RECORDS) {
+        const employee =
+          employees[Math.floor(Math.random() * employees.length)];
+        const day = new Date(
+          workDays[Math.floor(Math.random() * workDays.length)].setHours(
+            0,
+            0,
+            0,
+            0
+          )
+        );
+
+        const uniqueKey = `${employee.employee_id}_${day.toDateString()}`;
+
+        if (processedEmployeeDays.has(uniqueKey)) {
+          continue;
+        }
+        processedEmployeeDays.add(uniqueKey);
+
+        const dailyRecords: AttendanceRecord[] = [];
+        const isSplitShift = Math.random() < 0.3;
+
+        const firstEntryTime = new Date(day);
+        const entryHour = 8 + Math.random();
+        firstEntryTime.setHours(
+          Math.floor(entryHour),
+          Math.floor(Math.random() * 60)
+        );
+
+        dailyRecords.push({
+          employee_id: employee.employee_id,
+          type: attendance_type.entry,
+          date: day,
+          check_time: firstEntryTime,
+        });
+
+        let lastCheckTime = firstEntryTime;
+
+        if (isSplitShift) {
+          const firstExitTime = new Date(lastCheckTime);
+          const firstWorkHours = 3 + Math.random() * 2;
+          firstExitTime.setHours(firstExitTime.getHours() + firstWorkHours);
+          dailyRecords.push({
+            employee_id: employee.employee_id,
+            type: attendance_type.exit,
+            date: day,
+            check_time: firstExitTime,
+          });
+          lastCheckTime = firstExitTime;
+
+          const secondEntryTime = new Date(lastCheckTime);
+          const breakHours = 1 + Math.random();
+          secondEntryTime.setHours(secondEntryTime.getHours() + breakHours);
+          dailyRecords.push({
+            employee_id: employee.employee_id,
+            type: attendance_type.entry,
+            date: day,
+            check_time: secondEntryTime,
+          });
+          lastCheckTime = secondEntryTime;
+
+          const secondExitTime = new Date(lastCheckTime);
+          const secondWorkHours = 4 + Math.random() * 2;
+          secondExitTime.setHours(secondExitTime.getHours() + secondWorkHours);
+          dailyRecords.push({
+            employee_id: employee.employee_id,
+            type: attendance_type.exit,
+            date: day,
+            check_time: secondExitTime,
+          });
+        } else {
+          const exitTime = new Date(lastCheckTime);
+          const workHours = 8 + Math.random() * 2;
+          exitTime.setHours(exitTime.getHours() + workHours);
+
+          dailyRecords.push({
+            employee_id: employee.employee_id,
+            type: attendance_type.exit,
+            date: day,
+            check_time: exitTime,
+          });
+        }
+
+        if (allRecords.length + dailyRecords.length <= TARGET_RECORDS) {
+          allRecords.push(...dailyRecords);
+        } else {
+          break;
+        }
+      }
+
+      await insertAttendanceRecords(allRecords);
+
+      console.log(
+        `\nProceso completado. Se generaron ${allRecords.length} registros lógicos.`
+      );
+      printAttendanceStats(generateAttendanceStats(allRecords));
+    } catch (error) {
+      console.error("Error al crear registros de asistencia:", error);
+      throw error;
+    }
   }
 }

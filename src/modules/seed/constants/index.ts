@@ -666,22 +666,6 @@ export const pricesData = [
   },
 ];
 
-export const visitorsData = [
-  {
-    dni: "1234567890",
-    ruc: "1234567890",
-    first_name: "John",
-    last_name: "Doe",
-    phone: "1234567890",
-    email: "test@test.com",
-    company: "Test",
-    user_id: "1234567890",
-    space_id: "1234567890",
-    entry_time: new Date(),
-    exit_time: new Date(),
-  },
-];
-
 export const fakeClientsData = [
   {
     id: "11111111-1111-1111-1111-111111111111",
