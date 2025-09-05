@@ -12,10 +12,11 @@ const upload = multer({ storage: multer.memoryStorage() });
 /**
  * @openapi
  * /api/v1/products/{id}:
- *   put:
+ *   patch:
  *     tags:
  *       - Product
- *     summary: Editar producto
+ *     summary: Actualizar producto parcialmente
+ *     description: Actualiza solo los campos enviados del producto. Todos los campos son opcionales.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -26,7 +27,7 @@ const upload = multer({ storage: multer.memoryStorage() });
  *         schema:
  *           type: string
  *     requestBody:
- *       required: true
+ *       required: false
  *       content:
  *         multipart/form-data:
  *           schema:
@@ -35,15 +36,17 @@ const upload = multer({ storage: multer.memoryStorage() });
  *               data:
  *                 type: string
  *                 format: JSON
- *                 example: '{"name":"Producto A","brand_id":"6e9e4f3a-0d3f-4d8b-8f23-1a2b3c4d5e6f","quantity":15,"unit_of_measure":"kilogram"}'
+ *                 description: Datos del producto en formato JSON. Todos los campos son opcionales.
+ *                 example: '{"name":"Producto A actualizado","quantity":20}'
  *               images:
  *                 type: array
  *                 items:
  *                   type: string
  *                   format: binary
+ *                 description: Nueva imagen del producto (opcional)
  *     responses:
  *       200:
- *         description: Producto actualizado
+ *         description: Producto actualizado parcialmente
  *       400:
  *         description: Error de validación o marca inválida
  *       401:
@@ -53,11 +56,11 @@ const upload = multer({ storage: multer.memoryStorage() });
  *       404:
  *         description: Producto no encontrado
  */
-router.put(
+router.patch(
   "/:id",
   authenticateToken,
   upload.array("images", 1),
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 
 export { router as editProductRoutes };

@@ -5,17 +5,17 @@ import { unit_of_measure } from "@prisma/client";
 export const EditProductSchema = z.object({
   name: z
     .string({
-      required_error: "El nombre del producto es obligatorio",
       invalid_type_error: "El nombre del producto debe ser una cadena (string)",
     })
-    .min(1, "El nombre del producto no puede estar vacío"),
+    .min(1, "El nombre del producto no puede estar vacío")
+    .optional(),
 
   brand_id: z
     .string({
-      required_error: "El ID de la marca es obligatorio",
       invalid_type_error: "El ID de la marca debe ser una cadena (UUID)",
     })
-    .uuid("El ID de la marca debe ser un UUID válido"),
+    .uuid("El ID de la marca debe ser un UUID válido")
+    .optional(),
 
   description: z
     .string({
@@ -31,17 +31,19 @@ export const EditProductSchema = z.object({
 
   quantity: z
     .number({
-      required_error: "La cantidad es obligatoria",
       invalid_type_error: "La cantidad debe ser un número",
     })
     .int("La cantidad debe ser un número entero")
-    .nonnegative("La cantidad no puede ser negativa"),
+    .nonnegative("La cantidad no puede ser negativa")
+    .optional(),
 
-  unit_of_measure: z.nativeEnum(unit_of_measure, {
-    errorMap: () => ({
-      message: `La unidad de medida debe ser uno de los valores válidos: ${Object.values(
-        unit_of_measure
-      ).join(", ")}`,
-    }),
-  }),
+  unit_of_measure: z
+    .nativeEnum(unit_of_measure, {
+      errorMap: () => ({
+        message: `La unidad de medida debe ser uno de los valores válidos: ${Object.values(
+          unit_of_measure
+        ).join(", ")}`,
+      }),
+    })
+    .optional(),
 });

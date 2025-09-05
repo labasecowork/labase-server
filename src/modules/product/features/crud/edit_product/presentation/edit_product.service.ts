@@ -15,12 +15,12 @@ export class EditProductService {
     id: string,
     dto: EditProductDTO,
     user: Pick<CurrentUser, "id" | "role">,
-    newImageUrl: string,
+    newImageUrl: string
   ) {
     if (user.role !== "admin") {
       throw new AppError(
         MESSAGES.PRODUCT.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -28,34 +28,48 @@ export class EditProductService {
     if (!existing) {
       throw new AppError(
         MESSAGES.PRODUCT.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 
-    const brand = await prisma.product_brand.findUnique({
-      where: { id: dto.brand_id },
-    });
-    if (!brand) {
-      throw new AppError(
-        MESSAGES.BRAND.NOT_FOUND,
-        HttpStatusCodes.BAD_REQUEST.code,
-      );
+    // Validar brand_id solo si se envía
+    if (dto.brand_id) {
+      const brand = await prisma.product_brand.findUnique({
+        where: { id: dto.brand_id },
+      });
+      if (!brand) {
+        throw new AppError(
+          MESSAGES.BRAND.NOT_FOUND,
+          HttpStatusCodes.BAD_REQUEST.code
+        );
+      }
     }
 
-    if (existing.photo_url && newImageUrl) {
-      const key = new URL(existing.photo_url).pathname.slice(1);
-      await deleteFile(key);
+    // Manejar la imagen
+    let photo_url = existing.photo_url;
+    if (newImageUrl) {
+      // Si hay nueva imagen, eliminar la anterior si existe
+      if (existing.photo_url) {
+        const key = new URL(existing.photo_url).pathname.slice(1);
+        await deleteFile(key);
+      }
+      photo_url = newImageUrl;
     }
 
-    const updated = await this.repo.update(id, {
-      name: dto.name,
-      unit_of_measure: dto.unit_of_measure,
-      description: dto.description,
-      observations: dto.observations,
-      quantity: dto.quantity,
-      photo_url: newImageUrl || existing.photo_url || "",
-      brand: { connect: { id: dto.brand_id } },
-    });
+    // Construir el objeto de actualización solo con los campos enviados
+    const updateData: any = {};
+
+    if (dto.name !== undefined) updateData.name = dto.name;
+    if (dto.unit_of_measure !== undefined)
+      updateData.unit_of_measure = dto.unit_of_measure;
+    if (dto.description !== undefined) updateData.description = dto.description;
+    if (dto.observations !== undefined)
+      updateData.observations = dto.observations;
+    if (dto.quantity !== undefined) updateData.quantity = dto.quantity;
+    if (newImageUrl) updateData.photo_url = photo_url;
+    if (dto.brand_id) updateData.brand = { connect: { id: dto.brand_id } };
+
+    const updated = await this.repo.update(id, updateData);
 
     return updated;
   }
