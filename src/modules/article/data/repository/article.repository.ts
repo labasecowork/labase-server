@@ -11,6 +11,8 @@ import { AppError } from "../../../../utils/errors";
 interface PaginationParams {
   page: number;
   limit: number;
+  search?: string;
+  categoryId?: string;
 }
 
 interface PaginatedResponse<T> {
@@ -31,7 +33,7 @@ export class ArticleRepository {
     contentUrl: string,
     bannerUrl: string,
     resume: string,
-    readingTime: number,
+    readingTime: number
   ): Promise<Article> {
     const created = await prisma.articles.create({
       data: {
@@ -64,12 +66,29 @@ export class ArticleRepository {
   /* ------------------------------------------------------------------ */
   /* LIST (paginated)                                                   */
   /* ------------------------------------------------------------------ */
-  async getAll(params: PaginationParams): Promise<PaginatedResponse<any>> {
-    const { page, limit } = params;
+  async getAll(params: PaginationParams) {
+    const { page, limit, search, categoryId } = params;
     const skip = (page - 1) * limit;
+
+    // Construir filtros dinámicamente
+    const where: any = {};
+
+    // Filtro por búsqueda (título o resumen)
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: "insensitive" } },
+        { resume: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    // Filtro por categoría
+    if (categoryId) {
+      where.category_id = categoryId;
+    }
 
     const [articles, total] = await Promise.all([
       prisma.articles.findMany({
+        where,
         skip,
         take: limit,
         include: {
@@ -83,15 +102,17 @@ export class ArticleRepository {
         },
         orderBy: { publication_timestamp: "desc" },
       }),
-      prisma.articles.count(),
+      prisma.articles.count({ where }),
     ]);
 
     return {
-      data: articles,
-      total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: page,
-      limit,
+      articles,
+      pagination: {
+        total,
+        total_pages: Math.ceil(total / limit),
+        page,
+        limit,
+      },
     };
   }
 
@@ -120,7 +141,7 @@ export class ArticleRepository {
     bannerUrl: string,
     contentUrl: string,
     resume: string,
-    readingTime: number,
+    readingTime: number
   ): Promise<any> {
     const article = await prisma.articles.findUnique({
       where: { id: articleId },
@@ -129,7 +150,7 @@ export class ArticleRepository {
     if (!article || article.author_id !== authorId) {
       throw new AppError(
         MESSAGES.ARTICLE.ARTICLE_ERROR_ACCESS_DENIED,
-        HttpStatusCodes.UNAUTHORIZED.code,
+        HttpStatusCodes.UNAUTHORIZED.code
       );
     }
 
@@ -163,7 +184,7 @@ export class ArticleRepository {
     if (!article || article.author_id !== authorId) {
       throw new AppError(
         MESSAGES.ARTICLE.ARTICLE_ERROR_ACCESS_DENIED,
-        HttpStatusCodes.UNAUTHORIZED.code,
+        HttpStatusCodes.UNAUTHORIZED.code
       );
     }
 

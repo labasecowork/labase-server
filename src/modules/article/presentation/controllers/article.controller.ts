@@ -34,18 +34,25 @@ export class ArticleController {
   async create(req: Request, res: Response): Promise<Response> {
     try {
       const r = req as ArtCreateReq;
-      if (!r.user) throw new AppError("Unauthorized", HttpStatusCodes.UNAUTHORIZED.code);
+      if (!r.user)
+        throw new AppError("Unauthorized", HttpStatusCodes.UNAUTHORIZED.code);
 
       const banner = r.files?.banner?.[0];
       const content = r.files?.content?.[0];
       if (!banner || !content) {
-        throw new AppError("banner and content files are required", HttpStatusCodes.BAD_REQUEST.code);
+        throw new AppError(
+          "banner and content files are required",
+          HttpStatusCodes.BAD_REQUEST.code
+        );
       }
 
       // Validaciones extra omitidas por brevedad…
       const cleaned = stripHtmlTags(content.buffer.toString("utf-8"));
       if (cleaned.length < 500) {
-        throw new AppError("Content must exceed 500 chars", HttpStatusCodes.BAD_REQUEST.code);
+        throw new AppError(
+          "Content must exceed 500 chars",
+          HttpStatusCodes.BAD_REQUEST.code
+        );
       }
 
       const dto = CreateArticleSchema.parse(req.body);
@@ -56,14 +63,16 @@ export class ArticleController {
         banner
       );
 
-      return res.status(HttpStatusCodes.CREATED.code).json(
-        buildHttpResponse(
-          HttpStatusCodes.CREATED.code,
-          MESSAGES.ARTICLE.ARTICLE_SUCCESS_CREATED,
-          req.path,
-          result
-        )
-      );
+      return res
+        .status(HttpStatusCodes.CREATED.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.CREATED.code,
+            MESSAGES.ARTICLE.ARTICLE_SUCCESS_CREATED,
+            req.path,
+            result
+          )
+        );
     } catch (err) {
       return handleServerError(res, req, err);
     }
@@ -76,16 +85,25 @@ export class ArticleController {
     try {
       const page = Math.max(1, parseInt(req.query.page as string) || 1);
       const limit = Math.max(1, parseInt(req.query.limit as string) || 10);
+      const search = req.query.search as string | undefined;
+      const categoryId = req.query.categoryId as string | undefined;
 
-      const data = await articleService.getAllArticles(page, limit);
-      return res.status(HttpStatusCodes.OK.code).json(
-        buildHttpResponse(
-          HttpStatusCodes.OK.code,
-          "Articles retrieved successfully",
-          "/articles",
-          data
-        )
+      const data = await articleService.getAllArticles(
+        page,
+        limit,
+        search,
+        categoryId
       );
+      return res
+        .status(HttpStatusCodes.OK.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.OK.code,
+            "Articles retrieved successfully",
+            "/articles",
+            data
+          )
+        );
     } catch (err) {
       return handleServerError(res, req, err);
     }
@@ -98,14 +116,16 @@ export class ArticleController {
     try {
       const { id } = req.params;
       const article = await articleService.getArticleById(id);
-      return res.status(HttpStatusCodes.OK.code).json(
-        buildHttpResponse(
-          HttpStatusCodes.OK.code,
-          "Article retrieved successfully",
-          `/articles/${id}`,
-          article
-        )
-      );
+      return res
+        .status(HttpStatusCodes.OK.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.OK.code,
+            "Article retrieved successfully",
+            `/articles/${id}`,
+            article
+          )
+        );
     } catch (err) {
       return handleServerError(res, req, err);
     }
@@ -117,7 +137,8 @@ export class ArticleController {
   async update(req: Request, res: Response): Promise<Response> {
     try {
       const r = req as ArtCreateReq;
-      if (!r.user) throw new AppError("Unauthorized", HttpStatusCodes.UNAUTHORIZED.code);
+      if (!r.user)
+        throw new AppError("Unauthorized", HttpStatusCodes.UNAUTHORIZED.code);
 
       const dto = UpdateArticleSchema.parse(req.body);
       const updated = await articleService.updateArticle(
@@ -127,14 +148,16 @@ export class ArticleController {
         r.files
       );
 
-      return res.status(HttpStatusCodes.OK.code).json(
-        buildHttpResponse(
-          HttpStatusCodes.OK.code,
-          MESSAGES.ARTICLE.ARTICLE_SUCCESS_UPDATED,
-          `/articles/${req.params.id}`,
-          updated
-        )
-      );
+      return res
+        .status(HttpStatusCodes.OK.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.OK.code,
+            MESSAGES.ARTICLE.ARTICLE_SUCCESS_UPDATED,
+            `/articles/${req.params.id}`,
+            updated
+          )
+        );
     } catch (err) {
       return handleServerError(res, req, err);
     }
@@ -146,17 +169,23 @@ export class ArticleController {
   async delete(req: Request, res: Response): Promise<Response> {
     try {
       const r = req as AuthReq;
-      if (!r.user) throw new AppError("Unauthorized", HttpStatusCodes.UNAUTHORIZED.code);
+      if (!r.user)
+        throw new AppError("Unauthorized", HttpStatusCodes.UNAUTHORIZED.code);
 
-      const deleted = await articleService.deleteArticle(req.params.id, r.user.id);
-      return res.status(HttpStatusCodes.OK.code).json(
-        buildHttpResponse(
-          HttpStatusCodes.OK.code,
-          MESSAGES.ARTICLE.ARTICLE_SUCCESS_DELETED,
-          `/articles/${req.params.id}`,
-          deleted
-        )
+      const deleted = await articleService.deleteArticle(
+        req.params.id,
+        r.user.id
       );
+      return res
+        .status(HttpStatusCodes.OK.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.OK.code,
+            MESSAGES.ARTICLE.ARTICLE_SUCCESS_DELETED,
+            `/articles/${req.params.id}`,
+            deleted
+          )
+        );
     } catch (err) {
       return handleServerError(res, req, err);
     }

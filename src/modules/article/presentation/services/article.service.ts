@@ -45,8 +45,7 @@ export class ArticleService {
     // Genera resumen y tiempo de lectura
     const cleaned = stripHtmlTags(contentFile.buffer.toString("utf-8"));
     const readingTime = estimateReadingTimeByCharacters(cleaned);
-    const resume =
-      (await this.articleApi.generateResume(cleaned)) ?? null;
+    const resume = (await this.articleApi.generateResume(cleaned)) ?? null;
 
     const article = await this.articleRepo.create(
       userId,
@@ -63,8 +62,8 @@ export class ArticleService {
   /* ------------------------------------------------------------------ */
   /* READ – ALL                                                         */
   /* ------------------------------------------------------------------ */
-  getAllArticles(page = 1, limit = 10) {
-    return this.articleRepo.getAll({ page, limit });
+  getAllArticles(page = 1, limit = 10, search?: string, categoryId?: string) {
+    return this.articleRepo.getAll({ page, limit, search, categoryId });
   }
 
   /* ------------------------------------------------------------------ */
@@ -113,12 +112,16 @@ export class ArticleService {
 
     /* ---------- content (opcional) ---------------- */
     if (files?.content?.[0]) {
-      const resp = await uploadFile(files.content[0], "public/articles/content");
+      const resp = await uploadFile(
+        files.content[0],
+        "public/articles/content"
+      );
       contentUrl = resp.url;
 
       const cleaned = stripHtmlTags(files.content[0].buffer.toString("utf-8"));
       readingTime = estimateReadingTimeByCharacters(cleaned);
-      resume = (await this.articleApi.generateResume(cleaned)) ?? article.resume;
+      resume =
+        (await this.articleApi.generateResume(cleaned)) ?? article.resume;
 
       await deleteFile(article.content.split(".amazonaws.com/")[1]);
     }

@@ -19,9 +19,9 @@ const upload = multer({ storage: multer.memoryStorage() });
  *     tags: [Article]
  *     summary: Create a new article
  *     description: |
- *       Requires an authenticated (active) user.  
+ *       Requires an authenticated (active) user.
  *       Payload is **multipart/form-data** with two files:
- *         • `banner` (image) – 1 file  
+ *         • `banner` (image) – 1 file
  *         • `content` (HTML/Markdown) – 1 file
  *     security:
  *       - bearerAuth: []
@@ -52,7 +52,7 @@ const upload = multer({ storage: multer.memoryStorage() });
  *
  *   get:
  *     tags: [Article]
- *     summary: List all articles (paginated)
+ *     summary: List all articles (paginated with search and filters)
  *     parameters:
  *       - in: query
  *         name: page
@@ -60,15 +60,30 @@ const upload = multer({ storage: multer.memoryStorage() });
  *           type: integer
  *           minimum: 1
  *           default: 1
+ *         description: Page number for pagination
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           minimum: 1
  *           default: 10
+ *         description: Number of articles per page
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search term to filter articles by title or resume (case insensitive)
+ *         example: "tecnología"
+ *       - in: query
+ *         name: categoryId
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Filter articles by category ID
+ *         example: "0f0f9c98-3a7d-4cbe-a4f0-0f3fc33a4fd2"
  *     responses:
  *       200:
- *         description: Paginated list
+ *         description: Paginated list with optional search and category filtering
  *
  * /api/v1/articles/{id}:
  *   get:
@@ -152,9 +167,15 @@ router.post(
   asyncHandler((req, res) => ctrl.create(req, res))
 );
 
-router.get("/", asyncHandler((req, res) => ctrl.getAll(req, res)));
+router.get(
+  "/",
+  asyncHandler((req, res) => ctrl.getAll(req, res))
+);
 
-router.get("/:id", asyncHandler((req, res) => ctrl.getById(req, res)));
+router.get(
+  "/:id",
+  asyncHandler((req, res) => ctrl.getById(req, res))
+);
 
 router.patch(
   "/:id",
