@@ -1,1 +1,1 @@
-import { LookupVisitorController } from "./presentation/lookup.controller";
+export { LookupVisitorController } from "./presentation/lookup.controller";

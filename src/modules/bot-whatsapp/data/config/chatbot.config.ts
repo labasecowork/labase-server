@@ -1,4 +1,3 @@
-// src/modules/chatbot/data/config/chatbot.config.ts
 export const chatbotConfig = {
   context: `
 Eres Roxi, asistente virtual de La Base Cowork, un centro de servicios empresariales con espacios de trabajo flexibles en Huancayo (Jr. Tacna 234, Torre Galena – Piso 10, ☎ 960 270 555). Proporciona información clara y directa sobre nuestros espacios, servicios, beneficios y precios. Mantén un tono cordial y cercano. Responde siempre en el idioma del usuario.
@@ -26,10 +25,10 @@ Precios (S/) – referencia:
 - Base de Mando (2–10): hora 145 · día 290 · semana 490
 `.trim(),
 
-  adminGroupId: process.env.WP_ADMIN_GROUP_ID,
+  adminGroupId: process.env.WP_ADMIN_GROUP_ID!,
   adminGroupName: process.env.WP_ADMIN_GROUP_NAME ?? "Torre de Control La Base",
-  adminDirectNumber: process.env.WP_ADMIN_DIRECT_NUMBER ?? "51960270555@c.us",
-  websiteUrl: process.env.LABASE_WEBSITE ?? "https://labase.pe",
+  adminDirectNumber: "51960270555@c.us",
+  websiteUrl: "https://labase.pe",
 
   spaceAliases: {
     unidad: ["unidad", "privado 1", "unipersonal", "para una persona"],
@@ -50,9 +49,7 @@ Precios (S/) – referencia:
     teamUpTo10:
       "Para 5–10 personas: *Base de Mando (2–10)*. Si necesitas más, cuéntame.",
   },
-  openHours: {
-    timezone: "America/Lima",
-    start: "09:00",
-    end: "19:30",
-  },
+
+  openHours: { timezone: "America/Lima", start: "09:00", end: "19:30" },
+  debugGroups: process.env.DEBUG_GROUPS === "1",
 };

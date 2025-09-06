@@ -8,18 +8,12 @@ const controller = new GetBrandController();
 
 /**
  * @openapi
- * /api/v1/products/brands:
+ * /api/v1/product/brands:
  *   get:
  *     tags:
  *       - ProductBrand
  *     summary: Get all brands
  *     parameters:
- *       - in: query
- *         name: page
- *         schema: { type: integer, example: 1 }
- *       - in: query
- *         name: limit
- *         schema: { type: integer, example: 10 }
  *       - in: query
  *         name: search
  *         schema: { type: string, example: "Lenovo" }
@@ -31,7 +25,7 @@ router.get("/", asyncHandler(controller.getAll.bind(controller)));
 
 /**
  * @openapi
- * /api/v1/product-brands/{id}:
+ * /api/v1/product/brands/{id}:
  *   get:
  *     tags:
  *       - ProductBrand

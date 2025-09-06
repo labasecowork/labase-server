@@ -16,10 +16,9 @@ import { attendanceRouter } from "./modules/attendance";
 import { employeeRouter } from "./modules/employee";
 import { newsletterRouter } from "./modules/newsletter";
 import productRouter from "./modules/inventory";
-import { chatbotwhatsapp } from "./modules/bot-whatsapp/presentation/routes/send_message.routes";
 import { workareaRouter } from "./modules/workarea";
 import { companyRouter } from "./modules/company";
-
+import chatbotwhatsapp from "./modules/bot-whatsapp/presentation/routes/bot.routes";
 import visitorRouter from "./modules/visitor";
 
 const router = Router();
@@ -29,6 +28,7 @@ router.use(`${API_VERSION}/articles/categories`, articleCategoryRouter);
 router.use(`${API_VERSION}/articles`, articleRoutes);
 router.use(`${API_VERSION}/chatbot`, botRoutes);
 router.use(`${API_VERSION}/chatbotwhatsapp`, chatbotwhatsapp);
+
 router.use(`${API_VERSION}/auth`, authRouter);
 router.use(`${API_VERSION}/users`, userRouter);
 router.use(`${API_VERSION}/spaces`, spaceRouter);

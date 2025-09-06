@@ -13,9 +13,7 @@ export class GetProductsRepository {
   findById(id: string) {
     return prisma.products.findUnique({
       where: { id },
-      include: {
-        brand: { select: { id: true, name: true } },
-      },
+      include: { brand: { select: { id: true, name: true } } },
     });
   }
 
@@ -32,9 +30,7 @@ export class GetProductsRepository {
           ? { brand: { name: { contains: brandName, mode: "insensitive" } } }
           : {}),
       },
-      include: {
-        brand: { select: { id: true, name: true } },
-      },
+      include: { brand: { select: { id: true, name: true } } },
       orderBy: { name: "asc" },
     });
   }

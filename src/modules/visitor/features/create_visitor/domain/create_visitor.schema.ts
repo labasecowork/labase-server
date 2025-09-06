@@ -1,12 +1,9 @@
 // src/modules/visitor/features/create_visitor/domain/create_visitor.schema.ts
 import { z } from "zod";
 
-// Helper para validar que un campo tenga solo dígitos y longitud exacta
 const onlyDigits = (len: number, field: string) =>
   z
-    .string({
-      invalid_type_error: `El ${field} debe ser una cadena (string)`,
-    })
+    .string({ invalid_type_error: `El ${field} debe ser una cadena (string)` })
     .trim()
     .regex(new RegExp(`^\\d{${len}}$`), {
       message: `El ${field} debe tener exactamente ${len} dígitos`,
@@ -15,7 +12,6 @@ const onlyDigits = (len: number, field: string) =>
 export const CreateVisitorSchema = z
   .object({
     dni: onlyDigits(8, "DNI").optional(),
-
     ruc: onlyDigits(11, "RUC").optional(),
 
     first_name: z
@@ -24,7 +20,6 @@ export const CreateVisitorSchema = z
         invalid_type_error: "El nombre debe ser una cadena (string)",
       })
       .min(1, "El nombre no puede estar vacío"),
-
     last_name: z
       .string({
         required_error: "El apellido es obligatorio",
@@ -37,7 +32,6 @@ export const CreateVisitorSchema = z
         invalid_type_error: "El teléfono debe ser una cadena (string)",
       })
       .optional(),
-
     email: z
       .string({
         invalid_type_error:
@@ -46,12 +40,20 @@ export const CreateVisitorSchema = z
       .email("El formato del correo electrónico no es válido")
       .optional(),
 
-    client_id: z
+    host_user_id: z
       .string({
-        required_error: "El ID del cliente es obligatorio",
-        invalid_type_error: "El ID del cliente debe ser una cadena (UUID)",
+        required_error: "El ID del anfitrión es obligatorio",
+        invalid_type_error: "El ID del anfitrión debe ser una cadena (UUID)",
       })
-      .uuid("El ID del cliente debe ser un UUID válido"),
+      .uuid("El ID del anfitrión debe ser un UUID válido"),
+
+    // ⬇️ nuevo: empresa opcional (si no llega, se tomará la del host si tiene)
+    company_id: z
+      .string({
+        invalid_type_error: "El ID de la empresa debe ser una cadena (UUID)",
+      })
+      .uuid("El ID de la empresa debe ser un UUID válido")
+      .optional(),
 
     space_id: z
       .string({
@@ -83,12 +85,9 @@ export const CreateVisitorSchema = z
     path: ["dni"],
   })
   .refine(
-    (v) => {
-      if (!v.exit_time) return true;
-      return (
-        new Date(v.exit_time).getTime() >= new Date(v.entry_time).getTime()
-      );
-    },
+    (v) =>
+      !v.exit_time ||
+      new Date(v.exit_time).getTime() >= new Date(v.entry_time).getTime(),
     {
       message: "La hora de salida debe ser mayor o igual a la hora de ingreso",
       path: ["exit_time"],

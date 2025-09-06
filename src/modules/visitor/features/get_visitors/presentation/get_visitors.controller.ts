@@ -22,8 +22,8 @@ export class GetVisitorsController {
           HttpStatusCodes.OK.code,
           "Visitors list",
           req.path,
-          data,
-        ),
+          data
+        )
       );
   }
 
@@ -37,8 +37,8 @@ export class GetVisitorsController {
           HttpStatusCodes.OK.code,
           "Visitor detail",
           req.path,
-          data,
-        ),
+          data
+        )
       );
   }
 }

@@ -1,1 +1,1 @@
-import { createAndLookupVisitorRoutes } from "./presentation/create_visitor.routes";
+export { createAndLookupVisitorRoutes } from "./service/create_visitor.routes";

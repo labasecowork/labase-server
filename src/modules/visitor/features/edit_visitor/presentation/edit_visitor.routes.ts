@@ -45,7 +45,7 @@ const controller = new EditVisitorController();
 router.put(
   "/:id",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 
 export { router as editVisitorRoutes };

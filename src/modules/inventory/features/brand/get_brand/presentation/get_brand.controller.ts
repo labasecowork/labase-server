@@ -3,6 +3,7 @@ import { Response } from "express";
 import { buildHttpResponse } from "../../../../../../utils/build_http_response";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { GetBrandService } from "./get_brand.service";
+import { GetBrandQuerySchema } from "../domain/get_brand.schema";
 import type { AuthenticatedRequest } from "../../../../../../middlewares/authenticate_token";
 
 export class GetBrandController {
@@ -27,7 +28,8 @@ export class GetBrandController {
 
   // GET /product-brands
   async getAll(req: AuthenticatedRequest, res: Response) {
-    const data = await this.service.getAll();
+    const query = GetBrandQuerySchema.parse(req.query);
+    const data = await this.service.getAll(query);
 
     return res
       .status(HttpStatusCodes.OK.code)

@@ -1,3 +1,4 @@
+// utils/pagination.ts
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
@@ -19,11 +20,8 @@ function buildPaginationMeta(total: number, page: number, limit: number) {
     limit,
     totalPages,
     hasNextPage: page < totalPages,
-    hasPrevPage: page > 1
+    hasPrevPage: page > 1,
   };
 }
 
-export const Pagination = {
-  getPaginationParams,
-  buildPaginationMeta
-};
+export const Pagination = { getPaginationParams, buildPaginationMeta };
