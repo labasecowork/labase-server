@@ -1,2 +1,3 @@
-2025/09/05-18:39:46.859 1c04a Creating DB /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/Local Storage/leveldb since it was missing.
-2025/09/05-18:39:46.862 1c04a Reusing MANIFEST /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/Local Storage/leveldb/MANIFEST-000001
+2025/09/06-18:32:02.748 200ed Reusing MANIFEST /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/Local Storage/leveldb/MANIFEST-000001
+2025/09/06-18:32:02.750 200ed Recovering log #3
+2025/09/06-18:32:02.750 200ed Reusing old log /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/Local Storage/leveldb/000003.log 

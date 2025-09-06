@@ -1,2 +1,3 @@
-2025/09/05-18:39:47.708 1c04a Creating DB /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/Service Worker/Database since it was missing.
-2025/09/05-18:39:47.711 1c04a Reusing MANIFEST /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/Service Worker/Database/MANIFEST-000001
+2025/09/06-18:32:02.760 200ed Reusing MANIFEST /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/Service Worker/Database/MANIFEST-000001
+2025/09/06-18:32:02.760 200ed Recovering log #3
+2025/09/06-18:32:02.760 200ed Reusing old log /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/Service Worker/Database/000003.log 

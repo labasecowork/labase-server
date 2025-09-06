@@ -2,7 +2,7 @@
 import { Response } from "express";
 import { HttpStatusCodes } from "../../../../constants/http_status_codes";
 import { asyncHandler } from "../../../../middlewares/async_handler";
-import { ChatbotService } from "../../application/services/chatbot.service";
+import { ChatbotService } from "../services/bot.service";
 import { buildHttpResponse } from "../../../../utils";
 
 const singleton = new ChatbotService();

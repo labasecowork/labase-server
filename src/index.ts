@@ -12,7 +12,7 @@ import { APP_URL, PORT } from "./config/env";
 import { displayWelcomeMessage } from "./utils";
 import { customMorganFormat } from "./utils/cli";
 import { multerErrorHandler } from "./middlewares/multer_error_handler/multer_error_handler";
-import { startWhatsAppBot } from "./modules/bot-whatsapp/presentation/bot/whatsapp.bot";
+import { startWhatsAppBot } from "./modules/bot-whatsapp/application/bot/whatsapp.bot";
 import { globalErrorHandler } from "./middlewares/global_error_handler";
 import { buildHttpResponse } from "./utils/build_http_response";
 import { HttpStatusCodes } from "./constants/http_status_codes";

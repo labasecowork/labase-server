@@ -11,15 +11,13 @@ export class WhatsAppProvider {
 
   constructor() {
     const { Client, LocalAuth } = WWebJS;
-
-    // ⬇️ Directorio PERSISTENTE para la sesión (ajústalo si usas Docker/PM2)
     const sessionDir =
-      process.env.WA_SESSION_DIR || path.resolve(process.cwd(), ".wwebjs_auth"); // p. ej. "/var/www/labase-server/.wwebjs_auth"
+      process.env.WA_SESSION_DIR || path.resolve(process.cwd(), ".wwebjs_auth");
 
     this.client = new Client({
       authStrategy: new LocalAuth({
-        clientId: "labase-bot", // 👈 no lo cambies entre ejecuciones
-        dataPath: sessionDir, // 👈 persistente + con permisos
+        clientId: "labase-bot",
+        dataPath: sessionDir,
       }),
       puppeteer: {
         headless: true,
@@ -39,6 +37,17 @@ export class WhatsAppProvider {
     );
     this.client.on("message", (msg: Message) => onMessage(msg));
     this.client.initialize();
+  }
+
+  async typing(to: string, fn: () => Promise<void>, ms = 1200) {
+    const chat = await this.client.getChatById(to);
+    await chat.sendStateTyping();
+    await new Promise((r) => setTimeout(r, ms));
+    try {
+      await fn();
+    } finally {
+      await chat.clearState();
+    }
   }
 
   async reply(to: string, text: string) {
