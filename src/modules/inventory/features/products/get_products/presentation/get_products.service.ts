@@ -1,3 +1,5 @@
+// src/modules/product/features/get_products/presentation/get_products.service.ts
+import { Pagination } from "../../../../../../utils/pagination";
 import { GetProductsRepository } from "../data/get_products.repository";
 import { AppError } from "../../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
@@ -19,28 +21,26 @@ export class GetProductsService {
   }
 
   async getAll(query: GetProductsQueryDTO) {
-    const { page, limit, search, brand_id, brand_name } = query;
-    const skip = (page - 1) * limit;
+    const { page, limit, skip } = Pagination.getPaginationParams(query);
 
     const [items, total] = await Promise.all([
       this.repo.findMany({
         skip,
         take: limit,
-        search,
-        brandId: brand_id,
-        brandName: brand_name,
+        search: query.search,
+        brandId: query.brand_id,
+        brandName: query.brand_name,
       }),
-      this.repo.count({ search, brandId: brand_id, brandName: brand_name }),
+      this.repo.count({
+        search: query.search,
+        brandId: query.brand_id,
+        brandName: query.brand_name,
+      }),
     ]);
 
     return {
-      products: items,
-      pagination: {
-        page,
-        limit,
-        total,
-        total_pages: Math.ceil(total / limit) || 1,
-      },
+      items,
+      meta: Pagination.buildPaginationMeta(total, page, limit),
     };
   }
 }

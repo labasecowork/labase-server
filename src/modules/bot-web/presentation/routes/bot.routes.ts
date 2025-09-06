@@ -8,7 +8,7 @@ const Controller = new BotController();
 /**
  * Enviar mensaje al bot
  * @openapi
- * /api/v1/chatbot/send-message:
+ * /api/v1/bot-whatsapp/send-message:
  *    post:
  *      tags:
  *        - Bot

@@ -6,8 +6,11 @@ export class GetBrandRepository {
     return prisma.product_brand.findUnique({ where: { id } });
   }
 
-  findMany() {
+  findMany(search?: string) {
     return prisma.product_brand.findMany({
+      where: search
+        ? { name: { contains: search, mode: "insensitive" } }
+        : undefined,
       orderBy: { created_at: "desc" },
     });
   }

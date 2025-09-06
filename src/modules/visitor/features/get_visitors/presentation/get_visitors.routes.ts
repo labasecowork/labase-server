@@ -16,15 +16,15 @@ const controller = new GetVisitorsController();
  *     parameters:
  *       - in: query
  *         name: page
- *         schema: { type: integer, example: 1 }
+ *         schema: { type: integer, example: 1, minimum: 1 }
  *       - in: query
  *         name: limit
- *         schema: { type: integer, example: 10, maximum: 100 }
+ *         schema: { type: integer, example: 10, minimum: 1, maximum: 100 }
  *       - in: query
  *         name: search
- *         schema: { type: string, example: "Alicorp" }
+ *         schema: { type: string, example: "roxana" }
  *       - in: query
- *         name: client_id
+ *         name: host_user_id
  *         schema: { type: string, format: uuid }
  *       - in: query
  *         name: space_id
@@ -36,8 +36,8 @@ const controller = new GetVisitorsController();
  *         name: date_to
  *         schema: { type: string, format: date-time, example: "2025-08-31T23:59:59.999Z" }
  *     responses:
- *       200: { description: Lista paginada de visitantes }
- *       400: { description: Parámetros inválidos }
+ *       200:
+ *         description: Lista paginada de visitantes
  */
 router.get("/", asyncHandler(controller.getAll.bind(controller)));
 

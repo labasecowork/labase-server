@@ -13,14 +13,10 @@ export class EditProductController {
   constructor(private readonly service = new EditProductService()) {}
 
   async handle(req: AuthenticatedRequest, res: Response) {
-    // Parsear los datos solo si se envían, de lo contrario usar objeto vacío
-    const rawData = req.body.data || "{}";
-    const dto = EditProductSchema.parse(JSON.parse(rawData));
-
+    const dto = EditProductSchema.parse(JSON.parse(req.body.data));
     const user = await getAuthenticatedUser(req);
     const id = req.params.id;
-    // @ts-ignore: req.files puede estar presente si Multer está configurado
-    const files = (req as any).files as Express.Multer.File[] | undefined;
+    const files = req.files as Express.Multer.File[] | undefined;
 
     const newImageUrl = files?.[0]
       ? (await uploadFile(files[0], "public/products/img")).url
@@ -35,8 +31,8 @@ export class EditProductController {
           HttpStatusCodes.OK.code,
           MESSAGES.PRODUCT.UPDATED_SUCCESS,
           req.path,
-          updated
-        )
+          updated,
+        ),
       );
   }
 }
