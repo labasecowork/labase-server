@@ -10,8 +10,8 @@ import { bulkEmailRoutes } from "./modules/bulk-email/presentation/bulk-email.ro
 import calendarRouter from "./modules/calendar/index";
 import testingRouter from "./modules/testing_aws";
 import { paymentRoutes } from "./modules/payment";
-import articleRoutes from "./modules/article/presentation/routes/article.routes";
-import articleCategoryRouter from "./modules/article/presentation/routes/article_category.routes";
+import articleRoutes from "./modules/content/article/";
+import articleCategoryRouter from "./modules/content/category/";
 import { attendanceRouter } from "./modules/attendance";
 import { employeeRouter } from "./modules/employee";
 import { newsletterRouter } from "./modules/newsletter";
