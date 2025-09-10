@@ -1,133 +1,132 @@
-import { z } from "zod";
-import dayjs from "dayjs";
 import {
   ReservationLeadSchema,
   ReservationLead,
+  SpaceEnum,
 } from "../../domain/reservation_lead.schema";
 import { chatbotConfig } from "../../data/config/chatbot.config";
+import {
+  getFunnel,
+  saveFunnel,
+  resetFunnel,
+  ORDER,
+} from "../../infrastructure/redis/reservation_session.redis";
+import {
+  parseDateLoose,
+  parseTimeLoose,
+  fuzzySpace,
+} from "../utils/parse.helpers";
 
-type StepKey =
-  | "name"
-  | "phone"
-  | "space"
-  | "people"
-  | "date"
-  | "start_time"
-  | "end_time"
-  | "purpose"
-  | "notes";
+type StepKey = (typeof ORDER)[number];
+
 const QUESTIONS: Record<StepKey, string> = {
-  name: "Tu *nombre y apellido*, por favor.",
-  phone: "Tu *celular* (9 dígitos, empieza con 9).",
-  space:
-    "¿Qué *espacio* deseas? (unidad | bunker | brigada | base de mando | base operativa | el hangar)",
-  people: "¿Para *cuántas personas*? (número entero)",
-  date: "Indica *fecha* (ej. 12/09 o 2025-09-12).",
-  start_time: "Indica *hora de inicio* (ej. 10:00).",
-  end_time: "Indica *hora de fin* (ej. 12:30).",
-  purpose: "¿Cuál es el *motivo* de la reserva? (breve)",
-  notes: "Notas adicionales (opcional). Escribe '-' para omitir.",
+  name: "🪪 *Nombre y apellido*, por favor.",
+  phone: "📱 *Celular* (9 dígitos, empieza con 9).",
+  space: [
+    "🏛️ *¿Qué espacio deseas?*",
+    "• `unidad` (1p privado)  |  • `reserva` (2p dúo)",
+    "• `bunker` (2–4 privado) |  • `brigada` (2–4 equipo)",
+    "• `base de mando` (2–10 sala) | • `el arsenal` (3–6 abierto)",
+    "• `base operativa` (compartido 1–30) | • `el hangar` (compartido 1–20)",
+    "Escribe solo el *nombre*.",
+  ].join("\n"),
+  people: "👥 *¿Para cuántas personas?* (número entero)",
+  date: "📅 *Fecha* (ej. 12/09 o 2025-09-12).",
+  start_time: "⏰ *Hora de inicio* (ej. 10:00 o 9:30 AM).",
+  end_time: "⏱️ *Hora de fin* (ej. 12:30 o 6:45 PM).",
+  purpose: "🧩 *Motivo* de la reserva (breve).",
 };
 
-const ORDER: StepKey[] = [
-  "name",
-  "phone",
-  "space",
-  "people",
-  "date",
-  "start_time",
-  "end_time",
-  "purpose",
-  "notes",
-];
-
 export class ReservationFunnel {
-  // estado por usuario (puedes migrar a Redis)
-  private sessions = new Map<
-    string,
-    Partial<ReservationLead> & { _step?: number }
-  >();
-
-  start(chatId: string) {
-    this.sessions.set(chatId, { _step: 0, wa_from: chatId } as any);
-    return `🔐 Iniciando *reserva de espacio*.\nResponde de forma breve. ${
+  async start(chatId: string) {
+    await saveFunnel(chatId, {
+      _step: 0,
+      data: { wa_from: chatId, channel: "whatsapp" } as any,
+      startedAt: Date.now(),
+    });
+    return `🔐 Iniciando *reserva de espacio*.\nResponde en mensajes cortos.\n${
       QUESTIONS[ORDER[0]]
     }`;
   }
 
-  isActive(chatId: string) {
-    return this.sessions.has(chatId);
+  async isActive(chatId: string) {
+    const st = await getFunnel(chatId);
+    return !!st;
   }
 
-  cancel(chatId: string) {
-    this.sessions.delete(chatId);
-    return "Flujo de *reserva* cancelado. Si deseas retomarlo, escribe *reservar*.";
+  async cancel(chatId: string) {
+    await resetFunnel(chatId);
+    return "❌ Flujo de *reserva* cancelado. Escribe *reservar* para iniciar de nuevo.";
   }
 
-  nextQuestion(
+  async nextQuestion(
     chatId: string,
     userText: string
-  ): { done: boolean; message: string; payload?: ReservationLead } {
-    const s = this.sessions.get(chatId);
-    if (!s)
+  ): Promise<{ done: boolean; message: string; payload?: ReservationLead }> {
+    const st = await getFunnel(chatId);
+    if (!st)
       return {
         done: true,
         message: "No hay flujo activo. Escribe *reservar* para iniciar.",
       };
 
-    const stepIndex = s._step ?? 0;
+    const stepIndex = st._step ?? 0;
     const key = ORDER[stepIndex];
-
-    // Normaliza input
     const val = userText.trim();
-    if (key === "notes" && val === "-") (s as any)[key] = undefined;
-    else if (key === "people") (s as any)[key] = Number(val);
-    else if (key === "space") {
-      const normalized = this.normalizeSpace(val);
-      (s as any)[key] = normalized;
-    } else {
-      (s as any)[key] = val;
+
+    // Guardar valor normalizado por campo
+    switch (key) {
+      case "people":
+        (st.data as any)[key] = Number(val);
+        break;
+      case "space": {
+        const canon = this.normalizeSpace(val);
+        (st.data as any)[key] = canon;
+        break;
+      }
+      case "date": {
+        (st.data as any)[key] = parseDateLoose(val) ?? val;
+        break;
+      }
+      case "start_time":
+      case "end_time": {
+        (st.data as any)[key] = parseTimeLoose(val) ?? val;
+        break;
+      }
+      default:
+        (st.data as any)[key] = val;
     }
 
-    // Avanza
-    s._step = stepIndex + 1;
-    this.sessions.set(chatId, s);
+    // Avanzar
+    st._step = stepIndex + 1;
 
-    if (s._step! < ORDER.length) {
-      const nextKey = ORDER[s._step!];
+    // ¿Quedan preguntas?
+    if (st._step < ORDER.length) {
+      await saveFunnel(chatId, st);
+      const nextKey = ORDER[st._step];
       return { done: false, message: QUESTIONS[nextKey] };
     }
 
-    // validar
-    const candidate: any = {
-      ...s,
-      channel: "whatsapp",
-      wa_from: chatId,
-    };
-    delete candidate._step;
-
+    // Validar payload completo (Zod)
+    const candidate: any = { ...st.data, wa_from: chatId, channel: "whatsapp" };
     const parse = ReservationLeadSchema.safeParse(candidate);
     if (!parse.success) {
-      const errors = parse.error.issues
-        .map((i) => `• ${i.path.join(".")}: ${i.message}`)
-        .join("\n");
-      // Regresar al primer campo inválido
-      s._step = Math.max(
-        0,
-        ORDER.findIndex((k) =>
-          parse.error.issues.some((i) => (i.path?.[0] as string) === k)
-        )
-      );
-      this.sessions.set(chatId, s);
-      const nextKey = ORDER[s._step!];
+      // Tomar el primer error y re-pedir ESE campo con ejemplo
+      const issue = parse.error.issues[0];
+      const field = (issue.path?.[0] as StepKey) ?? "name";
+      const hint = this.hintFor(field, issue.message);
+      // Rebobinar al campo con error
+      const idx = ORDER.findIndex((k) => k === field);
+      st._step = idx >= 0 ? idx : 0;
+      await saveFunnel(chatId, st);
       return {
         done: false,
-        message: `Hay algunos datos por corregir:\n${errors}\n\nIntentemos de nuevo → ${QUESTIONS[nextKey]}`,
+        message: `⚠️ *Dato por corregir*: ${hint}\n\n${QUESTIONS[field]}`,
       };
     }
 
+    // OK
     const payload = parse.data as ReservationLead;
-    this.sessions.delete(chatId);
+    await resetFunnel(chatId);
     const summary = this.renderSummary(payload);
     return {
       done: true,
@@ -136,23 +135,44 @@ export class ReservationFunnel {
     };
   }
 
-  private normalizeSpace(text: string): ReservationLead["space"] {
-    const t = text.toLowerCase();
-    const entries = Object.entries(chatbotConfig.spaceAliases) as [
-      ReservationLead["space"],
-      string[]
-    ][];
-    for (const [key, aliases] of entries) {
-      if (key === t || aliases.some((a) => a.toLowerCase() === t)) return key;
+  // === helpers ===
+
+  private normalizeSpace(input: string): ReservationLead["space"] {
+    const aliases = chatbotConfig.spaceAliases;
+    const all = Object.keys(aliases);
+    // Fuzzy sobre claves + alias
+    const flat: string[] = [...all];
+    for (const k of all) flat.push(...aliases[k as keyof typeof aliases]);
+    const hit = fuzzySpace(input, flat);
+    if (hit) {
+      // mapear alias a clave canónica
+      if (all.includes(hit)) return hit as ReservationLead["space"];
+      const found = all.find((k) =>
+        aliases[k as keyof typeof aliases].some((a) => a === hit)
+      );
+      if (found) return found as ReservationLead["space"];
     }
     // heurística simple
+    const t = input.toLowerCase();
     if (t.includes("mando")) return "base de mando";
     if (t.includes("brigada")) return "brigada";
     if (t.includes("bunker")) return "bunker";
     if (t.includes("hangar")) return "el hangar";
-    if (t.includes("operativa") || t.includes("open"))
-      return "base de operativa" as any; // fallback
+    if (t.includes("arsenal")) return "el arsenal";
+    if (t.includes("operativa") || t.includes("open")) return "base operativa";
     return "unidad";
+  }
+
+  private hintFor(field: StepKey, msg: string) {
+    const map: Partial<Record<StepKey, string>> = {
+      phone: "Formato: *9xxxxxxxx* (9 dígitos).",
+      start_time: "Ejemplos: *10:00*, *9:30 AM*.",
+      end_time: "Ejemplos: *12:30*, *6:45 PM*.",
+      date: "Ejemplos: *12/09*, *2025-09-12*.",
+      people: "Debe ser un número dentro de la capacidad del espacio.",
+      space: "Escribe solo el *nombre* del espacio (p.ej. *unidad*, *bunker*).",
+    };
+    return map[field] ?? msg;
   }
 
   private renderSummary(p: ReservationLead) {
@@ -164,10 +184,7 @@ export class ReservationFunnel {
       `• Espacio: ${p.space} | Personas: ${p.people}`,
       `• Fecha/Hora: ${when}`,
       `• Motivo: ${p.purpose}`,
-      p.notes ? `• Notas: ${p.notes}` : undefined,
-      `• Canal: WhatsApp (${p.wa_from})`,
-    ]
-      .filter(Boolean)
-      .join("\n");
+      `• Canal origen: WhatsApp (${p.wa_from})`,
+    ].join("\n");
   }
 }
