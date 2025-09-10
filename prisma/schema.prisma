@@ -371,7 +371,7 @@ model articles {
   title        String
   content      String
   banner       String?
-  resume       String
+  resume       String?
   reading_time Int
 
   publication_timestamp DateTime?
