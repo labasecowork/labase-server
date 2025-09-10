@@ -48,6 +48,9 @@ app.use(routes);
 // Multer error handler
 app.use(multerErrorHandler as express.ErrorRequestHandler);
 
+// Test route
+app.get("/ping", (_, res) => res.send("pong"));
+
 // 404
 app.use((req, res) => {
   return res
@@ -56,16 +59,13 @@ app.use((req, res) => {
       buildHttpResponse(
         HttpStatusCodes.NOT_FOUND.code,
         "Route not found",
-        req.path,
-      ),
+        req.path
+      )
     );
 });
 
 // Global Error Handler
 app.use(globalErrorHandler);
-
-// Test route
-app.get("/ping", (_, res) => res.send("pong"));
 
 // Start server
 const main = async () => {
@@ -77,17 +77,20 @@ const main = async () => {
   }
 
   // Whatsapp bot
-  // try {
-  //   await startWhatsAppBot();
-  // } catch (e) {
-  //   console.error("[WhatsApp] No inició:", e);
-  // }
+  try {
+    await startWhatsAppBot();
+    console.log(
+      "[WhatsApp] Bot inicializado (si es primera vez, revisa el QR en logs)"
+    );
+  } catch (e) {
+    console.error("[WhatsApp] No inició:", e);
+  }
 
   server.listen(PORT, () => {
     displayWelcomeMessage(appUrl);
     console.log(`[HTTP] Server on :${PORT}`);
     console.log(
-      "[WhatsApp] Mirar los logs para ver el QR: pm2 logs labase-server",
+      "[WhatsApp] Mirar los logs para ver el QR: pm2 logs labase-server"
     );
   });
 };

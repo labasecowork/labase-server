@@ -19,7 +19,7 @@ export class EditVisitorController {
     return res.status(HttpStatusCodes.OK.code).json(
       buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path, {
         id: result.id,
-      })
+      }),
     );
   }
 }

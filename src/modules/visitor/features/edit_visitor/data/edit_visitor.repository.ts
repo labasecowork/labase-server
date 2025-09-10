@@ -6,8 +6,11 @@ export class EditVisitorRepository {
     return prisma.visitors.findUnique({
       where: { id },
       include: {
-        user: true,
-        space: true,
+        host: {
+          select: { id: true, first_name: true, last_name: true, email: true },
+        },
+        company: { select: { id: true, name: true } },
+        space: { select: { id: true, name: true } },
       },
     });
   }
@@ -16,8 +19,12 @@ export class EditVisitorRepository {
     return prisma.space.findUnique({ where: { id: space_id } });
   }
 
-  findClientById(client_id: string) {
-    return prisma.users.findUnique({ where: { id: client_id } });
+  findHostByUserId(user_id: string) {
+    return prisma.users.findUnique({ where: { id: user_id } });
+  }
+
+  findCompanyById(company_id: string) {
+    return prisma.companies.findUnique({ where: { id: company_id } });
   }
 
   update(
@@ -29,10 +36,11 @@ export class EditVisitorRepository {
       last_name: string;
       phone: string | null;
       email: string | null;
-      user_id: string;
-      space_id: string;
       entry_time: Date;
-      exit_time: Date | null;
+      exit_time: Date;
+      host_user_id: string;
+      company_id: string | null;
+      space_id: string;
     }>
   ) {
     const {
@@ -42,25 +50,33 @@ export class EditVisitorRepository {
       last_name,
       phone,
       email,
-      user_id,
-      space_id,
       entry_time,
       exit_time,
+      host_user_id,
+      company_id,
+      space_id,
     } = data;
 
     return prisma.visitors.update({
       where: { id },
       data: {
-        dni: dni ?? undefined,
-        ruc: ruc ?? undefined,
+        // scalars
+        dni: dni === undefined ? undefined : dni,
+        ruc: ruc === undefined ? undefined : ruc,
         first_name: first_name ?? undefined,
         last_name: last_name ?? undefined,
-        phone: phone ?? undefined,
-        email: email ?? undefined,
+        phone: phone === undefined ? undefined : phone,
+        email: email === undefined ? undefined : email,
         entry_time: entry_time ?? undefined,
         exit_time: exit_time ?? undefined,
-        user_id: user_id ?? undefined,
-        space_id: space_id ?? undefined,
+
+        ...(host_user_id ? { host: { connect: { id: host_user_id } } } : {}),
+        ...(space_id ? { space: { connect: { id: space_id } } } : {}),
+        ...(company_id === undefined
+          ? {}
+          : company_id === null
+          ? { company: { disconnect: true } }
+          : { company: { connect: { id: company_id } } }),
       },
     });
   }

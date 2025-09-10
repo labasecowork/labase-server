@@ -3,6 +3,7 @@ import { GetBrandRepository } from "../data/get_brand.repository";
 import { AppError } from "../../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { MESSAGES } from "../../../../../../constants/messages";
+import type { GetBrandQueryDTO } from "../domain/get_brand.dto";
 
 export class GetBrandService {
   constructor(private readonly repo = new GetBrandRepository()) {}
@@ -18,9 +19,9 @@ export class GetBrandService {
     return brand;
   }
 
-  async getAll() {
-    const items = this.repo.findMany();
-
-    return items;
+  async getAll(query: GetBrandQueryDTO) {
+    const { search } = query;
+    return this.repo.findMany(search);
   }
 }
+  

@@ -3,9 +3,7 @@ import { z } from "zod";
 
 const onlyDigits = (len: number, field: string) =>
   z
-    .string({
-      invalid_type_error: `El ${field} debe ser una cadena (string)`,
-    })
+    .string({ invalid_type_error: `El ${field} debe ser una cadena (string)` })
     .trim()
     .regex(new RegExp(`^\\d{${len}}$`), {
       message: `El ${field} debe tener exactamente ${len} dígitos`,
@@ -13,69 +11,36 @@ const onlyDigits = (len: number, field: string) =>
 
 export const EditVisitorSchema = z
   .object({
-    dni: onlyDigits(8, "DNI").optional(),
-
-    ruc: onlyDigits(11, "RUC").optional(),
-
-    first_name: z
-      .string({
-        required_error: "El nombre es obligatorio",
-        invalid_type_error: "El nombre debe ser una cadena (string)",
-      })
-      .min(1, "El nombre no puede estar vacío"),
-
-    last_name: z
-      .string({
-        required_error: "El apellido es obligatorio",
-        invalid_type_error: "El apellido debe ser una cadena (string)",
-      })
-      .min(1, "El apellido no puede estar vacío"),
-
-    phone: z
-      .string({
-        invalid_type_error: "El teléfono debe ser una cadena (string)",
-      })
-      .optional(),
-
+    // Datos del visitante
+    dni: onlyDigits(8, "DNI").optional().nullable(),
+    ruc: onlyDigits(11, "RUC").optional().nullable(),
+    first_name: z.string().min(1, "El nombre no puede estar vacío").optional(),
+    last_name: z.string().min(1, "El apellido no puede estar vacío").optional(),
+    phone: z.string().optional().nullable(),
     email: z
-      .string({
-        invalid_type_error:
-          "El correo electrónico debe ser una cadena (string)",
-      })
+      .string()
       .email("El formato del correo electrónico no es válido")
+      .optional()
+      .nullable(),
+
+    // Relaciones
+    host_user_id: z
+      .string()
+      .uuid("El ID del anfitrión debe ser un UUID válido")
       .optional(),
-
-    client_id: z
-      .string({
-        required_error: "El ID del cliente es obligatorio",
-        invalid_type_error: "El ID del cliente debe ser una cadena (UUID)",
-      })
-      .uuid("El ID del cliente debe ser un UUID válido"),
-
+    company_id: z
+      .string()
+      .uuid("El ID de la empresa debe ser un UUID válido")
+      .optional()
+      .nullable(),
     space_id: z
-      .string({
-        required_error: "El ID del espacio es obligatorio",
-        invalid_type_error: "El ID del espacio debe ser una cadena (UUID)",
-      })
-      .uuid("El ID del espacio debe ser un UUID válido"),
-
-    entry_time: z
-      .string({
-        required_error: "La hora de ingreso es obligatoria",
-        invalid_type_error: "La hora de ingreso debe ser una cadena (string)",
-      })
-      .datetime(
-        "La hora de ingreso debe estar en formato ISO válido (ej.: 2024-01-31T13:45:00Z)"
-      ),
-
-    exit_time: z
-      .string({
-        invalid_type_error: "La hora de salida debe ser una cadena (string)",
-      })
-      .datetime(
-        "La hora de salida debe estar en formato ISO válido (ej.: 2024-01-31T13:45:00Z)"
-      )
+      .string()
+      .uuid("El ID del espacio debe ser un UUID válido")
       .optional(),
+
+    // Tiempos
+    entry_time: z.string().datetime("Formato ISO inválido").optional(),
+    exit_time: z.string().datetime("Formato ISO inválido").optional(),
   })
   .refine((v) => !(v.dni && v.ruc), {
     message: "El DNI y el RUC no pueden proporcionarse al mismo tiempo",
@@ -83,7 +48,7 @@ export const EditVisitorSchema = z
   })
   .refine(
     (v) => {
-      if (!v.exit_time) return true;
+      if (!v.entry_time || !v.exit_time) return true;
       return (
         new Date(v.exit_time).getTime() >= new Date(v.entry_time).getTime()
       );
@@ -92,4 +57,7 @@ export const EditVisitorSchema = z
       message: "La hora de salida debe ser mayor o igual a la hora de ingreso",
       path: ["exit_time"],
     }
-  );
+  )
+  .refine((v) => Object.values(v).some((val) => val !== undefined), {
+    message: "Debes enviar al menos un campo para actualizar",
+  });
