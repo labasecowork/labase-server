@@ -1,4 +1,3 @@
-// src/modules/product/features/create_product/presentation/routes/create_product.routes.ts
 import { Router } from "express";
 import { DeleteProductController } from "./delete_product.controller";
 import { authenticateToken } from "../../../../../../middlewares/authenticate_token";
@@ -36,7 +35,7 @@ const controller = new DeleteProductController();
 router.delete(
   "/:id",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 
 export { router as deleteProductRoutes };

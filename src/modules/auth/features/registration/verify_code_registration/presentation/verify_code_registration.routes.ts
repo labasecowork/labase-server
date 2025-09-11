@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/verify_code_registration/presentation/verify_code_registration.routes.ts
 import { Router } from "express";
 import { VerifyCodeRegistrationController } from "./verify_code_registration.controller";
 import { VerifyCodeRegistrationService } from "./verify_code_registration.service";

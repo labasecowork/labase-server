@@ -1,4 +1,3 @@
-// src/modules/attendance/index.ts
 import { Router } from "express";
 
 import { markAttendanceRoutes } from "./features/mark_attendance";

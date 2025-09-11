@@ -1,6 +1,5 @@
-//src/modules/content/article/update_article/presentation/update_article.service.ts
 import { UpdateArticleRepository } from "../data/update_article.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants";
 import { deleteFile, uploadFile } from "../../../../../infrastructure/aws";
 import {

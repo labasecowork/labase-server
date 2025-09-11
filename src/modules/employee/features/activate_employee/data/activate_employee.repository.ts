@@ -1,4 +1,3 @@
-// src/modules/employee/features/activate_employee/data/activate_employee.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class ActivateEmployeeRepository {

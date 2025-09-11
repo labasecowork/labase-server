@@ -1,4 +1,3 @@
-// src/modules/user/features/list_users/presentation/list_users.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { ListUsersController } from "./list_users.controller";

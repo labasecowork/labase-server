@@ -1,13 +1,11 @@
-// src/modules/company/features/update_company/presentation/update_company.controller.ts
 import { Response } from "express";
 import { UpdateCompanyService } from "./update_company.service";
 import {
   UpdateCompanySchema,
   UpdateCompanyParamsSchema,
 } from "../domain/update_company.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class UpdateCompanyController {

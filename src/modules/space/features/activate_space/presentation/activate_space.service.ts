@@ -1,6 +1,5 @@
-// src/modules/space/features/activate_space/presentation/activate_space.service.ts
 import { ActivateSpaceRepository } from "../data/activate_space.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class ActivateSpaceService {

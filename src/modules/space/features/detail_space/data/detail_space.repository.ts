@@ -1,4 +1,3 @@
-// src/modules/space/features/detail_space/data/detail_space.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class DetailSpaceRepository {

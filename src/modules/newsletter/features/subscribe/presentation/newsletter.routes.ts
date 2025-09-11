@@ -1,4 +1,3 @@
-//src/modules/waitlist/presentation/waitlist.routes.ts
 import { Router } from "express";
 import { SubscribeNewsletterController } from "./newsletter.controller";
 import { asyncHandler } from "../../../../../middlewares";

@@ -1,11 +1,10 @@
-//src/modules/content/article/delete_article/presentation/delete_article.controller.ts
 import { Request, Response } from "express";
 import { DeleteArticleService } from "./delete_article.service";
 import { DeleteArticleParamsSchema } from "../domain/delete_article.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 
 interface AuthReq extends Request {
   user?: { id: string };

@@ -1,11 +1,10 @@
-// src/modules/product/features/edit_product/presentation/edit_product.service.ts
 import { EditProductDTO } from "../domain/edit_product.dto";
 import { EditProductRepository } from "../data/edit_product.repository";
-import { AppError } from "../../../../../../utils/errors";
+import { AppError } from "../../../../../../types/";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { MESSAGES } from "../../../../../../constants/messages";
 import { deleteFile } from "../../../../../../infrastructure/aws";
-import type { CurrentUser } from "../../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../../utils/";
 import prisma from "../../../../../../config/prisma_client";
 
 export class EditProductService {
@@ -15,12 +14,12 @@ export class EditProductService {
     id: string,
     dto: EditProductDTO,
     user: Pick<CurrentUser, "id" | "role">,
-    newImageUrl: string,
+    newImageUrl: string
   ) {
     if (user.role !== "admin") {
       throw new AppError(
         MESSAGES.PRODUCT.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -28,7 +27,7 @@ export class EditProductService {
     if (!existing) {
       throw new AppError(
         MESSAGES.PRODUCT.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 
@@ -38,7 +37,7 @@ export class EditProductService {
     if (!brand) {
       throw new AppError(
         MESSAGES.BRAND.NOT_FOUND,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 

@@ -1,4 +1,3 @@
-// src/modules/company/index.ts
 import { Router } from "express";
 
 import { listCompaniesRoutes } from "./features/list_companies";

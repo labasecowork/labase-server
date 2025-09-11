@@ -1,4 +1,3 @@
-//src/modules/content/category/delete_category/presentation/delete_category.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { DeleteCategoryController } from "./delete_category.controller";

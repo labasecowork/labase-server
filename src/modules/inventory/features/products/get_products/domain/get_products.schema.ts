@@ -1,4 +1,3 @@
-// src/modules/product/features/get_products/domain/get_products.schema.ts
 import { z } from "zod";
 
 export const GetProductsQuerySchema = z.object({

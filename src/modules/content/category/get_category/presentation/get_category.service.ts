@@ -1,4 +1,3 @@
-//src/modules/content/category/get_category/presentation/get_category.service.ts
 import { GetCategoryRepository } from "../data/get_category.repository";
 
 export class GetCategoryService {

@@ -1,11 +1,11 @@
 import { generateVerificationCode } from "../../../../../../infrastructure/jwt";
-import { sendEmail } from "../../../../../../utils/email_sender";
+import { sendEmail } from "../../../../../../utils/";
 import {
   RequestPasswordResetDTO,
   RequestPasswordResetResponseDTO,
 } from "./request_password_reset.dto";
 import { RequestPasswordResetRepository } from "../data/request_password_reset.repository";
-import { AppError } from "../../../../../../utils";
+import { AppError } from "../../../../../../types/";
 import { HttpStatusCodes } from "../../../../../../constants";
 import path from "path";
 import ejs from "ejs";

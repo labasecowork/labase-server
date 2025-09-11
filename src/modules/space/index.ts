@@ -1,4 +1,3 @@
-// src/modules/space/index.ts
 import { Router } from "express";
 
 import { createSpaceRoutes } from "./features/create_space";

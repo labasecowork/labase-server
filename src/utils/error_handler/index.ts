@@ -1,10 +1,9 @@
-// src/utils/error_handler/index.ts
 import { Request, Response } from "express";
 import { ZodError } from "zod";
 import { Prisma } from "@prisma/client";
 import { HttpStatusCodes } from "../../constants";
-import { buildHttpResponse } from "../build_http_response";
-import { AppError } from "../errors";
+import { buildHttpResponse } from "../http_response";
+import { AppError } from "../../types/";
 
 export function handleZodError(error: ZodError, req: Request) {
   const firstMessage = error.errors[0]?.message ?? "Validation error";
@@ -54,6 +53,18 @@ export const handleServerError = (
         }
       )
     );
+  }
+
+  if (error instanceof Error && error.message === "ONLY_IMAGE_FILES_ALLOWED") {
+    return res
+      .status(HttpStatusCodes.BAD_REQUEST.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.BAD_REQUEST.code,
+          HttpStatusCodes.BAD_REQUEST.message,
+          req.path
+        )
+      );
   }
 
   if (

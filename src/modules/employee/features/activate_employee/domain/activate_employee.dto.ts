@@ -1,4 +1,3 @@
-// src/modules/employee/features/activate_employee/domain/activate_employee.dto.ts
 import { z } from "zod";
 import { ActivateEmployeeParamsSchema } from "./activate_employee.schema";
 

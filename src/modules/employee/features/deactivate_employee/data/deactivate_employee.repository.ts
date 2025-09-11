@@ -1,4 +1,3 @@
-// src/modules/employee/features/deactivate_employee/data/deactivate_employee.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class DeactivateEmployeeRepository {

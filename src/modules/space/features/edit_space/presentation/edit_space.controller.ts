@@ -1,8 +1,7 @@
-// src/modules/space/features/edit_space/presentation/controllers/edit_space.controller.ts
 import { Response } from "express";
 import { EditSpaceService } from "./edit_space.service";
 import { EditSpaceSchema } from "../domain/edit_space.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 import { uploadFile } from "../../../../../infrastructure/aws";

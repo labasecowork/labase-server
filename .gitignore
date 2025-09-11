@@ -6,6 +6,11 @@ pnpm-debug.log*
 *.log
 .DS_Store
 
+# WhatsApp Web.js
+storage/
+.wwebjs_auth/
+.wwebjs_cache/
+
 # Entornos y credenciales
 .env
 .cursorrules

@@ -1,4 +1,3 @@
-//src/modules/email/domain/bulk-email.repository.ts
 import { z } from "zod";
 
 export const BulkEmailSchema = z.object({

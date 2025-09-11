@@ -1,5 +1,5 @@
 import { HttpStatusCodes } from "../../../../../../constants";
-import { AppError } from "../../../../../../utils";
+import { AppError } from "../../../../../../types/";
 import { VerifyCodePasswordResetRepository } from "../data/verify_code_password_reset.repository";
 import {
   VerifyCodePasswordResetDTO,

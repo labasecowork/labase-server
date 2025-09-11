@@ -1,4 +1,3 @@
-// src/modules/visitor/features/delete_visitor/data/delete_visitor.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class DeleteVisitorRepository {

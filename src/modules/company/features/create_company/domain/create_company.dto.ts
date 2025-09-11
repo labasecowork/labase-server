@@ -1,5 +1,3 @@
-// src/modules/company/features/create_company/domain/create_company.dto.ts
-
 import { z } from "zod";
 import { CreateCompanySchema } from "./create_company.schema";
 

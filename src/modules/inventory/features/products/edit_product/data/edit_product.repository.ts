@@ -1,4 +1,3 @@
-// src/modules/product/features/edit_product/data/edit_product.repository.ts
 import prisma from "../../../../../../config/prisma_client";
 import { Prisma } from "@prisma/client";
 

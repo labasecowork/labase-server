@@ -1,4 +1,3 @@
-// src/modules/employee/features/update_employee/domain/update_employee.schema.ts
 import { z } from "zod";
 
 export const UpdateEmployeeParamsSchema = z.object({

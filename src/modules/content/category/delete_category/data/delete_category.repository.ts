@@ -1,4 +1,3 @@
-//src/modules/content/category/delete_category/data/delete_category.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class DeleteCategoryRepository {

@@ -1,4 +1,3 @@
-// src/modules/reservation/features/get_reservations/domain/get_reservations.schema.ts
 import { z } from "zod";
 
 export const GetReservationsSchema = z.object({

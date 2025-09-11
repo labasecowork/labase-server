@@ -1,4 +1,3 @@
-//src/modules/content/article/create_article/data/create_article.repository.ts
 import { article_status } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 import { Article } from "../domain/entities/article.entity";

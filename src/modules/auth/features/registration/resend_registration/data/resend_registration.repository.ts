@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/resend_registration/data/resend_registration.repository.ts
 import { redisClient } from "../../../../../../config/redis";
 
 export interface ResendRegistrationRepository {

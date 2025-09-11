@@ -1,6 +1,5 @@
-// src/modules/space/features/deactivate_space/presentation/deactivate_space.service.ts
 import { DeactivateSpaceRepository } from "../data/deactivate_space.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class DeactivateSpaceService {

@@ -1,4 +1,3 @@
-// src/modules/reservation/index.ts
 import { Router } from "express";
 
 import { checkAvailabilityRoutes } from "./features/check_availability";

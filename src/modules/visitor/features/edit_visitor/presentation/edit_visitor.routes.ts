@@ -1,4 +1,3 @@
-// src/modules/visitor/features/edit_visitor/presentation/edit_visitor.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

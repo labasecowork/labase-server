@@ -1,4 +1,3 @@
-// src/modules/reservation/features/create_reservation/data/create_reservation.repository.ts
 import { Prisma, reservation } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 

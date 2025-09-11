@@ -1,4 +1,3 @@
-// src/modules/reservation/entities/reservation.entity.ts
 export interface ReservationEntity {
   id: number;
   spaceId: number;

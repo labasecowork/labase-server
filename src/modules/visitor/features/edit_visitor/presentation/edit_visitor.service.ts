@@ -1,9 +1,8 @@
-// src/modules/visitor/features/edit_visitor/presentation/edit_visitor.service.ts
 import { EditVisitorRepository } from "../data/edit_visitor.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { MESSAGES } from "../../../../../constants/messages";
-import type { CurrentUser } from "../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../utils/";
 import { z } from "zod";
 import { EditVisitorSchema } from "../domain/edit_visitor.schema";
 

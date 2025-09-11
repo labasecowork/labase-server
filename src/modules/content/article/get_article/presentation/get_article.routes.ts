@@ -1,4 +1,3 @@
-//src/modules/content/article/get_article/presentation/get_article.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { GetArticleController } from "./get_article.controller";

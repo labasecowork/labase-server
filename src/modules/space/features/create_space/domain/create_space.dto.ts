@@ -1,4 +1,3 @@
-// src/modules/space/features/create_space/domain/dtos/create_space.dto.ts
 import { z } from "zod";
 import { CreateSpaceSchema } from "./create_space.schema";
 

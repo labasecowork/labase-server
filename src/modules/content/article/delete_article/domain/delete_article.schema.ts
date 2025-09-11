@@ -1,4 +1,3 @@
-//src/modules/content/article/delete_article/domain/delete_article.schema.ts
 import { z } from "zod";
 
 export const DeleteArticleParamsSchema = z.object({

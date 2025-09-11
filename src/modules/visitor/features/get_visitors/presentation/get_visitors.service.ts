@@ -1,6 +1,5 @@
-// src/modules/visitor/features/get_visitors/presentation/get_visitors.service.ts
 import { GetVisitorsRepository } from "../data/get_visitors.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { MESSAGES } from "../../../../../constants/messages";
 import type { z } from "zod";

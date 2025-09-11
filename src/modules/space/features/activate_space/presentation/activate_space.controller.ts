@@ -1,11 +1,8 @@
-// src/modules/space/features/activate_space/presentation/activate_space.controller.ts
 import { Response } from "express";
 import { ActivateSpaceService } from "./activate_space.service";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user"; // ✅
-
 export class ActivateSpaceController {
   constructor(private readonly service = new ActivateSpaceService()) {}
 
@@ -20,8 +17,8 @@ export class ActivateSpaceController {
           HttpStatusCodes.OK.code,
           "Space activated",
           req.path,
-          { space, user },
-        ),
+          { space, user }
+        )
       );
   }
 }

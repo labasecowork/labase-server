@@ -1,4 +1,3 @@
-// src/modules/visitor/features/get_visitors/data/get_visitors.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import type { Prisma } from "@prisma/client";
 

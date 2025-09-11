@@ -1,10 +1,9 @@
-// src/modules/product/features/create_product/presentation/services/create_product.service.ts
 import { CreateProductDTO } from "../domain/create_product.dto";
 import { CreateProductRepository } from "../data/create_product.repository";
-import { AppError } from "../../../../../../utils/errors";
-import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
+import { AppError } from "../../../../../../types/";
+import { HttpStatusCodes } from "../../../../../../constants";
 import { MESSAGES } from "../../../../../../constants/messages";
-import type { CurrentUser } from "../../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../../utils/";
 
 export class CreateProductService {
   constructor(private readonly repo = new CreateProductRepository()) {}
@@ -12,12 +11,12 @@ export class CreateProductService {
   async execute(
     dto: CreateProductDTO,
     user: Pick<CurrentUser, "id" | "role">,
-    imageUrl: string,
+    imageUrl: string
   ) {
     if (user.role !== "admin") {
       throw new AppError(
         MESSAGES.PRODUCT.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -26,7 +25,7 @@ export class CreateProductService {
     if (!brand) {
       throw new AppError(
         MESSAGES.BRAND.NOT_FOUND,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 

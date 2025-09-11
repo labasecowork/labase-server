@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/verify_code_registration/data/verify_code_registration.repository.ts
 import { User } from "../../../../domain/user.entity";
 import { RequestRegistrationDTO } from "../../request_registration/domain/request_registration.dto";
 import { user_status } from "@prisma/client";
@@ -42,20 +41,20 @@ export class VerifyCodeRegistrationRepositoryImpl
       userData.password,
       userData.status,
       userData.creation_timestamp ?? undefined,
-      userData.user_type,
+      userData.user_type
     );
   }
 
   async getTemporaryCode(email: string): Promise<string | null> {
     const temporaryCodeRaw = await redisClient.get(
-      `TEMPORARY_REGISTRATION_CODE:${email}`,
+      `TEMPORARY_REGISTRATION_CODE:${email}`
     );
     return temporaryCodeRaw;
   }
 
   async getTemporaryUser(email: string): Promise<string | null> {
     const temporaryUserDataRaw = await redisClient.get(
-      `TEMPORARY_USER_REGISTRATION:${email}`,
+      `TEMPORARY_USER_REGISTRATION:${email}`
     );
     return temporaryUserDataRaw;
   }

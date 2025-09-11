@@ -1,6 +1,5 @@
-// src/modules/employee/features/activate_employee/presentation/activate_employee.service.ts
 import { ActivateEmployeeRepository } from "../data/activate_employee.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 interface CurrentUser {
@@ -15,7 +14,7 @@ export class ActivateEmployeeService {
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden activar empleados",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -23,14 +22,14 @@ export class ActivateEmployeeService {
     if (!employee) {
       throw new AppError(
         "Empleado no encontrado",
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 
     if (employee.user.status === "active") {
       throw new AppError(
         "El empleado ya está activo",
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 

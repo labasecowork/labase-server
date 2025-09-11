@@ -1,4 +1,3 @@
-//src/modules/content/article/create_article/domain/entities/article.entity.ts
 export interface Article {
   id: string;
   userId: string;

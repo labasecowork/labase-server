@@ -1,8 +1,7 @@
-// src/modules/reservation/features/check_availability/presentation/check_availability.controller.ts
 import { Request, Response } from "express";
 import { CheckAvailabilityService } from "./check_availability.service";
 import { CheckAvailabilitySchema } from "../domain/check_availability.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class CheckAvailabilityController {
@@ -19,8 +18,8 @@ export class CheckAvailabilityController {
           HttpStatusCodes.OK.code,
           "Availability checked",
           req.path,
-          result,
-        ),
+          result
+        )
       );
   }
 }

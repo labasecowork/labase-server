@@ -1,4 +1,3 @@
-// src/modules/reservation/features/detail_reservation/data/detail_reservation.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class DetailReservationRepository {

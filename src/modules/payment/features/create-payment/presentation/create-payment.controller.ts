@@ -1,10 +1,8 @@
-// src/modules/payment/features/create-payment/presentation/create-payment.controller.ts
 import { Request, Response } from "express";
 import { CreatePaymentService } from "./create-payment.service";
 import { CreatePaymentSchema } from "../domain/create-payment.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { handleServerError } from "../../../../../utils/error_handler";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 
 export class CreatePaymentController {
   private svc = new CreatePaymentService();
@@ -22,7 +20,7 @@ export class CreatePaymentController {
         200,
         "Payment flow initiated",
         req.path,
-        result,
+        result
       );
       return res.status(200).json(payload);
     } catch (err) {

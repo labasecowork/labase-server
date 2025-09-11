@@ -1,4 +1,3 @@
-//src/modules/auth/features/login/login_with_email/domain/login_with_email.dto.ts
 import { z } from "zod";
 import { LoginSchema } from "./login_with_email.schema";
 

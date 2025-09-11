@@ -1,4 +1,3 @@
-// src/modules/reservation/features/get_reservations/presentation/get_reservations.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

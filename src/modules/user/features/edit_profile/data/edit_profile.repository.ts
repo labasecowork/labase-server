@@ -1,4 +1,3 @@
-// src/modules/user/features/edit_profile/data/edit_profile.repository.ts
 import { Prisma } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 

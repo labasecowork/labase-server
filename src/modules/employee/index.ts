@@ -1,4 +1,3 @@
-// src/modules/employee/index.ts
 import { Router } from "express";
 
 import { listEmployeesRoutes } from "./features/list_employees";

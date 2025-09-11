@@ -1,4 +1,3 @@
-// src/modules/space/features/benefit/domain/dtos/benefit_space.schema.ts
 import { z } from "zod";
 
 export const CreateBenefitSchema = z.object({

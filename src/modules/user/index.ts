@@ -1,4 +1,3 @@
-// src/modules/user/index.ts
 import { Router } from "express";
 import { editProfileRoutes } from "./features/edit_profile";
 import { getProfileRoutes } from "./features/get_profile/presentation/get_profile.routes";

@@ -1,4 +1,3 @@
-// src/modules/payment/features/visa-callback/data/visa-callback.repository.ts
 import type {
   CreatePaymentDTO,
   TransactionResponse,

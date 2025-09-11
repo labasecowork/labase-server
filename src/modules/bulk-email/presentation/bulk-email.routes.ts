@@ -1,4 +1,3 @@
-// src/modules/bulk-email/presentation/bulk-email.routes.ts
 import { Router } from "express";
 import { authenticateToken } from "../../../middlewares/authenticate_token";
 import { asyncHandler } from "../../../middlewares/async_handler";

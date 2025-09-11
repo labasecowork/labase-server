@@ -1,8 +1,7 @@
-//src/modules/auth/features/registration/request_reqistration/domain/request_registration.use_case.ts
-import { AppError } from "../../../../../../utils";
+import { AppError } from "../../../../../../types/";
 import { HttpStatusCodes } from "../../../../../../constants";
 import { generateVerificationCode } from "../../../../../../infrastructure/jwt";
-import { sendEmail } from "../../../../../../utils/email_sender";
+import { sendEmail } from "../../../../../../utils/";
 import { RequestRegistrationRepository } from "../data/request_registration.repository";
 import {
   RequestRegistrationDTO,

@@ -1,4 +1,3 @@
-// src/modules/product/features/brand/create_brand/domain/create_brand.schema.ts
 import { z } from "zod";
 
 export const CreateBrandSchema = z.object({

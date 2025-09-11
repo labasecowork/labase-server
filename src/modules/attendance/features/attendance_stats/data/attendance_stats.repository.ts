@@ -1,4 +1,3 @@
-// src/modules/attendance/features/attendance_stats/data/attendance_stats.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 interface FindAttendanceStatsParams {

@@ -1,5 +1,3 @@
-// src/modules/workarea/features/update_workarea/domain/update_workarea.dto.ts
-
 import { z } from "zod";
 import {
   UpdateWorkAreaSchema,

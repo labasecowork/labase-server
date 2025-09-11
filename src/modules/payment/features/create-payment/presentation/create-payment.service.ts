@@ -1,9 +1,8 @@
-// src/modules/payment/features/create-payment/presentation/create-payment.service.ts
 import { CreatePaymentDTO } from "../domain/create-payment.schema";
 import { CreatePaymentRepository } from "../data/create-payment.repository";
 import { PaymentTransactionRepository } from "../data/payment-transaction.repository";
 import { CreateReservationRepository } from "../../../../reservation/features/create_reservation/data/create_reservation.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 type EnrichedPaymentDTO = CreatePaymentDTO & {
@@ -24,13 +23,13 @@ export class CreatePaymentService {
     if (!reservation) {
       throw new AppError(
         "RESERVATION_NOT_FOUND",
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
     if (reservation.status !== "pending") {
       throw new AppError(
         "PAYMENT_NOT_ALLOWED",
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
     if (reservation.user_id !== userId) {

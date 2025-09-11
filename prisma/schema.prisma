@@ -1,11 +1,3 @@
-// puedes aprender más sobre él en la documentación: https://pris.ly/d/prisma-schema
-// ¿Buscas formas de acelerar tus consultas o escalar fácilmente con tus funciones serverless o edge?
-// Prueba Prisma Accelerate: https://pris.ly/cli/accelerate-init
-// npx prisma generate
-// npx prisma migrate reset
-// npx prisma migrate dev --init
-// npx prisma studio
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,38 +9,38 @@ datasource db {
 }
 
 enum user_type {
-  admin // Usuario administrador (superadmin o manager)
-  client // Usuario cliente que reserva espacios
-  employee // Usuario empleado que trabaja en la empresa
+  admin
+  client
+  employee
 }
 
 enum admin_role {
-  superadmin // Rol con permisos totales (crea otros superadmins y managers)
-  manager // Rol con permisos limitados (solo puede crear managers)
+  superadmin
+  manager
 }
 
 enum user_status {
-  active // Usuario activo
-  suspended // Usuario suspendido
-  pending // Usuario pendiente de verificación o activación
+  active
+  suspended
+  pending
 }
 
 enum notification_type {
-  info // Notificación informativa
-  success // Operación exitosa
-  error // Error en la operación
-  alert // Alerta importante
+  info
+  success
+  error
+  alert
 }
 
 enum space_type {
-  unit // Unidad individual (privada)
-  shared_site // Sitio individual en espacio compartido
-  full_room // Reserva de todo el espacio (sala completa)
+  unit
+  shared_site
+  full_room
 }
 
 enum access_type {
-  public // Visible y reservable por cualquier cliente
-  private // Reservable solo por admin o bajo condiciones especiales
+  public
+  private
 }
 
 enum duration_unit {
@@ -59,23 +51,23 @@ enum duration_unit {
 }
 
 enum price_mode {
-  individual // Precio por sitio / unidad
-  group // Precio por reserva de sala completa
+  individual
+  group
 }
 
 enum reservation_status {
-  pending // Estado inicial al crear una reserva. Aún no se ha pagado.
-  confirmed // Estado asignado cuando el pago fue APROBADO por el proveedor (Niubiz).
-  cancelled // Estado cuando un admin o cliente cancela manualmente la reserva, o vence el tiempo de espera sin pagar.
-  in_progress // Estado al momento de escanear el código QR de una reserva CONFIRMADA **y** dentro del horario.
+  pending
+  confirmed
+  cancelled
+  in_progress
 }
 
 enum payment_status {
-  pending // Estado inicial al crear el flujo de pago (aún sin generar sessionToken).
-  ready // Estado cuando se ha generado correctamente el `sessionToken` y script de pago (checkout.js).
-  approved // Estado final cuando el proveedor aprueba el pago del cliente.
-  canceled // Pago cancelado manualmente por el usuario (desde frontend o backend).
-  failed // El proveedor rechazó el pago (tarjeta inválida, error interno, etc.).
+  pending
+  ready
+  approved
+  canceled
+  failed
 }
 
 enum article_status {
@@ -85,85 +77,85 @@ enum article_status {
 }
 
 enum community_user_type {
-  moderator // Moderador de la comunidad
-  member // Miembro de la comunidad
+  moderator
+  member
 }
 
 enum reaction_type {
-  like // Me gusta
-  dislike // No me gusta
+  like
+  dislike
 }
 
 enum reaction_target {
-  publication // Reacción a una publicación
-  comment // Reacción a un comentario
-  reply // Reacción a una respuesta
+  publication
+  comment
+  reply
 }
 
 enum attendance_type {
-  entry // Entrada
-  exit // Salida
+  entry
+  exit
 }
 
 enum unit_of_measure {
-  unit // unidad
-  kilogram // kilogramo
-  meter // metro
-  piece // pieza
+  unit
+  kilogram
+  meter
+  piece
 }
 
 enum company_type {
-  internal // La Base
-  tenant // Empresa inquilina
+  internal
+  tenant
 }
 
 enum gender {
-  male // Hombre
-  female // Mujer
-  unspecified // Sin especificar
+  male
+  female
+  unspecified
 }
 
 model users {
-  id                 String      @id @default(uuid()) // Identificador único del usuario
-  first_name         String // Nombre del usuario
-  last_name          String // Apellido del usuario
-  email              String      @unique // Correo electrónico único
-  password           String // Contraseña hasheada
-  user_type          user_type? // Tipo de usuario (admin o client)
-  profile_image      String? // Imagen de perfil del usuario
-  phone              String? // Número telefónico del usuario
-  birth_date         DateTime?   @db.Date // Fecha de nacimiento
-  gender             gender      @default(unspecified) // Género del usuario
-  status             user_status // Estado actual del usuario
-  creation_timestamp DateTime    @default(now()) // Fecha de creación del registro
+  id                 String      @id @default(uuid())
+  first_name         String
+  last_name          String
+  email              String      @unique
+  password           String
+  user_type          user_type?
+  profile_image      String?
+  phone              String?
+  birth_date         DateTime?   @db.Date
+  gender             gender      @default(unspecified)
+  status             user_status
+  creation_timestamp DateTime    @default(now())
 
-  admin_details        admin_details? // Relación uno a uno si es admin
+  admin_details        admin_details?
   employee_details     employee_details?
-  user_details         user_details? // Relación uno a uno para detalles generales
-  reservations         reservation[]         @relation("user_reservations") // Reservas realizadas por el usuario
+  user_details         user_details?
+  reservations         reservation[]         @relation("user_reservations")
   payment_transactions payment_transaction[] @relation("user_payments")
   articles             articles[]            @relation("user_articles")
 
   hosted_visitors visitors[] @relation("visitor_host")
 
-  @@map("users") // (opcional; ya está en snake_case)
+  @@map("users")
 }
 
 model admin_details {
-  admin_id String     @id // ID del admin (igual al ID en users.id)
-  role     admin_role // Rol del administrador
-  notes    String? // Notas administrativas adicionales
+  admin_id String     @id
+  role     admin_role
+  notes    String?
 
-  user users @relation(fields: [admin_id], references: [id], onDelete: Cascade) // Relación con users
+  user users @relation(fields: [admin_id], references: [id], onDelete: Cascade)
 
   @@map("admin_details")
 }
 
 model user_details {
-  user_id String      @id // ID del usuario
-  status  user_status // (volátil) Duplicado de users.status; revisar si realmente se requiere aquí
+  user_id String      @id
+  status  user_status
 
-  user users @relation(fields: [user_id], references: [id], onDelete: Cascade) // Relación con users
+  user users @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("user_details")
 }
@@ -226,23 +218,23 @@ model attendance {
 }
 
 model space {
-  id              String      @id @default(uuid()) // ID del espacio
-  name            String // Nombre del espacio (ej: Hangar, Unidad)
-  description     String? // Descripción opcional
-  type            space_type // Tipo de espacio (privado, compartido, etc.)
-  access          access_type // Acceso público o privado
-  capacity_min    Int // Mínimo de personas por reserva
-  capacity_max    Int // Máximo de personas permitidas en el espacio
-  allow_by_unit   Boolean // ¿Se permiten reservas “por unidad” (sitio individual).
-  allow_full_room Boolean // Permite reservar toda la sala de una sola vez.
-  disabled        Boolean     @default(false) // ¿Deshabilitado?
-  created_at      DateTime    @default(now()) // Fecha de creación del espacio
+  id              String      @id @default(uuid())
+  name            String
+  description     String?
+  type            space_type
+  access          access_type
+  capacity_min    Int
+  capacity_max    Int
+  allow_by_unit   Boolean
+  allow_full_room Boolean
+  disabled        Boolean     @default(false)
+  created_at      DateTime    @default(now())
 
   space_images   space_image[]
   space_benefits space_benefit[]
-  prices         price[] // Relación: precios por duración
-  reservations   reservation[] // Relación: reservas registradas para este espacio
-  visitors       visitors[] // Relación: visitantes que ingresaron a este espacio
+  prices         price[]
+  reservations   reservation[]
+  visitors       visitors[]
 
   @@map("spaces")
 }
@@ -250,9 +242,9 @@ model space {
 model space_image {
   id       String  @id @default(uuid())
   space_id String
-  url      String // URL en S3
-  alt      String? // opcional
-  position Int     @default(0) // orden
+  url      String
+  alt      String?
+  position Int     @default(0)
 
   space space @relation(fields: [space_id], references: [id], onDelete: Cascade)
 
@@ -282,11 +274,11 @@ model space_benefit {
 }
 
 model price {
-  id       String        @id @default(uuid()) // ID del registro de precio
-  space_id String // FK al espacio asociado
-  duration duration_unit // Tipo de duración (hora, día, semana)
+  id       String        @id @default(uuid())
+  space_id String
+  duration duration_unit
   mode     price_mode
-  amount   Float // Monto en moneda local
+  amount   Float
 
   space space @relation(fields: [space_id], references: [id], onDelete: Cascade)
 
@@ -295,38 +287,38 @@ model price {
 }
 
 model reservation {
-  id              String             @id @default(uuid()) // ID de la reserva
-  purchase_number String             @unique // Número de compra generado
-  user_id         String // FK al usuario que reservó
-  space_id        String // FK al espacio reservado
-  start_time      DateTime // Fecha y hora de inicio de la reserva
-  end_time        DateTime // Fecha y hora de fin de la reserva
-  people          Int // Número total de personas
-  full_room       Boolean // ¿Se reservó todo el espacio?
-  code_qr         String             @unique // Código QR
-  price           Decimal // Precio a cobrar
+  id              String             @id @default(uuid())
+  purchase_number String             @unique
+  user_id         String
+  space_id        String
+  start_time      DateTime
+  end_time        DateTime
+  people          Int
+  full_room       Boolean
+  code_qr         String             @unique
+  price           Decimal
   status          reservation_status @default(pending)
-  created_at      DateTime           @default(now()) // Timestamp de creación
+  created_at      DateTime           @default(now())
 
   user  users @relation("user_reservations", fields: [user_id], references: [id], onDelete: Cascade)
   space space @relation(fields: [space_id], references: [id], onDelete: Cascade)
 
-  slots                reservation_slot[] // Relación a los slots individuales (opcional)
+  slots                reservation_slot[]
   payment_transactions payment_transaction[] @relation("reservation_payments")
 
-  @@index([space_id, start_time, end_time]) // Index para verificar conflictos
-  @@index([user_id, created_at]) // Para listar reservas por usuario/fecha
+  @@index([space_id, start_time, end_time])
+  @@index([user_id, created_at])
   @@map("reservations")
 }
 
 model reservation_slot {
-  id             String @id @default(uuid()) // ID del slot individual
-  reservation_id String // FK a  la reserva principal
-  slot_number    Int // Número de sitio asignado (1 a N)
+  id             String @id @default(uuid())
+  reservation_id String
+  slot_number    Int
 
   reservation reservation @relation(fields: [reservation_id], references: [id], onDelete: Cascade)
 
-  @@unique([reservation_id, slot_number]) // Un sitio por reserva
+  @@unique([reservation_id, slot_number])
   @@map("reservation_slots")
 }
 
@@ -350,7 +342,7 @@ model payment_transaction {
   user_id String?
   user    users?  @relation("user_payments", fields: [user_id], references: [id])
 
-  @@index([status, created_at]) // Buscar pagos por estado/fecha
+  @@index([status, created_at])
   @@map("payment_transactions")
 }
 
@@ -413,34 +405,34 @@ model product_brand {
   name       String   @unique
   created_at DateTime @default(now())
 
-  products products[] // inversa correcta
+  products products[]
 
-  @@map("product_brand") // nombre de tabla real (si quieres plural, usa "product_brands")
+  @@map("product_brand")
 }
 
 model visitors {
-  id         String    @id @default(uuid()) // Identificador único
-  dni        String?   // DNI (si es persona natural)
-  ruc        String?   // RUC (si es empresa/independiente)
-  first_name String // Nombre
-  last_name  String // Apellido
-  phone      String? // Teléfono
-  email      String? // Correo
-  host_user_id String // A quién visita (FK a client_details)
-  company_id String? // Compañía del cliente (redundante pero útil p/queries)
-  space_id   String // Espacio visitado (FK a space)WWWSW
-  entry_time DateTime // Hora de entrada
-  exit_time  DateTime? // Hora de salida (opcional)
-  created_at DateTime  @default(now())
+  id                           String    @id @default(uuid())
+  dni                          String?
+  ruc                          String?
+  first_name                   String
+  last_name                    String
+  phone                        String?
+  email                        String?
+  host_user_id                 String
+  company_id                   String?
+  space_id                     String
+  entry_time                   DateTime
+  exit_time                    DateTime?
+  created_at                   DateTime  @default(now())
+  employee_details_employee_id String?
 
-  host         users      @relation("visitor_host", fields: [host_user_id], references: [id], onDelete: Cascade)
+  host users @relation("visitor_host", fields: [host_user_id], references: [id], onDelete: Cascade)
 
-  company                     companies?        @relation(fields: [company_id], references: [id], onDelete: SetNull)
-  space                       space             @relation(fields: [space_id], references: [id], onDelete: Cascade)
-  employee_details            employee_details? @relation(fields: [employee_detailsEmployee_id], references: [employee_id])
-  employee_detailsEmployee_id String?
+  company          companies?        @relation(fields: [company_id], references: [id], onDelete: SetNull)
+  space            space             @relation(fields: [space_id], references: [id], onDelete: Cascade)
+  employee_details employee_details? @relation(fields: [employee_details_employee_id], references: [employee_id])
 
-  @@index([host_user_id, created_at]) 
+  @@index([host_user_id, created_at])
   @@index([space_id, created_at])
   @@index([company_id])
   @@map("visitors")

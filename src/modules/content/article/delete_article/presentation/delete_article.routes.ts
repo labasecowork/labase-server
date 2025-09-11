@@ -1,4 +1,3 @@
-//src/modules/content/article/delete_article/presentation/delete_article.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

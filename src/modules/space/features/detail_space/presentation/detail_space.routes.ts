@@ -1,4 +1,3 @@
-// src/modules/space/features/detail_space/presentation/routes/detail_space.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { DetailSpaceController } from "./detail_space.controller";

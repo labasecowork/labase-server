@@ -1,10 +1,8 @@
-// src/modules/space/features/deactivate_space/presentation/deactivate_space.controller.ts
 import { Response } from "express";
 import { DeactivateSpaceService } from "./deactivate_space.service";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 
 export class DeactivateSpaceController {
   constructor(private readonly service = new DeactivateSpaceService()) {}
@@ -20,8 +18,8 @@ export class DeactivateSpaceController {
           HttpStatusCodes.OK.code,
           "Space deactivated",
           req.path,
-          { space, user },
-        ),
+          { space, user }
+        )
       );
   }
 }

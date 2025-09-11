@@ -1,4 +1,3 @@
-// src/modules/visitor/features/edit_visitor/data/edit_visitor.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class EditVisitorRepository {

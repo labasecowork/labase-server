@@ -1,4 +1,3 @@
-// src/modules/employee/features/create_employee/data/create_employee.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { Prisma, user_type, user_status } from "@prisma/client";
 

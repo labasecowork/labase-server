@@ -1,9 +1,8 @@
-// src/modules/product/features/brand/edit_brand/presentation/edit_brand.service.ts
 import { EditBrandDTO } from "../domain/edit_brand.dto";
 import { EditBrandRepository } from "../data/edit_brand.repository";
-import { AppError } from "../../../../../../utils/errors";
-import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
-import type { CurrentUser } from "../../../../../../utils/authenticated_user";
+import { AppError } from "../../../../../../types/";
+import { HttpStatusCodes } from "../../../../../../constants";
+import type { CurrentUser } from "../../../../../../utils/";
 import { MESSAGES } from "../../../../../../constants/messages/";
 
 export class EditBrandService {
@@ -12,12 +11,12 @@ export class EditBrandService {
   async execute(
     id: string,
     dto: EditBrandDTO,
-    user: Pick<CurrentUser, "id" | "role">,
+    user: Pick<CurrentUser, "id" | "role">
   ) {
     if (user.role !== "admin") {
       throw new AppError(
         MESSAGES.BRAND.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -25,7 +24,7 @@ export class EditBrandService {
     if (!existing) {
       throw new AppError(
         MESSAGES.BRAND.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 
@@ -35,7 +34,7 @@ export class EditBrandService {
       if (duplicated) {
         throw new AppError(
           MESSAGES.BRAND.DUPLICATED_NAME,
-          HttpStatusCodes.CONFLICT.code,
+          HttpStatusCodes.CONFLICT.code
         );
       }
     }

@@ -1,4 +1,3 @@
-// src/modules/communication/features/inquiry/presentation/inquiry.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../middlewares/async_handler";
 import { inquiryController } from "./inquiry.controller";

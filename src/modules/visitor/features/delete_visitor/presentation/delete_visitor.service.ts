@@ -1,9 +1,8 @@
-// src/modules/visitor/features/delete_visitor/presentation/delete_visitor.service.ts
 import { DeleteVisitorRepository } from "../data/delete_visitor.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { MESSAGES } from "../../../../../constants/messages";
-import type { CurrentUser } from "../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../utils/";
 
 export class DeleteVisitorService {
   constructor(private readonly repo = new DeleteVisitorRepository()) {}
@@ -12,14 +11,14 @@ export class DeleteVisitorService {
     if (user.role !== "admin") {
       throw new AppError(
         MESSAGES.VISITOR.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
     const existing = await this.repo.findById(id);
     if (!existing)
       throw new AppError(
         MESSAGES.VISITOR.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
 
     await this.repo.delete(id);

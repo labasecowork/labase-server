@@ -1,11 +1,9 @@
-// src/modules/employee/features/list_employees/presentation/list_employees.controller.ts
 import { Request, Response } from "express";
 import { ListEmployeesSchema } from "../domain/list_employees.schema";
 import { ListEmployeesService } from "./list_employees.service";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { AppError } from "../../../../../utils/errors";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
+import { AppError } from "../../../../../types/";
 
 export class ListEmployeesController {
   constructor(private readonly svc = new ListEmployeesService()) {}
@@ -15,7 +13,7 @@ export class ListEmployeesController {
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden ver la lista de empleados",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -30,8 +28,8 @@ export class ListEmployeesController {
           HttpStatusCodes.OK.message,
           req.path,
           result,
-          "Lista de empleados",
-        ),
+          "Lista de empleados"
+        )
       );
   }
 }

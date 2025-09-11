@@ -1,7 +1,6 @@
-// src/modules/company/features/delete_company/presentation/delete_company.service.ts
 import { DeleteCompanyRepository } from "../data/delete_company.repository";
 import { DeleteCompanyResponseDTO } from "../domain/delete_company.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class DeleteCompanyService {

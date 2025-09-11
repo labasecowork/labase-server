@@ -1,4 +1,3 @@
-// src/modules/visitor/features/get_visitors/domain/get_visitors.schema.ts
 import { z } from "zod";
 
 const toNumber = (v: unknown, def: number) => {

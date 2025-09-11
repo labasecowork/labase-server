@@ -1,6 +1,5 @@
-//src/modules/content/category/delete_category/presentation/delete_category.service.ts
 import { DeleteCategoryRepository } from "../data/delete_category.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants";
 
 export class DeleteCategoryService {

@@ -1,4 +1,3 @@
-//src/modules/auth/features/login/login_with_email/presentation/login_with_email.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../../middlewares";
 import { LoginController } from "./login_with_email.controller";

@@ -1,4 +1,3 @@
-// src/modules/company/features/create_company/domain/create_company.schema.ts
 import { z } from "zod";
 
 export const CreateCompanySchema = z.object({

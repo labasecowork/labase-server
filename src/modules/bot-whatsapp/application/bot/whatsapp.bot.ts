@@ -1,4 +1,3 @@
-//src/modules/bot-whatsapp/application/bot/whatsapp.bot.ts
 import { ChatbotService } from "../../presentation/services/bot.service";
 
 let started = false;

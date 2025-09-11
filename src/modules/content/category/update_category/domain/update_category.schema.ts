@@ -1,4 +1,3 @@
-//src/modules/content/category/update_category/domain/update_category.schema.ts
 import { z } from "zod";
 
 export const UpdateCategoryParamsSchema = z.object({

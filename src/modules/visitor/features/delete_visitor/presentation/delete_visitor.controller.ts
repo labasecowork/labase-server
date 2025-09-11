@@ -1,9 +1,7 @@
-// src/modules/visitor/features/delete_visitor/presentation/delete_visitor.controller.ts
 import { Response } from "express";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { DeleteVisitorService } from "./delete_visitor.service";
 
 export class DeleteVisitorController {
@@ -16,7 +14,7 @@ export class DeleteVisitorController {
     return res
       .status(HttpStatusCodes.OK.code)
       .json(
-        buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path),
+        buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path)
       );
   }
 }

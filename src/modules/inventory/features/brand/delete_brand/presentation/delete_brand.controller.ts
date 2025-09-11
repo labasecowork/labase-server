@@ -1,9 +1,10 @@
-// src/modules/product/features/brand/delete_brand/presentation/delete_brand.controller.ts
 import { Response } from "express";
 import { DeleteBrandService } from "./delete_brand.service";
-import { getAuthenticatedUser } from "../../../../../../utils/authenticated_user";
-import { buildHttpResponse } from "../../../../../../utils/build_http_response";
-import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
+import {
+  getAuthenticatedUser,
+  buildHttpResponse,
+} from "../../../../../../utils/";
+import { HttpStatusCodes } from "../../../../../../constants";
 import { AuthenticatedRequest } from "../../../../../../middlewares/authenticate_token";
 
 export class DeleteBrandController {
@@ -18,7 +19,7 @@ export class DeleteBrandController {
     return res
       .status(HttpStatusCodes.OK.code)
       .json(
-        buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path),
+        buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path)
       );
   }
 }

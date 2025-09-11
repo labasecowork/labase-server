@@ -1,5 +1,3 @@
-// src/modules/workarea/features/create_workarea/domain/create_workarea.dto.ts
-
 import { z } from "zod";
 import { CreateWorkAreaSchema } from "./create_workarea.schema";
 

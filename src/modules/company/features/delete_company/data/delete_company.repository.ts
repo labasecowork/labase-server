@@ -1,4 +1,3 @@
-// src/modules/company/features/delete_company/data/delete_company.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { CompanyEntity } from "../../../entities/company.entity";
 

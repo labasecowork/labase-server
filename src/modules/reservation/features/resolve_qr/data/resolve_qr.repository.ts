@@ -1,4 +1,3 @@
-// src/modules/reservation/features/resolve_qr/data/resolve_qr.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { reservation_status } from "@prisma/client";
 

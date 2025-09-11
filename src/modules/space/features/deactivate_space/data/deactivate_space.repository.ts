@@ -1,4 +1,3 @@
-// src/modules/space/features/deactivate_space/data/deactivate_space.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class DeactivateSpaceRepository {

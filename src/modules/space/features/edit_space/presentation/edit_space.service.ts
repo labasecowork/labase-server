@@ -1,7 +1,6 @@
-// src/modules/space/features/edit_space/presentation/services/edit_space.service.ts
 import { EditSpaceDTO } from "../domain/edit_space.schema";
 import { EditSpaceRepository } from "../data/edit_space.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { deleteFile } from "../../../../../infrastructure/aws";
 import { SPACE_MESSAGES } from "../../../../../constants/messages/space";

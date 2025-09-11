@@ -1,10 +1,9 @@
-// src/modules/visitor/features/create_visitor/service/create_visitor.service.ts
 import { CreateVisitorRepository } from "../data/create_visitor.repository";
 import { CreateVisitorDTO } from "../domain/create_visitor.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { MESSAGES } from "../../../../../constants/messages";
-import type { CurrentUser } from "../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../utils/";
 
 export class CreateVisitorService {
   constructor(private readonly repo = new CreateVisitorRepository()) {}

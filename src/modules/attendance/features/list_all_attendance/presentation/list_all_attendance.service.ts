@@ -1,4 +1,3 @@
-// src/modules/attendance/features/list_all_attendance/presentation/list_all_attendance.service.ts
 import { formatInTimeZone } from "date-fns-tz";
 import { attendance_type } from "@prisma/client";
 import { ListAllAttendanceDTO } from "../domain/list_all_attendance.dto";

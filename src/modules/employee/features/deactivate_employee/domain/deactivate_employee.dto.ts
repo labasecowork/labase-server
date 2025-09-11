@@ -1,4 +1,3 @@
-// src/modules/employee/features/deactivate_employee/domain/deactivate_employee.dto.ts
 import { z } from "zod";
 import { DeactivateEmployeeParamsSchema } from "./deactivate_employee.schema";
 

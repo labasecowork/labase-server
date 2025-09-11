@@ -1,4 +1,3 @@
-// src/modules/attendance/features/list_all_attendance/domain/list_all_attendance.schema.ts
 import { z } from "zod";
 
 export const ListAllAttendanceSchema = z

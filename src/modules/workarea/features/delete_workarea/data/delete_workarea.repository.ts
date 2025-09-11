@@ -1,4 +1,3 @@
-// src/modules/workarea/features/delete_workarea/data/delete_workarea.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { WorkAreaEntity } from "../../../entities/workarea.entity";
 

@@ -1,4 +1,3 @@
-// src/modules/product/features/brand/delete_brand/presentation/delete_brand.routes.ts
 import { Router } from "express";
 import { DeleteBrandController } from "./delete_brand.controller";
 import { authenticateToken } from "../../../../../../middlewares/authenticate_token";

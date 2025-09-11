@@ -1,9 +1,7 @@
-// src/modules/space/features/create_space/presentation/services/create_space.service.ts
 import { CreateSpaceDTO } from "../domain/create_space.dto";
 import { CreateSpaceRepository } from "../data/create_space.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { SPACE_MESSAGES } from "../../../../../constants/messages/space";
 
 interface CurrentUser {
   id: string;

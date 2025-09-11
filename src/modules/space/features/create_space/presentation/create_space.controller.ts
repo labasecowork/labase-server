@@ -1,13 +1,12 @@
-// src/modules/space/features/create_space/presentation/controllers/create_space.controller.ts
 import { Response } from "express";
 import { CreateSpaceService } from "./create_space.service";
 import { CreateSpaceSchema } from "../domain/create_space.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
+import { getAuthenticatedUser } from "../../../../../utils/";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 import { uploadFile } from "../../../../../infrastructure/aws";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 
 export class CreateSpaceController {
   constructor(private readonly service = new CreateSpaceService()) {}

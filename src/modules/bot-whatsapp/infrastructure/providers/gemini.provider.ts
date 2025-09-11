@@ -1,4 +1,3 @@
-// src/modules/bot-whatsapp/infrastructure/providers/gemini.provider.ts
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { chatbotConfig } from "../../data/config/chatbot.config";
 

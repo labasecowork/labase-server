@@ -1,4 +1,3 @@
-// src/modules/product/features/crud/create_product/domain/create_product.schema.ts
 import { z } from "zod";
 import { unit_of_measure } from "@prisma/client";
 

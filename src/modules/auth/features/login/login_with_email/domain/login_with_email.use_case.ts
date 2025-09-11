@@ -1,8 +1,7 @@
-//src/modules/auth/features/login/login_with_email/domain/login_with_email.use_case.ts
 import { generateToken } from "../../../../../../infrastructure/jwt";
 import { LoginDTO, LoginResponseDTO } from "./login_with_email.dto";
 import { LoginRepository } from "../data/login_with_email.repository";
-import { AppError } from "../../../../../../utils";
+import { AppError } from "../../../../../../types/";
 import { HttpStatusCodes } from "../../../../../../constants";
 import bcrypt from "bcrypt";
 import prisma from "../../../../../../config/prisma_client";

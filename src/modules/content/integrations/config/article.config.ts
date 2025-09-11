@@ -1,4 +1,3 @@
-//src/modules/article/data/config
 export const articleConfig = {
   context: `
   Asume el rol de un experto en comunicación y redacción, especializado en la creación de resúmenes efectivos y concisos que capturan la esencia de un texto para una audiencia ocupada.

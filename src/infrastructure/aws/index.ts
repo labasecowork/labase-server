@@ -1,10 +1,10 @@
-//src/infrastructure/aws/index.ts
 import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
+import type { Multer } from "multer";
 import { getSignedUrl as awsGetSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   AWS_BUCKET_NAME,
@@ -37,7 +37,7 @@ export const getUrl = (key: string) => {
 
 export async function uploadFile(
   file: Express.Multer.File,
-  pathPrefix: string,
+  pathPrefix: string
 ) {
   let fileBody: Buffer | fs.ReadStream;
   let originalFileName: string;

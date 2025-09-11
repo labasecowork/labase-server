@@ -1,4 +1,3 @@
-// src/modules/reservation/features/detail_reservation/presentation/detail_reservation.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";
@@ -34,6 +33,10 @@ const controller = new DetailReservationController();
  *       404:
  *         description: Reserva no encontrada
  */
-router.get("/:id", authenticateToken, asyncHandler(controller.handle.bind(controller)));
+router.get(
+  "/:id",
+  authenticateToken,
+  asyncHandler(controller.handle.bind(controller))
+);
 
 export { router as detailReservationRoutes };

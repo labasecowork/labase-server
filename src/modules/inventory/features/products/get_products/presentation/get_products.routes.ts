@@ -1,4 +1,3 @@
-// src/modules/product/features/get_products/presentation/get_products.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../../middlewares/async_handler";
 import { GetProductsController } from "./get_products.controller";

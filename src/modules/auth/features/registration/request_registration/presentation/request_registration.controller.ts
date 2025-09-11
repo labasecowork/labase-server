@@ -1,10 +1,7 @@
-//src/modules/auth/features/registration/request_reqistration/presentation/request_registration.controller.ts
 import { Request, Response } from "express";
 import { HttpStatusCodes } from "../../../../../../constants";
 import { buildHttpResponse } from "../../../../../../utils";
-import {
-  handleServerError,
-} from "../../../../../../utils/error_handler";
+import { handleServerError } from "../../../../../../utils/error_handler";
 import { RequestRegistrationSchema } from "../domain/request_registration.schema";
 import { RequestRegistrationService } from "./request_registration.service";
 
@@ -20,7 +17,7 @@ export class RequestRegistrationController {
         .status(HttpStatusCodes.OK.code)
         .json(buildHttpResponse(HttpStatusCodes.OK.code, message, req.path));
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return handleServerError(res, req, error);
     }
   }

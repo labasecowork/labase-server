@@ -1,5 +1,3 @@
-// src/modules/reservation/features/list_my_reservations/repository/list_my_reservations.repository.ts
-// src/modules/reservation/features/list_my_reservations/data/list_my_reservations.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { reservation_status } from "@prisma/client";
 

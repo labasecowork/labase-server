@@ -1,10 +1,9 @@
-// src/modules/product/features/brand/create_brand/presentation/services/create_brand.service.ts
 import { CreateBrandDTO } from "../domain/create_brand.dto";
 import { CreateBrandRepository } from "../data/create_brand.repository";
-import { AppError } from "../../../../../../utils/errors";
-import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
+import { AppError } from "../../../../../../types/";
+import { HttpStatusCodes } from "../../../../../../constants";
 import { MESSAGES } from "../../../../../../constants/messages";
-import type { CurrentUser } from "../../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../../utils/";
 
 export class CreateBrandService {
   constructor(private readonly repo = new CreateBrandRepository()) {}
@@ -13,7 +12,7 @@ export class CreateBrandService {
     if (user.role !== "admin") {
       throw new AppError(
         MESSAGES.BRAND.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -22,7 +21,7 @@ export class CreateBrandService {
     if (exists) {
       throw new AppError(
         MESSAGES.BRAND.DUPLICATED_NAME,
-        HttpStatusCodes.CONFLICT.code,
+        HttpStatusCodes.CONFLICT.code
       );
     }
 

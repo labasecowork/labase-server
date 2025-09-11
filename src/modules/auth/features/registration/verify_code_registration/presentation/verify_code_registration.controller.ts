@@ -1,12 +1,6 @@
-//src/modules/auth/features/registration/verify_code_registration/presentation/verify_code_registration.controller.ts
 import { Request, Response } from "express";
-import { ZodError } from "zod";
 import { HttpStatusCodes } from "../../../../../../constants";
-import { AppError, buildHttpResponse } from "../../../../../../utils";
-import {
-  handleServerError,
-  handleZodError,
-} from "../../../../../../utils/error_handler";
+import { buildHttpResponse } from "../../../../../../utils";
 import { VerifyCodeRegistrationSchema } from "../domain/verify_code_registration.schema";
 import { VerifyCodeRegistrationService } from "./verify_code_registration.service";
 

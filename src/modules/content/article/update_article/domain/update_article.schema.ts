@@ -1,4 +1,3 @@
-//src/modules/content/article/update_article/domain/update_article.schema.ts
 import { z } from "zod";
 import { MESSAGES } from "../../../../../constants/messages";
 

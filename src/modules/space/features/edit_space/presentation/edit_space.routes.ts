@@ -1,4 +1,3 @@
-// src/modules/space/features/edit_space/presentation/routes/edit_space.routes.ts
 import { Router } from "express";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";
 import { asyncHandler } from "../../../../../middlewares/async_handler";

@@ -1,11 +1,12 @@
-// src/modules/product/features/create_product/presentation/controllers/create_product.controller.ts
 import { Response } from "express";
 import { CreateProductService } from "./create_product.service";
 import { CreateProductSchema } from "../domain/create_product.schema";
 import { uploadFile } from "../../../../../../infrastructure/aws";
-import { buildHttpResponse } from "../../../../../../utils/build_http_response";
-import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../../utils/authenticated_user";
+import {
+  buildHttpResponse,
+  getAuthenticatedUser,
+} from "../../../../../../utils/";
+import { HttpStatusCodes } from "../../../../../../constants";
 import { AuthenticatedRequest } from "../../../../../../middlewares/authenticate_token";
 
 export class CreateProductController {
@@ -34,8 +35,8 @@ export class CreateProductController {
           quantity: dto.quantity,
           unit_of_measure: dto.unit_of_measure,
           photo_url: imageUrl,
-        },
-      ),
+        }
+      )
     );
   }
 }

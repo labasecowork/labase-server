@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/resend_registration/presentation/resend_registration.service.ts
 import {
   ResendRegistrationDTO,
   ResendRegistrationResponseDTO,

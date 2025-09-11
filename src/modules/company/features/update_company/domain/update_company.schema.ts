@@ -1,4 +1,3 @@
-// src/modules/company/features/update_company/domain/update_company.schema.ts
 import { z } from "zod";
 
 export const UpdateCompanySchema = z.object({

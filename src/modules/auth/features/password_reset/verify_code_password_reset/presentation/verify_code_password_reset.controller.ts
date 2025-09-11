@@ -3,7 +3,6 @@ import { VerifyCodePasswordResetService } from "./verify_code_password_reset.ser
 import { VerifyCodePasswordResetSchema } from "../domain/verify_code_password_reset.schema";
 import { HttpStatusCodes } from "../../../../../../constants";
 import { buildHttpResponse } from "../../../../../../utils";
-import { handleServerError } from "../../../../../../utils/error_handler";
 
 export class VerifyCodePasswordResetController {
   constructor(private readonly service: VerifyCodePasswordResetService) {}

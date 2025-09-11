@@ -1,4 +1,3 @@
-//src/modules/content/article/delete_article/data/delete_article.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class DeleteArticleRepository {

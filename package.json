@@ -1,7 +1,7 @@
 {
   "name": "labase-server",
-  "version": "1.0.0",
-  "description": "Backend Clean Architecture para LaBase",
+  "version": "0.1.0",
+  "description": "Backend for LaBase, a workspace management system that includes reservations, user administration, employees, products, and an AI assistant chatbot.",
   "main": "./dist/index.js",
   "type": "module",
   "scripts": {

@@ -1,9 +1,10 @@
-// src/modules/product/features/brand/edit_brand/presentation/edit_brand.controller.ts
 import { Response } from "express";
 import { EditBrandService } from "./edit_brand.service";
 import { EditBrandSchema } from "../domain/edit_brand.schema";
-import { getAuthenticatedUser } from "../../../../../../utils/authenticated_user";
-import { buildHttpResponse } from "../../../../../../utils/build_http_response";
+import {
+  getAuthenticatedUser,
+  buildHttpResponse,
+} from "../../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../../middlewares/authenticate_token";
 
@@ -25,8 +26,8 @@ export class EditBrandController {
           HttpStatusCodes.OK.code,
           "Brand updated",
           req.path,
-          updated,
-        ),
+          updated
+        )
       );
   }
 }

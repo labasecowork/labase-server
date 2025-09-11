@@ -1,4 +1,3 @@
-//src/modules/content/category/update_category/data/update_category.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class UpdateCategoryRepository {

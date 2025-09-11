@@ -1,4 +1,3 @@
-// src/modules/workarea/features/list_workareas/data/list_workareas.repository.ts
 import { WorkAreaEntity } from "../../../entities/workarea.entity";
 import prisma from "../../../../../config/prisma_client";
 

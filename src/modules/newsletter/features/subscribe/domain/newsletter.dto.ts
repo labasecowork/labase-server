@@ -1,4 +1,3 @@
-//src/modules/waitlist/domain/waitlist.dto.ts
 import { z } from "zod";
 import { MESSAGES } from "../../../../../constants";
 

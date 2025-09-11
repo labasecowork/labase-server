@@ -1,4 +1,3 @@
-// src/modules/payment/features/visa-callback/presentation/visa-callback.route.ts
 import { Router } from "express";
 import express from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
@@ -38,7 +37,7 @@ const ctrl = new VisaCallbackController();
 router.post(
   "/",
   express.urlencoded({ extended: false }),
-  asyncHandler(ctrl.handle.bind(ctrl)),
+  asyncHandler(ctrl.handle.bind(ctrl))
 );
 
 export { router as visaCbRoutes };

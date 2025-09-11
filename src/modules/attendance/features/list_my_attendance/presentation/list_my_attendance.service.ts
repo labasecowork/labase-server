@@ -1,10 +1,8 @@
-// src/modules/attendance/features/list_my_attendance/presentation/list_my_attendance.service.ts
-
 import { ListMyAttendanceDTO } from "../domain/list_my_attendance.dto";
 import { ListMyAttendanceRepository } from "../data/list_my_attendance.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { format, formatInTimeZone, toZonedTime } from "date-fns-tz";
+import { formatInTimeZone } from "date-fns-tz";
 import { TIMEZONE } from "../../../../../config/env";
 
 export class ListMyAttendanceService {

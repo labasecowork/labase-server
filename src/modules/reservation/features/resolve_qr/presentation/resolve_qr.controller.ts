@@ -1,9 +1,11 @@
-// src/modules/reservation/features/resolve_qr/presentation/resolve_qr.controller.ts
 import { Request, Response } from "express";
 import { ResolveQrService } from "./resolve_qr.service";
 import { ResolveQrSchema } from "../domain/resolve_qr.schema";
-import { handleServerError, handleZodError } from "../../../../../utils/error_handler";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import {
+  handleServerError,
+  handleZodError,
+} from "../../../../../utils/error_handler";
+import { buildHttpResponse } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { ZodError } from "zod";
 
@@ -14,9 +16,16 @@ export class ResolveQrController {
     try {
       const dto = ResolveQrSchema.parse(req.body);
       const result = await this.service.execute(dto);
-      return res.status(HttpStatusCodes.OK.code).json(
-        buildHttpResponse(HttpStatusCodes.OK.code, "Reserva encontrada", req.path, result)
-      );
+      return res
+        .status(HttpStatusCodes.OK.code)
+        .json(
+          buildHttpResponse(
+            HttpStatusCodes.OK.code,
+            "Reserva encontrada",
+            req.path,
+            result
+          )
+        );
     } catch (error) {
       if (error instanceof ZodError) {
         const err = handleZodError(error, req);

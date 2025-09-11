@@ -1,11 +1,10 @@
-//src/modules/content/category/update_category/presentation/update_category.controller.ts
 import { Request, Response } from "express";
 import { UpdateCategoryService } from "./update_category.service";
 import {
   UpdateCategoryParamsSchema,
   UpdateCategoryBodySchema,
 } from "../domain/update_category.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants";
 

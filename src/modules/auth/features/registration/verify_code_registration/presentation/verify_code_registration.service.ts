@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/verify_code_registration/presentation/verify_code_registration.service.ts
 import {
   VerifyCodeRegistrationDTO,
   VerifyCodeRegistrationResponseDTO,

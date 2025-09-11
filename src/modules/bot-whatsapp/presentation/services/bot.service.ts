@@ -1,4 +1,3 @@
-// src/modules/bot-whatsapp/presentation/services/bot.service.ts
 import type { Message } from "whatsapp-web.js";
 import { GeminiProvider } from "../../infrastructure/providers/gemini.provider";
 import { WhatsAppProvider } from "../../infrastructure/providers/whatsapp.provider";

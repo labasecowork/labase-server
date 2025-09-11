@@ -1,4 +1,3 @@
-// src/modules/product/features/brand/edit_brand/data/edit_brand.repository.ts
 import prisma from "../../../../../../config/prisma_client";
 
 export class EditBrandRepository {

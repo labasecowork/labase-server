@@ -1,4 +1,3 @@
-// src/modules/workarea/features/delete_workarea/presentation/delete_workarea.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

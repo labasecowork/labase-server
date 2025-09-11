@@ -1,10 +1,10 @@
-// src/modules/newsletter/features/list_subscribe/presentation/list_subscribe.controller.ts
 import { Request, Response } from "express";
 import { ListSubscribeService } from "./list_subscribe.service";
 import { ListSubscribeRepository } from "../data/list_subscribe.repository";
-import { AppError, buildHttpResponse } from "../../../../../utils";
+import { buildHttpResponse } from "../../../../../utils";
 import { HttpStatusCodes } from "../../../../../constants";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
+import { getAuthenticatedUser } from "../../../../../utils/";
+import { AppError } from "../../../../../types/";
 
 const repository = new ListSubscribeRepository();
 const service = new ListSubscribeService(repository);

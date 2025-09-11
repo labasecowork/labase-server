@@ -1,4 +1,3 @@
-// src/modules/visitor/features/delete_visitor/presentation/delete_visitor.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";
@@ -38,7 +37,7 @@ const controller = new DeleteVisitorController();
 router.delete(
   "/:id",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 
 export { router as deleteVisitorRoutes };

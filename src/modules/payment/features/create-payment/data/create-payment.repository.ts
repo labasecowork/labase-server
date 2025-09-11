@@ -1,4 +1,3 @@
-// src/modules/payment/features/create-payment/data/create-payment.repository.ts
 import { reservation } from "@prisma/client";
 import { CreatePaymentDTO } from "../domain/create-payment.dto";
 import { resolvePaymentProvider } from "../../../../../shared/payments/utils/payments.helpers";
@@ -31,7 +30,7 @@ export class CreatePaymentRepository {
 
     const sessionToken = await this.provider.getSessionToken(
       accessToken,
-      sessionRequest,
+      sessionRequest
     );
 
     return {
@@ -52,7 +51,7 @@ export class ReservationRepository {
   }
   async updateStatus(
     id: string,
-    status: reservation["status"],
+    status: reservation["status"]
   ): Promise<reservation> {
     return prisma.reservation.update({
       where: { id },

@@ -1,4 +1,3 @@
-// src/modules/workarea/entities/workarea.entity.ts
 export interface WorkAreaEntity {
   id: string;
   name: string;

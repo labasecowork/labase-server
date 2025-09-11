@@ -1,11 +1,9 @@
-// src/modules/visitor/features/edit_visitor/presentation/edit_visitor.controller.ts
 import { Response } from "express";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { EditVisitorService } from "./edit_visitor.service";
 import { EditVisitorSchema } from "../domain/edit_visitor.schema";
 import type { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 
 export class EditVisitorController {
   constructor(private readonly service = new EditVisitorService()) {}
@@ -19,7 +17,7 @@ export class EditVisitorController {
     return res.status(HttpStatusCodes.OK.code).json(
       buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path, {
         id: result.id,
-      }),
+      })
     );
   }
 }

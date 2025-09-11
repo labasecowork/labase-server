@@ -1,10 +1,8 @@
-// src/modules/employee/features/deactivate_employee/presentation/deactivate_employee.controller.ts
 import { Response } from "express";
 import { DeactivateEmployeeService } from "./deactivate_employee.service";
 import { DeactivateEmployeeParamsSchema } from "../domain/deactivate_employee.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
-import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
+import { HttpStatusCodes } from "../../../../../constants";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class DeactivateEmployeeController {
@@ -25,7 +23,7 @@ export class DeactivateEmployeeController {
       buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path, {
         employee_id: result.employee_id,
         user: result.user,
-      }),
+      })
     );
   }
 }

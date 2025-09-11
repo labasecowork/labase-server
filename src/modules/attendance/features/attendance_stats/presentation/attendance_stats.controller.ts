@@ -1,11 +1,9 @@
-// src/modules/attendance/features/attendance_stats/presentation/attendance_stats.controller.ts
 import { Response, Request } from "express";
 import { AttendanceStatsSchema } from "../domain/attendance_stats.schema";
 import { AttendanceStatsService } from "./attendance_stats.service";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 
 export class AttendanceStatsController {
   constructor(private readonly svc = new AttendanceStatsService()) {}

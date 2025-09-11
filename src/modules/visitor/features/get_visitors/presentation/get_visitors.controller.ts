@@ -1,6 +1,5 @@
-// src/modules/visitor/features/get_visitors/presentation/get_visitors.controller.ts
 import { Response } from "express";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/http_response";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { GetVisitorsService } from "./get_visitors.service";
 import {

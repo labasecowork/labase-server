@@ -1,9 +1,7 @@
-// src/modules/reservation/features/cancel_reservation/presentation/cancel_reservation.controller.ts
 import { Response } from "express";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { CancelReservationService } from "./cancel_reservation.service";
 import { CancelReservationParamsSchema } from "../domain/cancel_reservation.schema";
 
@@ -23,8 +21,8 @@ export class CancelReservationController {
           HttpStatusCodes.OK.code,
           result.message,
           req.path,
-          result,
-        ),
+          result
+        )
       );
   }
 }

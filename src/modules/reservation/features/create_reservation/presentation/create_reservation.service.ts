@@ -1,4 +1,3 @@
-// src/modules/reservation/features/create_reservation/presentation/create_reservation.service.ts
 import {
   differenceInHours,
   differenceInDays,
@@ -7,13 +6,13 @@ import {
 } from "date-fns";
 import { CreateReservationDTO } from "../domain/create_reservation.dto";
 import { CreateReservationRepository } from "../data/create_reservation.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { RESERVATION_MESSAGES } from "../../../../../constants/messages/reservation";
-import { generateQrCode } from "../../../../../utils/generate_qr_code";
+import { generateQrCode } from "../../../../../utils/qr_code";
 import { io } from "../../../../../config/socket";
 import { reservation } from "@prisma/client";
-import type { CurrentUser } from "../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../utils/";
 
 function generatePurchaseNumber(): string {
   const ts = Date.now().toString(); // 13 dígitos
@@ -30,7 +29,7 @@ export class CreateReservationService {
     if (user.role === "employee") {
       throw new AppError(
         "USER_TYPE_NOT_ALLOWED",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -38,28 +37,28 @@ export class CreateReservationService {
     if (!space || space.disabled) {
       throw new AppError(
         RESERVATION_MESSAGES.SPACE_NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 
     if (dto.people < space.capacity_min || dto.people > space.capacity_max) {
       throw new AppError(
         RESERVATION_MESSAGES.CAPACITY_OUT_OF_RANGE,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
     if (dto.full_room && !space.allow_full_room) {
       throw new AppError(
         RESERVATION_MESSAGES.FULL_ROOM_FORBIDDEN,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
     if (!dto.full_room && !space.allow_by_unit && space.type === "unit") {
       throw new AppError(
         RESERVATION_MESSAGES.UNIT_BOOKING_FORBIDDEN,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 
@@ -67,24 +66,24 @@ export class CreateReservationService {
       const overlap = await this.repo.findOverlaps(
         dto.space_id,
         dto.start_time,
-        dto.end_time,
+        dto.end_time
       );
       if (overlap) {
         throw new AppError(
           RESERVATION_MESSAGES.TIME_OVERLAP,
-          HttpStatusCodes.CONFLICT.code,
+          HttpStatusCodes.CONFLICT.code
         );
       }
     } else {
       const booked = await this.repo.sumPeople(
         dto.space_id,
         dto.start_time,
-        dto.end_time,
+        dto.end_time
       );
       if (booked + dto.people > space.capacity_max) {
         throw new AppError(
           RESERVATION_MESSAGES.NO_CAPACITY_LEFT,
-          HttpStatusCodes.CONFLICT.code,
+          HttpStatusCodes.CONFLICT.code
         );
       }
     }
@@ -124,7 +123,7 @@ export class CreateReservationService {
     } else {
       throw new AppError(
         RESERVATION_MESSAGES.PRICE_NOT_DEFINED,
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 

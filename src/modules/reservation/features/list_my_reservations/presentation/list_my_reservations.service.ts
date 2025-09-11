@@ -1,4 +1,3 @@
-// src/modules/reservation/features/list_my_reservations/presentation/services/list_my_reservations.service.ts
 import { ListMyReservationsRepository } from "../data/list_my_reservations.repository";
 
 export class ListMyReservationsService {

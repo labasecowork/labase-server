@@ -1,11 +1,8 @@
-// src/modules/employee/features/create_employee/presentation/create_employee.controller.ts
 import { Response } from "express";
 import { CreateEmployeeService } from "./create_employee.service";
 import { CreateEmployeeSchema } from "../domain/create_employee.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
-
-import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
+import { HttpStatusCodes } from "../../../../../constants";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class CreateEmployeeController {
@@ -30,8 +27,8 @@ export class CreateEmployeeController {
         {
           employee_id: result.employee_id,
           user: result.user,
-        },
-      ),
+        }
+      )
     );
   }
 }

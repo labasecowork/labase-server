@@ -1,10 +1,9 @@
-// src/modules/company/features/create_company/presentation/create_company.service.ts
 import { CreateCompanyRepository } from "../data/create_company.repository";
 import {
   CreateCompanyDTO,
   CreateCompanyResponseDTO,
 } from "../domain/create_company.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class CreateCompanyService {

@@ -1,4 +1,3 @@
-// src/modules/payment/features/get-payment-result/presentation/get-payment-result.route.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

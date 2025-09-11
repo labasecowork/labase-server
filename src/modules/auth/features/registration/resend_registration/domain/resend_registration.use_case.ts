@@ -1,12 +1,11 @@
-//src/modules/auth/features/registration/resend_registration/domain/resend_registration.use_case.ts
 import { generateVerificationCode } from "../../../../../../infrastructure/jwt";
-import { sendEmail } from "../../../../../../utils/email_sender";
+import { sendEmail } from "../../../../../../utils/";
 import {
   ResendRegistrationDTO,
   ResendRegistrationResponseDTO,
 } from "./resend_registration.dto";
 import { ResendRegistrationRepository } from "../data/resend_registration.repository";
-import { AppError } from "../../../../../../utils";
+import { AppError } from "../../../../../../types/";
 import { HttpStatusCodes } from "../../../../../../constants";
 import path from "path";
 import ejs from "ejs";

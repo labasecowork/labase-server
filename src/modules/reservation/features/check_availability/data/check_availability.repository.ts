@@ -1,4 +1,3 @@
-// src/modules/reservation/features/check_availability/data/check_availability.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { reservation_status } from "@prisma/client";
 
@@ -22,7 +21,7 @@ export class CheckAvailabilityRepository {
     space_id: string,
     start: Date,
     end: Date,
-    statuses: reservation_status[],
+    statuses: reservation_status[]
   ) {
     return prisma.reservation.findFirst({
       where: {
@@ -40,7 +39,7 @@ export class CheckAvailabilityRepository {
     space_id: string,
     start: Date,
     end: Date,
-    statuses: reservation_status[],
+    statuses: reservation_status[]
   ): Promise<number> {
     const agg = await prisma.reservation.aggregate({
       _sum: { people: true },

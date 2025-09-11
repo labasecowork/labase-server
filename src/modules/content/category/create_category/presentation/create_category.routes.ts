@@ -1,4 +1,3 @@
-//src/modules/content/category/create_category/presentation/create_category.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { CreateCategoryController } from "./create_category.controller";

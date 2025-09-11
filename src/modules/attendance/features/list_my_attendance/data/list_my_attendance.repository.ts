@@ -1,4 +1,3 @@
-// src/modules/attendance/features/list_my_attendance/data/list_my_attendance.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { attendance_type } from "@prisma/client";
 

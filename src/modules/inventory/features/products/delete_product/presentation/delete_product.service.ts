@@ -1,10 +1,9 @@
-// src/modules/product/features/delete_product/presentation/delete_product.service.ts
 import { DeleteProductRepository } from "../data/delete_product.repository";
-import { AppError } from "../../../../../../utils/errors";
+import { AppError } from "../../../../../../types/";
 import { MESSAGES } from "../../../../../../constants/messages";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { deleteFile } from "../../../../../../infrastructure/aws";
-import type { CurrentUser } from "../../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../../utils/";
 
 export class DeleteProductService {
   constructor(private readonly repo = new DeleteProductRepository()) {}
@@ -13,7 +12,7 @@ export class DeleteProductService {
     if (user.role !== "admin") {
       throw new AppError(
         MESSAGES.PRODUCT.FORBIDDEN,
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -21,7 +20,7 @@ export class DeleteProductService {
     if (!existing) {
       throw new AppError(
         MESSAGES.PRODUCT.NOT_FOUND,
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 

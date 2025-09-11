@@ -1,4 +1,3 @@
-// src/modules/product/features/brand/get_brand/presentation/get_brand.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../../middlewares/async_handler";
 import { GetBrandController } from "./get_brand.controller";

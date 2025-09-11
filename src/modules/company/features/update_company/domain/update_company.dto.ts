@@ -1,5 +1,3 @@
-// src/modules/company/features/update_company/domain/update_company.dto.ts
-
 import { z } from "zod";
 import {
   UpdateCompanySchema,

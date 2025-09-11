@@ -1,4 +1,3 @@
-//src/modules/content/category/update_category/presentation/update_category.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { UpdateCategoryController } from "./update_category.controller";

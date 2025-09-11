@@ -1,4 +1,3 @@
-// src/modules/product/feature/edit_product/presentation/edit_product.routes.ts
 import { Router } from "express";
 import multer from "multer";
 import { authenticateToken } from "../../../../../../middlewares/authenticate_token";
@@ -57,7 +56,7 @@ router.put(
   "/:id",
   authenticateToken,
   upload.array("images", 1),
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 
 export { router as editProductRoutes };

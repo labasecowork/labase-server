@@ -1,4 +1,3 @@
-//src/modules/content/article/get_article/data/get_article.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class GetArticleRepository {

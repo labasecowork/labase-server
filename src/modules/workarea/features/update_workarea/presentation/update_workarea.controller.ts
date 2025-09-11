@@ -1,13 +1,11 @@
-// src/modules/workarea/features/update_workarea/presentation/update_workarea.controller.ts
 import { Response } from "express";
 import { UpdateWorkAreaService } from "./update_workarea.service";
 import {
   UpdateWorkAreaSchema,
   UpdateWorkAreaParamsSchema,
 } from "../domain/update_workarea.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class UpdateWorkAreaController {

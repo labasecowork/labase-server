@@ -1,4 +1,3 @@
-// src/modules/space/features/list_spaces/list_activated_spaces/presentation/routes/list_activated_spaces.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { ListSpacesController } from "./list_spaces.controller";

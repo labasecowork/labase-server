@@ -1,4 +1,3 @@
-// src/modules/product/features/create_product/data/create_product.repository.ts
 import prisma from "../../../../../../config/prisma_client";
 
 export type FindManyParams = {

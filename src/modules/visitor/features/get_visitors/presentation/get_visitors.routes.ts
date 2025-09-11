@@ -1,4 +1,3 @@
-// src/modules/visitor/features/get_visitors/presentation/get_visitors.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { GetVisitorsController } from "./get_visitors.controller";

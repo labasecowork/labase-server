@@ -1,7 +1,6 @@
-//src/modules/content/article/get_article/presentation/get_article.service.ts
 import { GetArticleRepository } from "../data/get_article.repository";
-import { Pagination } from "../../../../../utils/pagination";
-import { AppError } from "../../../../../utils/errors";
+import { buildPaginationMeta, getPaginationParams } from "../../../../../utils";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants";
 import { MESSAGES } from "../../../../../constants/messages";
 
@@ -9,7 +8,7 @@ export class GetArticleService {
   constructor(private readonly repo = new GetArticleRepository()) {}
 
   async list(query: any) {
-    const { page, limit, skip } = Pagination.getPaginationParams(query);
+    const { page, limit, skip } = getPaginationParams(query);
     const [rows, total] = await Promise.all([
       this.repo.findMany(skip, limit),
       this.repo.count(),
@@ -17,7 +16,7 @@ export class GetArticleService {
 
     return {
       data: rows,
-      meta: Pagination.buildPaginationMeta(total, page, limit),
+      meta: buildPaginationMeta(total, page, limit),
     };
   }
 

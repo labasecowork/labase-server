@@ -1,4 +1,3 @@
-// src/modules/visitor/features/create_visitor/domain/create_visitor.schema.ts
 import { z } from "zod";
 
 const onlyDigits = (len: number, field: string) =>

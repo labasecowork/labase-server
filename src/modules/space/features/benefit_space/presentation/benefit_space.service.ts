@@ -1,10 +1,8 @@
-// src/modules/space/features/benefit/presentation/services/benefit_space.service.ts
 import { BenefitRepository } from "../data/benefit_space.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { CreateBenefitDTO } from "../domain/benefit_space.dto";
 import { UpdateBenefitDTO } from "../domain/benefit_space.dto";
-
 
 export class BenefitService {
   constructor(private readonly repo = new BenefitRepository()) {}
@@ -14,9 +12,11 @@ export class BenefitService {
   }
 
   async create(dto: CreateBenefitDTO) {
-    const exists = await this.repo.list().then((list) =>
-      list.find((b) => b.name.toLowerCase() === dto.name.toLowerCase())
-    );
+    const exists = await this.repo
+      .list()
+      .then((list) =>
+        list.find((b) => b.name.toLowerCase() === dto.name.toLowerCase())
+      );
 
     if (exists) {
       throw new AppError(
@@ -31,10 +31,7 @@ export class BenefitService {
   async update(id: string, dto: UpdateBenefitDTO) {
     const benefit = await this.repo.findById(id);
     if (!benefit) {
-      throw new AppError(
-        "BENEFIT_NOT_FOUND",
-        HttpStatusCodes.NOT_FOUND.code
-      );
+      throw new AppError("BENEFIT_NOT_FOUND", HttpStatusCodes.NOT_FOUND.code);
     }
 
     return this.repo.update(id, dto);

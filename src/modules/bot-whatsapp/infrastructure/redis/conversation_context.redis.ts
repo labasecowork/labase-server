@@ -1,4 +1,3 @@
-//src/modules/bot-whatsapp/infraestructure/redis/conversation_context.redis.ts
 import { redisClient } from "../../../../config/redis";
 
 export type ConversationState = {

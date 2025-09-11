@@ -1,10 +1,9 @@
-// src/modules/workarea/features/create_workarea/presentation/create_workarea.service.ts
 import { CreateWorkAreaRepository } from "../data/create_workarea.repository";
 import {
   CreateWorkAreaDTO,
   CreateWorkAreaResponseDTO,
 } from "../domain/create_workarea.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class CreateWorkAreaService {

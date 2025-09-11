@@ -1,4 +1,3 @@
-// src/modules/workarea/features/update_workarea/presentation/update_workarea.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

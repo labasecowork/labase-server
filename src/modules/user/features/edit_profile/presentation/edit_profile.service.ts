@@ -1,10 +1,9 @@
-// src/modules/user/features/edit_profile/service/edit_profile.service.ts
 import bcrypt from "bcrypt";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { EditProfileDTO } from "../domain/edit_profile.dto";
 import { EditProfileRepository } from "../data/edit_profile.repository";
-import { CurrentUser } from "../../../../../utils/authenticated_user";
+import { CurrentUser } from "../../../../../utils/";
 
 export class EditProfileService {
   constructor(private readonly repo = new EditProfileRepository()) {}
@@ -15,7 +14,7 @@ export class EditProfileService {
       if (dbUser.status !== "active") {
         throw new AppError(
           "Inactive users cannot edit profile",
-          HttpStatusCodes.FORBIDDEN.code,
+          HttpStatusCodes.FORBIDDEN.code
         );
       }
     }

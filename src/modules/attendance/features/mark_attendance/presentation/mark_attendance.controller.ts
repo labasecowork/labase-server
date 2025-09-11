@@ -1,10 +1,8 @@
-// src/modules/attendance/features/mark_attendance/presentation/mark_attendance.controller.ts
 import { Response } from "express";
 import { MarkAttendanceService } from "./mark_attendance.service";
 import { MarkAttendanceSchema } from "../domain/mark_attendance.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class MarkAttendanceController {
@@ -32,8 +30,8 @@ export class MarkAttendanceController {
           date: result.date,
           check_time: result.check_time,
           user: authUser,
-        },
-      ),
+        }
+      )
     );
   }
 }

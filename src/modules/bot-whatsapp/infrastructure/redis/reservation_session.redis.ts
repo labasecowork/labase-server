@@ -1,4 +1,3 @@
-//src/modules/bot-whatsapp/infraestructure/redis/reservation_session.redis.ts
 import { redisClient } from "../../../../config/redis";
 import type { ReservationLead } from "../../domain/reservation_lead.schema";
 

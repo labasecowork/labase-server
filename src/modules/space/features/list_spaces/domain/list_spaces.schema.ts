@@ -1,4 +1,3 @@
-// src/modules/space/features/list_spaces/domain/list_spaces.schema.ts
 import { z } from "zod";
 
 export const ListSpacesSchema = z.object({

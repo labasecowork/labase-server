@@ -1,10 +1,9 @@
-// src/modules/company/features/list_companies/presentation/list_companies.service.ts
 import { ListCompaniesRepository } from "../data/list_companies.repository";
 import {
   ListCompaniesDTO,
   ListCompaniesResponseDTO,
 } from "../domain/list_companies.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class ListCompaniesService {

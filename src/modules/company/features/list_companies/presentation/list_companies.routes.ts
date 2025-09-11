@@ -1,4 +1,3 @@
-// src/modules/company/features/list_companies/presentation/list_companies.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

@@ -1,4 +1,3 @@
-// src/modules/employee/features/update_employee/data/update_employee.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { user_type, user_status, $Enums } from "@prisma/client";
 

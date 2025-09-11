@@ -1,4 +1,3 @@
-// src/modules/space/features/deactivate_space/presentation/deactivate_space.routes.ts
 import { Router } from "express";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";
 import { asyncHandler } from "../../../../../middlewares/async_handler";

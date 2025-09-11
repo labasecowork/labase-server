@@ -1,4 +1,4 @@
-import { CurrentUser } from "../../../../../utils/authenticated_user";
+import { CurrentUser } from "../../../../../utils/";
 import { GetProfileRepository } from "../data/get_profile.repository";
 import { GetProfileResponseDto } from "../domain/get_profile.dto";
 

@@ -1,4 +1,3 @@
-// src/modules/product/index.ts
 import { Router } from "express";
 import { createProductRoutes } from "./features/products/create_product";
 import { editProductRoutes } from "./features/products/edit_product";

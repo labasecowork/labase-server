@@ -1,4 +1,3 @@
-// normalizacion de la hora
 export function parseTimeLoose(input: string): string | null {
   const t = input.trim().toLowerCase();
 
@@ -23,7 +22,6 @@ export function parseTimeLoose(input: string): string | null {
   return null;
 }
 
-// normalizacion de la fecha
 export function parseDateLoose(input: string): string | null {
   const t = input.trim();
   // YYYY-M-D
@@ -45,7 +43,6 @@ export function parseDateLoose(input: string): string | null {
   return null;
 }
 
-// Similitud muy barata (distancia de Levenshtein <=1 o contains)
 export function fuzzySpace(input: string, candidates: string[]): string | null {
   const t = input.toLowerCase().trim();
   for (const c of candidates) {

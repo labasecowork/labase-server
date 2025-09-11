@@ -1,4 +1,3 @@
-//src/modules/newsletter/features/list_subscribe/presentation/list_subscribe.routes.ts
 import { Router } from "express";
 import { ListSubscribeController } from "./list_subscribe.controller";
 import { asyncHandler, authenticateToken } from "../../../../../middlewares";

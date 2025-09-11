@@ -1,4 +1,3 @@
-// src/modules/reservation/features/resolve_qr/domain/resolve_qr.schema.ts
 import { z } from "zod";
 
 export const ResolveQrSchema = z.object({

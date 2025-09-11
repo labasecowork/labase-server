@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/resend_registration/presentation/resend_registration.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../../middlewares";
 import { ResendRegistrationService } from "./resend_registration.service";

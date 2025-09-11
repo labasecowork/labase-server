@@ -1,4 +1,3 @@
-//src/config/env/index.ts
 import { config } from "dotenv";
 
 config();

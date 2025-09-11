@@ -1,4 +1,3 @@
-// src/modules/reservation/features/cancel_reservation/domain/dtos/cancel_reservation.dto.ts
 import { z } from "zod";
 import {
   CancelReservationParamsSchema,

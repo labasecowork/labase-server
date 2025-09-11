@@ -1,6 +1,5 @@
-// src/modules/space/features/detail_space/presentation/services/detail_space.service.ts
 import { DetailSpaceRepository } from "../data/detail_space.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class DetailSpaceService {

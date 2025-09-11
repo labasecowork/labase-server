@@ -1,4 +1,3 @@
-// src/modules/user/features/list_users/data/list_users.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class ListUsersRepository {

@@ -1,9 +1,9 @@
-//src/modules/newsletter/features/subcribe/presentation/newsletter.service.ts
 import { SubscribeNewsletterDTO } from "../domain/newsletter.dto";
-import { sendEmail } from "../../../../../utils/email_sender";
+import { sendEmail } from "../../../../../utils/";
 import { SubscribeNewsletterRepository } from "../data/newsletter.repository";
-import { AppError } from "../../../../../utils";
-import { MESSAGES, HttpStatusCodes } from "../../../../../constants";
+import { AppError } from "../../../../../types/";
+import { MESSAGES } from "../../../../../constants";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import path from "path";
 import ejs from "ejs";
 import { resolveImagePath } from "../../../../../utils/path";

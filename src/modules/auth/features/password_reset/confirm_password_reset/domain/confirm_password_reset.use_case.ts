@@ -1,5 +1,5 @@
 import { HttpStatusCodes } from "../../../../../../constants";
-import { AppError } from "../../../../../../utils";
+import { AppError } from "../../../../../../types/";
 import { ConfirmPasswordResetRepository } from "../data/confirm_password_reset.repository";
 import {
   ConfirmPasswordResetDTO,

@@ -1,4 +1,3 @@
-// src/modules/space/features/edit_space/data/edit_space.repository.ts
 import { Prisma } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 

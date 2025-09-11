@@ -1,4 +1,3 @@
-// src/modules/employee/features/activate_employee/domain/activate_employee.schema.ts
 import { z } from "zod";
 
 export const ActivateEmployeeParamsSchema = z.object({

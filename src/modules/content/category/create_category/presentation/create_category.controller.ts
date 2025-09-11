@@ -1,8 +1,7 @@
-//src/modules/content/category/create_category/presentation/create_category.controller.ts
 import { Request, Response } from "express";
 import { CreateCategoryService } from "./create_category.service";
 import { CreateCategorySchema } from "../domain/create_category.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants";
 

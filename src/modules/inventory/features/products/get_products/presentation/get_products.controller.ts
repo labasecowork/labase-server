@@ -1,6 +1,5 @@
-// src/modules/product/features/get_products/presentation/get_products.controller.ts
 import { Response } from "express";
-import { buildHttpResponse } from "../../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { GetProductsService } from "./get_products.service";
 import {
@@ -24,8 +23,8 @@ export class GetProductsController {
           HttpStatusCodes.OK.code,
           "Lista de productos",
           req.path,
-          data,
-        ),
+          data
+        )
       );
   }
 
@@ -41,8 +40,8 @@ export class GetProductsController {
           HttpStatusCodes.OK.code,
           "Detalle del producto",
           req.path,
-          data,
-        ),
+          data
+        )
       );
   }
 }

@@ -1,4 +1,3 @@
-// src/modules/product/features/brand/get_brand/data/get_brand.repository.ts
 import prisma from "../../../../../../config/prisma_client";
 
 export class GetBrandRepository {

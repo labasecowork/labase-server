@@ -1,6 +1,5 @@
-// src/modules/employee/features/deactivate_employee/presentation/deactivate_employee.service.ts
 import { DeactivateEmployeeRepository } from "../data/deactivate_employee.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 interface CurrentUser {
@@ -15,7 +14,7 @@ export class DeactivateEmployeeService {
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden desactivar empleados",
-        HttpStatusCodes.FORBIDDEN.code,
+        HttpStatusCodes.FORBIDDEN.code
       );
     }
 
@@ -23,14 +22,14 @@ export class DeactivateEmployeeService {
     if (!employee) {
       throw new AppError(
         "Empleado no encontrado",
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 
     if (employee.user.status === "suspended") {
       throw new AppError(
         "El empleado ya está desactivado",
-        HttpStatusCodes.BAD_REQUEST.code,
+        HttpStatusCodes.BAD_REQUEST.code
       );
     }
 

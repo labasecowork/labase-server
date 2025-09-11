@@ -1,10 +1,7 @@
-//src/modules/auth/features/registration/resend_registration/presentation/resend_registration.controller.ts
 import { Request, Response } from "express";
 import { HttpStatusCodes } from "../../../../../../constants";
 import { buildHttpResponse } from "../../../../../../utils";
-import {
-  handleServerError,
-} from "../../../../../../utils/error_handler";
+import { handleServerError } from "../../../../../../utils/error_handler";
 import { ResendRegistrationSchema } from "../domain/resend_registration.schema";
 import { ResendRegistrationService } from "./resend_registration.service";
 

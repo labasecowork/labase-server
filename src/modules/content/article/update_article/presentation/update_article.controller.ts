@@ -1,14 +1,13 @@
-//src/modules/content/article/update_article/presentation/update_article.controller.ts
 import { Request, Response } from "express";
 import { UpdateArticleService } from "./update_article.service";
 import {
   UpdateArticleParamsSchema,
   UpdateArticleBodySchema,
 } from "../domain/update_article.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 
 interface AuthReq extends Request {
   user?: { id: string };

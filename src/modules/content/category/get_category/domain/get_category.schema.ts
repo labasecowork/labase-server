@@ -1,4 +1,3 @@
-//src/modules/content/category/get_category/domain/get_category.schema.ts
 import { z } from "zod";
 
 export const GetCategoryByIdSchema = z.object({

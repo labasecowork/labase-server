@@ -1,4 +1,3 @@
-// src/modules/company/features/update_company/data/update_company.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { UpdateCompanyDTO } from "../domain/update_company.dto";
 import { CompanyEntity } from "../../../entities/company.entity";

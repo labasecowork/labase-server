@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/request_reqistration/presentation/request_registration.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../../middlewares";
 import { RequestRegistrationController } from "./request_registration.controller";

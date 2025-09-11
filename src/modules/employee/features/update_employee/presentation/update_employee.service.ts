@@ -1,8 +1,7 @@
-// src/modules/employee/features/update_employee/presentation/update_employee.service.ts
 import { UpdateEmployeeBodyDTO } from "../domain/update_employee.dto";
 import { UpdateEmployeeRepository } from "../data/update_employee.repository";
-import { AppError } from "../../../../../utils/errors";
-import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
+import { AppError } from "../../../../../types/";
+import { HttpStatusCodes } from "../../../../../constants";
 import bcrypt from "bcrypt";
 
 interface CurrentUser {

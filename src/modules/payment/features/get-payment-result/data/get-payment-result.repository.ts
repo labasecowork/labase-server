@@ -1,10 +1,9 @@
-// src/modules/payment/features/get-payment-result/data/get-payment-result.repository.ts
 import { payment_transaction } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
 export class GetPaymentResultRepository {
   async findByPurchaseNumber(
-    purchase_number: string,
+    purchase_number: string
   ): Promise<payment_transaction | null> {
     return prisma.payment_transaction.findUnique({
       where: { purchase_number },

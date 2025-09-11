@@ -1,4 +1,3 @@
-//src/modules/auth/features/login/login_with_email/data/login_with_email.repository.ts
 import { User } from "../../../../domain/user.entity";
 import prisma from "../../../../../../config/prisma_client";
 
@@ -31,7 +30,7 @@ export class LoginRepositoryImpl implements LoginRepository {
           userData.password,
           userData.status,
           userData.creation_timestamp ?? undefined,
-          userData.user_type,
+          userData.user_type
         )
       : null;
   }

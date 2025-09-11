@@ -1,10 +1,9 @@
-// src/modules/attendance/features/mark_attendance/presentation/mark_attendance.service.ts
 import { MarkAttendanceDTO } from "../domain/mark_attendance.dto";
 import { MarkAttendanceRepository } from "../data/mark_attendance.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { isAfter, isSameDay, format } from "date-fns";
-import type { CurrentUser } from "../../../../../utils/authenticated_user";
+import type { CurrentUser } from "../../../../../utils/";
 import { formatInTimeZone } from "date-fns-tz";
 import { TIMEZONE } from "../../../../../config/env";
 

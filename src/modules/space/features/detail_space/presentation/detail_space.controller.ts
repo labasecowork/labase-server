@@ -1,7 +1,6 @@
-// src/modules/space/features/detail_space/presentation/controllers/detail_space.controller.ts
 import { Response } from "express";
 import { DetailSpaceService } from "./detail_space.service";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 

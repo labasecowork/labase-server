@@ -1,4 +1,3 @@
-// src/modules/workarea/features/update_workarea/data/update_workarea.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { UpdateWorkAreaDTO } from "../domain/update_workarea.dto";
 import { WorkAreaEntity } from "../../../entities/workarea.entity";
@@ -45,7 +44,7 @@ export class UpdateWorkAreaRepository {
 
   async checkIfNameExistsExcludingId(
     name: string,
-    excludeId: string,
+    excludeId: string
   ): Promise<boolean> {
     const existingWorkArea = await prisma.work_areas.findFirst({
       where: {

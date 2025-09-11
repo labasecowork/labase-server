@@ -1,8 +1,6 @@
-// src/modules/reservation/features/detail_reservation/presentation/detail_reservation.controller.ts
 import { Response } from "express";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 import { DetailReservationService } from "./detail_reservation.service";
 
@@ -15,8 +13,15 @@ export class DetailReservationController {
 
     const data = await this.service.execute(user, reservationId);
 
-    return res.status(HttpStatusCodes.OK.code).json(
-      buildHttpResponse(HttpStatusCodes.OK.code, "Reservation detail", req.path, data)
-    );
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          "Reservation detail",
+          req.path,
+          data
+        )
+      );
   }
 }

@@ -1,7 +1,6 @@
-// src/modules/product/features/brand/get_brand/presentation/get_brand.controller.ts
 import { Response } from "express";
-import { buildHttpResponse } from "../../../../../../utils/build_http_response";
-import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
+import { buildHttpResponse } from "../../../../../../utils/";
+import { HttpStatusCodes } from "../../../../../../constants";
 import { GetBrandService } from "./get_brand.service";
 import { GetBrandQuerySchema } from "../domain/get_brand.schema";
 import type { AuthenticatedRequest } from "../../../../../../middlewares/authenticate_token";

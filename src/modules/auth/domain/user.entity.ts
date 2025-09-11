@@ -1,4 +1,3 @@
-//src/modules/auth/domain/user.entity.ts
 export class User {
   constructor(
     public id: string,

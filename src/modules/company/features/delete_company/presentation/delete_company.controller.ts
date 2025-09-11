@@ -1,10 +1,8 @@
-// src/modules/company/features/delete_company/presentation/delete_company.controller.ts
 import { Response } from "express";
 import { DeleteCompanyService } from "./delete_company.service";
 import { DeleteCompanyParamsSchema } from "../domain/delete_company.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class DeleteCompanyController {

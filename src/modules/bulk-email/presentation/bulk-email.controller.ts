@@ -1,4 +1,3 @@
-// src/modules/bulk-email/presentation/bulk-email.controller.ts
 import { Response } from "express";
 import { EmailService } from "./bulk-email.service";
 import { BulkEmailSchema } from "../domain/bulk-email.dto";
@@ -9,7 +8,7 @@ import {
 import { ZodError } from "zod";
 import { HttpStatusCodes } from "../../../constants";
 import { buildHttpResponse } from "../../../utils";
-import { getAuthenticatedUser } from "../../../utils/authenticated_user";
+import { getAuthenticatedUser } from "../../../utils/";
 import { AuthenticatedRequest } from "../../../middlewares/authenticate_token";
 
 export class EmailController {

@@ -1,4 +1,3 @@
-//src/utils/encryption/index.ts
 import crypto from "crypto";
 import { JWT_SECRET } from "../../config/env";
 

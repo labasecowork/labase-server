@@ -1,4 +1,4 @@
-import { sendEmail } from "../../../utils/email_sender";
+import { sendEmail } from "../../../utils/";
 import { inquiryDTO } from "../domain/inquiry.dto";
 import { EMAIL_USER } from "../../../config/env";
 import path from "path";

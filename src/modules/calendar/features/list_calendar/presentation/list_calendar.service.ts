@@ -1,7 +1,6 @@
-// src/modules/calendar/features/list_calendar/presentation/list_calendar.service.ts
 import { ListCalendarDTO } from "../domain/list_calendar.schema";
 import { ListCalendarRepository } from "../data/list_calendar.repository";
-import { CurrentUser } from "../../../../../utils/authenticated_user";
+import { CurrentUser } from "../../../../../utils/";
 
 export class ListCalendarService {
   constructor(private readonly repo = new ListCalendarRepository()) {}

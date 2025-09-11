@@ -1,10 +1,11 @@
-// src/modules/product/features/brand/create_brand/presentation/controllers/create_brand.controller.ts
 import { Response } from "express";
 import { CreateBrandService } from "./create_brand.service";
 import { CreateBrandSchema } from "../domain/create_brand.schema";
-import { buildHttpResponse } from "../../../../../../utils/build_http_response";
-import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../../utils/authenticated_user";
+import {
+  buildHttpResponse,
+  getAuthenticatedUser,
+} from "../../../../../../utils/";
+import { HttpStatusCodes } from "../../../../../../constants";
 import { AuthenticatedRequest } from "../../../../../../middlewares/authenticate_token";
 
 export class CreateBrandController {
@@ -24,8 +25,8 @@ export class CreateBrandController {
         {
           id: result.brand_id,
           name: dto.name,
-        },
-      ),
+        }
+      )
     );
   }
 }

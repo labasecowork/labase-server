@@ -1,10 +1,8 @@
-// src/modules/attendance/features/list_my_attendance/presentation/list_my_attendance.controller.ts
 import { Response } from "express";
 import { ListMyAttendanceService } from "./list_my_attendance.service";
 import { ListMyAttendanceSchema } from "../domain/list_my_attendance.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class ListMyAttendanceController {

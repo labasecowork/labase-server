@@ -1,4 +1,3 @@
-//src/modules/auth/features/password_reset/confirm_password_reset/data/confirm_password_reset.repository.ts
 import prisma from "../../../../../../config/prisma_client";
 
 export interface ConfirmPasswordResetRepository {

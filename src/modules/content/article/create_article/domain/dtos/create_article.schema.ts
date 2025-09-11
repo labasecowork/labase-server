@@ -1,4 +1,3 @@
-//src/modules/content/article/create_article/domain/dtos/create_article.schema.ts
 import { z } from "zod";
 import { MESSAGES } from "../../../../../../constants/messages";
 

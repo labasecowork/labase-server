@@ -1,6 +1,5 @@
-// src/modules/visitor/features/lookup_visitor/presentation/lookup.controller.ts
 import { Response } from "express";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 import { z } from "zod";
@@ -33,8 +32,8 @@ export class LookupVisitorController {
             buildHttpResponse(
               HttpStatusCodes.NOT_FOUND.code,
               MESSAGES.VISITOR.LOOKUP_NOT_FOUND,
-              req.path,
-            ),
+              req.path
+            )
           );
       }
       const payload = normalizeReniecToVisitor(data);
@@ -45,8 +44,8 @@ export class LookupVisitorController {
             HttpStatusCodes.OK.code,
             "Lookup ok",
             req.path,
-            payload,
-          ),
+            payload
+          )
         );
     }
 
@@ -59,8 +58,8 @@ export class LookupVisitorController {
             buildHttpResponse(
               HttpStatusCodes.NOT_FOUND.code,
               MESSAGES.VISITOR.LOOKUP_NOT_FOUND,
-              req.path,
-            ),
+              req.path
+            )
           );
       }
       const payload = normalizeSunatToVisitor(data, ruc);
@@ -71,8 +70,8 @@ export class LookupVisitorController {
             HttpStatusCodes.OK.code,
             "Lookup ok",
             req.path,
-            payload,
-          ),
+            payload
+          )
         );
     }
 
@@ -82,8 +81,8 @@ export class LookupVisitorController {
         buildHttpResponse(
           HttpStatusCodes.BAD_REQUEST.code,
           "dni or ruc required",
-          req.path,
-        ),
+          req.path
+        )
       );
   }
 }

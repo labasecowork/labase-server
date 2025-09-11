@@ -1,4 +1,3 @@
-// src/middlewares/async_handler/index.ts
 import { Request, Response, NextFunction } from "express";
 import { handleServerError } from "../../utils/error_handler";
 

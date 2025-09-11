@@ -1,9 +1,5 @@
-// src/modules/waitlist/presentation/waitlist.controller.ts
 import { Request, Response } from "express";
-import {
-  SubscribeNewsletterDTO,
-  subscribeNewsletterSchema,
-} from "../domain/newsletter.dto";
+import { subscribeNewsletterSchema } from "../domain/newsletter.dto";
 import { SubscribeNewsletterService } from "./newsletter.service";
 import { SubscribeNewsletterRepository } from "../data/newsletter.repository";
 import { buildHttpResponse } from "../../../../../utils";

@@ -1,8 +1,9 @@
-// src/modules/product/feature/delete_product/presentation/delete_product.controller.ts
 import { Response } from "express";
 import { DeleteProductService } from "./delete_product.service";
-import { getAuthenticatedUser } from "../../../../../../utils/authenticated_user";
-import { buildHttpResponse } from "../../../../../../utils/build_http_response";
+import {
+  buildHttpResponse,
+  getAuthenticatedUser,
+} from "../../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { AuthenticatedRequest } from "../../../../../../middlewares/authenticate_token";
 
@@ -18,7 +19,7 @@ export class DeleteProductController {
     return res
       .status(HttpStatusCodes.OK.code)
       .json(
-        buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path),
+        buildHttpResponse(HttpStatusCodes.OK.code, result.message, req.path)
       );
   }
 }

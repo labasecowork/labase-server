@@ -1,4 +1,3 @@
-//src/modules/auth/features/login/login_with_email/presentation/login_with_email.controller.ts
 import { Request, Response } from "express";
 import { HttpStatusCodes } from "../../../../../../constants";
 import { buildHttpResponse } from "../../../../../../utils";

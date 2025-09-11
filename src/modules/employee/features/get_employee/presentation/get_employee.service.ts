@@ -1,9 +1,8 @@
-// src/modules/employee/features/get_employee/presentation/get_employee.service.ts
 import { GetEmployeeDTO } from "../domain/get_employee.dto";
 import { GetEmployeeRepository } from "../data/get_employee.repository";
 import { format } from "date-fns";
-import { AppError } from "../../../../../utils/errors";
-import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
+import { AppError } from "../../../../../types/";
+import { HttpStatusCodes } from "../../../../../constants";
 
 export class GetEmployeeService {
   constructor(private readonly repo = new GetEmployeeRepository()) {}

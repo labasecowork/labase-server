@@ -1,4 +1,3 @@
-// src/modules/product/features/brand/delete_brand/data/delete_brand.repository.ts
 import prisma from "../../../../../../config/prisma_client";
 
 export class DeleteBrandRepository {

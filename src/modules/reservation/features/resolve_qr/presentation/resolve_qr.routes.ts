@@ -1,4 +1,3 @@
-// src/modules/reservation/features/resolve_qr/presentation/resolve_qr.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { ResolveQrController } from "./resolve_qr.controller";

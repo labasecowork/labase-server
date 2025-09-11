@@ -1,4 +1,3 @@
-//src/modules/content/category/create_category/presentation/create_category.service.ts
 import { CreateCategoryRepository } from "../data/create_category.repository";
 import { CreateCategoryDto } from "../domain/create_category.dto";
 

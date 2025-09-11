@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/request_reqistration/presentation/request_registration.service.ts
 import {
   RequestRegistrationDTO,
   RequestRegistrationResponseDTO,

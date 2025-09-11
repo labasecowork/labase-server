@@ -1,5 +1,5 @@
 import { DeleteArticleRepository } from "../data/delete_article.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants";
 import { deleteFile } from "../../../../../infrastructure/aws";
 import { MESSAGES } from "../../../../../constants/messages";

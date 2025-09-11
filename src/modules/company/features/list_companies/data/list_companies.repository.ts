@@ -1,4 +1,3 @@
-// src/modules/company/features/list_companies/data/list_companies.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import {
   ListCompaniesDTO,

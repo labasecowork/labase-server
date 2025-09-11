@@ -1,9 +1,8 @@
-// src/middlewares/authenticate_token/index.ts
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from "../../config/env";
 import { HttpStatusCodes } from "../../constants/http_status_codes";
-import { buildHttpResponse } from "../../utils/build_http_response";
+import { buildHttpResponse } from "../../utils/http_response";
 
 export interface AuthenticatedRequest extends Request {
   user?: {
@@ -16,7 +15,6 @@ export interface AuthenticatedRequest extends Request {
 interface TokenPayload {
   id: string;
   user_type: "admin" | "client" | "employee";
-  //admin_role?: "superadmin" | "manager"
   email?: string;
 }
 

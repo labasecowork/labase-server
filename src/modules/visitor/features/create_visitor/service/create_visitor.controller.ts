@@ -1,10 +1,8 @@
-// src/modules/visitor/features/create_visitor/service/create_visitor.controller.ts
 import { Response } from "express";
 import { CreateVisitorService } from "./create_visitor.service";
 import { CreateVisitorSchema } from "../domain/create_visitor.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class CreateVisitorController {

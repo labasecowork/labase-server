@@ -1,4 +1,3 @@
-// src/modules/reservation/features/get_reservations/presentation/get_reservations.service.ts
 import { Prisma } from "@prisma/client";
 import { GetReservationsDTO } from "../domain/get_reservations.dto";
 import { GetReservationsRepository } from "../data/get_reservations.repository";

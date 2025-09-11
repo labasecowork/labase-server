@@ -1,10 +1,9 @@
-// src/modules/reservation/features/check_availability/presentation/check_availability.service.ts
 import { CheckAvailabilityDTO } from "../domain/check_availability.schema";
 import { CheckAvailabilityRepository } from "../data/check_availability.repository";
 import { reservation_status } from "@prisma/client";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { RESERVATION_MESSAGES as M } from "../../../../../constants/messages/reservation"; // ajusta a tu estructura de mensajes
+import { RESERVATION_MESSAGES as M } from "../../../../../constants/messages/reservation";
 
 export class CheckAvailabilityService {
   constructor(private readonly repo = new CheckAvailabilityRepository()) {}
@@ -43,7 +42,7 @@ export class CheckAvailabilityService {
         dto.space_id,
         dto.start_time,
         dto.end_time,
-        statuses,
+        statuses
       );
       if (blocking) {
         return {
@@ -87,7 +86,7 @@ export class CheckAvailabilityService {
       dto.space_id,
       dto.start_time,
       dto.end_time,
-      statuses,
+      statuses
     );
     if (blocking) {
       return {
@@ -102,7 +101,7 @@ export class CheckAvailabilityService {
       dto.space_id,
       dto.start_time,
       dto.end_time,
-      statuses,
+      statuses
     );
     const capacity_left = Math.max(0, space.capacity_max - booked);
 

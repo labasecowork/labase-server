@@ -1,4 +1,3 @@
-// src/modules/bot-whatsapp/data/config/chatbot.config.ts
 export const chatbotConfig = {
   context: `
 ✨ Bienvenido a La Base Cowork ✨

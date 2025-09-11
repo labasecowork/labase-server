@@ -1,4 +1,3 @@
-// src/modules/attendance/features/list_my_attendance/domain/list_my_attendance.schema.ts
 import { z } from "zod";
 
 export const ListMyAttendanceSchema = z
@@ -20,14 +19,14 @@ export const ListMyAttendanceSchema = z
       .max(100, "El límite no puede ser mayor a 100")
       .default(10),
 
-    start_date: z
-      .coerce.date({
+    start_date: z.coerce
+      .date({
         invalid_type_error: "La fecha de inicio debe ser una fecha válida",
       })
       .optional(),
 
-    end_date: z
-      .coerce.date({
+    end_date: z.coerce
+      .date({
         invalid_type_error: "La fecha de fin debe ser una fecha válida",
       })
       .optional(),
@@ -44,7 +43,8 @@ export const ListMyAttendanceSchema = z
     if (data.start_date && data.end_date && data.end_date < data.start_date) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "La fecha de fin debe ser posterior o igual a la fecha de inicio",
+        message:
+          "La fecha de fin debe ser posterior o igual a la fecha de inicio",
         path: ["end_date"],
       });
     }

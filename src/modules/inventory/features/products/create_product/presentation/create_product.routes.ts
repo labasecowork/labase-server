@@ -1,4 +1,3 @@
-// src/modules/product/features/crud/create_product/presentation/routes/create_product.routes.ts
 import { Router } from "express";
 import multer from "multer";
 import { asyncHandler } from "../../../../../../middlewares/async_handler";
@@ -48,7 +47,7 @@ router.post(
   "/",
   authenticateToken,
   upload.array("images", 1),
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 
 export { router as createProductRoutes };

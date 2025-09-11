@@ -1,10 +1,8 @@
-// src/modules/space/features/list_spaces/list_activated_spaces/presentation/controllers/list_activated_spaces.controller.ts
 import { Response } from "express";
 import { ListSpacesService } from "./list_spaces.service";
 import { ListSpacesSchema } from "../domain/list_spaces.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class ListSpacesController {

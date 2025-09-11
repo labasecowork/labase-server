@@ -1,4 +1,3 @@
-// src/modules/reservation/features/check_availability/domain/dtos/check_availability.schema.ts
 import { z } from "zod";
 
 export const CheckAvailabilitySchema = z

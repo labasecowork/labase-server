@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { ConfirmPasswordResetService } from "./confirm_password_reset.service";
 import { HttpStatusCodes } from "../../../../../../constants";
 import { buildHttpResponse } from "../../../../../../utils";
-import { handleServerError } from "../../../../../../utils/error_handler";
 import { ConfirmPasswordResetSchema } from "../domain/confirm_password_reset.schema";
 
 export class ConfirmPasswordResetController {

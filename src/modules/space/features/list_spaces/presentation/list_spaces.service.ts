@@ -1,4 +1,3 @@
-// src/modules/space/features/list_spaces/presentation/list_spaces.service.ts
 import { ListSpacesDTO } from "../domain/list_spaces.dto";
 import { ListSpacesRepository } from "../data/list_spaces.repository";
 

@@ -1,5 +1,3 @@
-// src/modules/attendance/features/list_all_attendance/domain/list_all_attendance.dto.ts
-
 import { z } from "zod";
 import { ListAllAttendanceSchema } from "./list_all_attendance.schema";
 

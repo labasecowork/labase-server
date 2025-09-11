@@ -1,4 +1,3 @@
-// src/modules/attendance/features/mark_attendance/presentation/mark_attendance.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

@@ -1,4 +1,3 @@
-// src/modules/payment/features/create-payment/data/payment-transaction.repository.ts
 import { Prisma, payment_status, payment_transaction } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
@@ -27,7 +26,7 @@ export class PaymentTransactionRepository {
   }
 
   async findByPurchaseNumber(
-    purchaseNumber: string,
+    purchaseNumber: string
   ): Promise<payment_transaction | null> {
     return prisma.payment_transaction.findUnique({
       where: { purchase_number: purchaseNumber },
@@ -35,7 +34,7 @@ export class PaymentTransactionRepository {
   }
 
   async findByTransactionId(
-    transactionId: string,
+    transactionId: string
   ): Promise<payment_transaction | null> {
     return prisma.payment_transaction.findFirst({
       where: { transaction_id: transactionId },
@@ -43,7 +42,7 @@ export class PaymentTransactionRepository {
   }
 
   async findByReservationId(
-    reservationId: string,
+    reservationId: string
   ): Promise<payment_transaction[]> {
     return prisma.payment_transaction.findMany({
       where: { reservation_id: reservationId },
@@ -54,7 +53,7 @@ export class PaymentTransactionRepository {
   // --------- helpers ---------
 
   private toCreateData(
-    tx: CreateTransactionData,
+    tx: CreateTransactionData
   ): Prisma.payment_transactionCreateInput {
     return {
       purchase_number: tx.purchaseNumber,
@@ -74,7 +73,7 @@ export class PaymentTransactionRepository {
   }
 
   private toUpdateData(
-    tx: CreateTransactionData,
+    tx: CreateTransactionData
   ): Prisma.payment_transactionUpdateInput {
     return {
       transaction_id: tx.transactionId,

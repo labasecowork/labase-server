@@ -1,4 +1,3 @@
-// src/modules/reservation/features/cancel_reservation/data/cancel_reservation.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { reservation_status } from "@prisma/client";
 

@@ -1,4 +1,3 @@
-// src/modules/company/features/create_company/data/create_company.repository.ts
 import prisma from "../../../../../config/prisma_client";
 import { CreateCompanyDTO } from "../domain/create_company.dto";
 import { CompanyEntity } from "../../../entities/company.entity";

@@ -1,4 +1,3 @@
-// src/modules/workarea/index.ts
 import { Router } from "express";
 
 import { listWorkAreasRoutes } from "./features/list_workareas";

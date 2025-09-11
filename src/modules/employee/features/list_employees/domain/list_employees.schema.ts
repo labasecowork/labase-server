@@ -1,4 +1,3 @@
-// src/modules/employee/features/list_employees/domain/list_employees.schema.ts
 import { z } from "zod";
 
 export const ListEmployeesSchema = z.object({

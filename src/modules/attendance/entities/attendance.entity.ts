@@ -1,5 +1,3 @@
-// src/modules/attendance/entities/attendance.entity.ts
-
 export interface AttendanceEntity {
   id: string;
   employee_id: string;

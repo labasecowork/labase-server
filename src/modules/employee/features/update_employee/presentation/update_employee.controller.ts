@@ -1,13 +1,11 @@
-// src/modules/employee/features/update_employee/presentation/update_employee.controller.ts
 import { Response } from "express";
 import { UpdateEmployeeService } from "./update_employee.service";
 import {
   UpdateEmployeeParamsSchema,
   UpdateEmployeeBodySchema,
 } from "../domain/update_employee.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse, getAuthenticatedUser } from "../../../../../utils/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
 
 export class UpdateEmployeeController {

@@ -1,4 +1,3 @@
-// src/modules/payment/features/create-payment/domain/create-payment.schema.ts
 import { z } from "zod";
 
 export const locationDataMap = z.object({

@@ -1,4 +1,3 @@
-// src/modules/attendance/features/list_my_attendance/domain/list_my_attendance.dto.ts
 import { z } from "zod";
 import { ListMyAttendanceSchema } from "./list_my_attendance.schema";
 

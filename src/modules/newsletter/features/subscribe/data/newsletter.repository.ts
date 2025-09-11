@@ -1,4 +1,3 @@
-//src/modules/newsletter/data/newsletter.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class SubscribeNewsletterRepository {

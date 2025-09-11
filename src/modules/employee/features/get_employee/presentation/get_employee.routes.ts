@@ -1,4 +1,3 @@
-// src/modules/employee/features/get_employee/presentation/get_employee.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

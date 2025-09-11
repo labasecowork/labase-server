@@ -1,4 +1,3 @@
-// utils/attendanceUtils.ts
 import { attendance_type } from "@prisma/client";
 
 export interface AttendanceRecord {
@@ -15,7 +14,6 @@ export interface AttendanceStats {
   uniqueDays: number;
   uniqueEmployees: number;
 }
-
 
 export const getWorkDays = (
   daysBack: number = 30,

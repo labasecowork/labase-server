@@ -1,4 +1,3 @@
-//src/modules/content/category/create_category/domain/create_category.schema.ts
 import { z } from "zod";
 
 export const CreateCategorySchema = z.object({

@@ -1,7 +1,6 @@
-// src/modules/workarea/features/delete_workarea/presentation/delete_workarea.service.ts
 import { DeleteWorkAreaRepository } from "../data/delete_workarea.repository";
 import { DeleteWorkAreaResponseDTO } from "../domain/delete_workarea.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class DeleteWorkAreaService {

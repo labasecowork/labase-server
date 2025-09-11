@@ -1,10 +1,9 @@
-// src/modules/company/features/update_company/presentation/update_company.service.ts
 import { UpdateCompanyRepository } from "../data/update_company.repository";
 import {
   UpdateCompanyDTO,
   UpdateCompanyResponseDTO,
 } from "../domain/update_company.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class UpdateCompanyService {

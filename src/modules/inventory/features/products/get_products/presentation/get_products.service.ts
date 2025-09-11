@@ -1,7 +1,9 @@
-// src/modules/product/features/get_products/presentation/get_products.service.ts
-import { Pagination } from "../../../../../../utils/pagination";
+import {
+  getPaginationParams,
+  buildPaginationMeta,
+} from "../../../../../../utils/";
 import { GetProductsRepository } from "../data/get_products.repository";
-import { AppError } from "../../../../../../utils/errors";
+import { AppError } from "../../../../../../types/";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { MESSAGES } from "../../../../../../constants/messages";
 import type { GetProductsQueryDTO } from "../domain/get_products.dto";
@@ -21,7 +23,7 @@ export class GetProductsService {
   }
 
   async getAll(query: GetProductsQueryDTO) {
-    const { page, limit, skip } = Pagination.getPaginationParams(query);
+    const { page, limit, skip } = getPaginationParams(query);
 
     const [items, total] = await Promise.all([
       this.repo.findMany({
@@ -40,7 +42,7 @@ export class GetProductsService {
 
     return {
       items,
-      meta: Pagination.buildPaginationMeta(total, page, limit),
+      meta: buildPaginationMeta(total, page, limit),
     };
   }
 }

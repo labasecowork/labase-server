@@ -1,4 +1,3 @@
-// src/modules/space/features/create_space/domain/create_space.schema.ts
 import { z } from "zod";
 import { duration_unit, price_mode } from "@prisma/client";
 

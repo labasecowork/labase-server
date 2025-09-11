@@ -1,4 +1,3 @@
-// src/modules/workarea/features/update_workarea/domain/update_workarea.schema.ts
 import { z } from "zod";
 
 export const UpdateWorkAreaSchema = z.object({

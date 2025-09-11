@@ -1,6 +1,5 @@
-// src/modules/workarea/features/list_workareas/presentation/list_workareas.service.ts
 import { ListWorkAreasRepository } from "../data/list_workareas.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { WorkAreaEntity } from "../../../entities/workarea.entity";
 

@@ -1,5 +1,4 @@
-//src/modules/auth/features/registration/verify_code_registration/domain/verify_code_registration.use_case.ts
-import { AppError } from "../../../../../../utils";
+import { AppError } from "../../../../../../types/";
 import { HttpStatusCodes } from "../../../../../../constants";
 import {
   VerifyCodeRegistrationDTO,

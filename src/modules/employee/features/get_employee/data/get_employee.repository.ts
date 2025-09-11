@@ -1,4 +1,3 @@
-// src/modules/employee/features/get_employee/data/get_employee.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
 export class GetEmployeeRepository {

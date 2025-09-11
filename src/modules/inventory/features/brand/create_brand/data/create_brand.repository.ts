@@ -1,4 +1,3 @@
-// src/modules/product/features/brand/create_brand/data/create_brand.repository.ts
 import { Prisma } from "@prisma/client";
 import prisma from "../../../../../../config/prisma_client";
 

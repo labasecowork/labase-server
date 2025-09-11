@@ -1,4 +1,3 @@
-// src/modules/employee/features/activate_employee/presentation/activate_employee.routes.ts
 import { Router } from "express";
 import { asyncHandler } from "../../../../../middlewares/async_handler";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";
@@ -78,7 +77,7 @@ const controller = new ActivateEmployeeController();
 router.patch(
   "/:id/activate",
   authenticateToken,
-  asyncHandler(controller.handle.bind(controller)),
+  asyncHandler(controller.handle.bind(controller))
 );
 
 export { router as activateEmployeeRoutes };

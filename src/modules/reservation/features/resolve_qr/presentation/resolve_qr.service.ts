@@ -1,7 +1,6 @@
-// src/modules/reservation/features/resolve_qr/presentation/resolve_qr.service.ts
 import { ResolveQrDTO } from "../domain/resolve_qr.dto";
 import { ResolveQrRepository } from "../data/resolve_qr.repository";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { reservation_status } from "@prisma/client";
 
@@ -13,7 +12,7 @@ export class ResolveQrService {
     if (!reservation) {
       throw new AppError(
         "RESERVATION_NOT_FOUND",
-        HttpStatusCodes.NOT_FOUND.code,
+        HttpStatusCodes.NOT_FOUND.code
       );
     }
 

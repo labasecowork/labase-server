@@ -1,10 +1,9 @@
-// src/modules/workarea/features/update_workarea/presentation/update_workarea.service.ts
 import { UpdateWorkAreaRepository } from "../data/update_workarea.repository";
 import {
   UpdateWorkAreaDTO,
   UpdateWorkAreaResponseDTO,
 } from "../domain/update_workarea.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class UpdateWorkAreaService {

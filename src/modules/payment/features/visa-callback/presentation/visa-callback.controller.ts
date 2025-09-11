@@ -1,8 +1,7 @@
-// src/modules/payment/features/visa-callback/presentation/visa-callback.controller.ts
 import { Request, Response } from "express";
 import { VisaCallbackService } from "./visa-callback.service";
 import { VisaCallbackDTO } from "../domain/visa-callback.dto";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class VisaCallbackController {

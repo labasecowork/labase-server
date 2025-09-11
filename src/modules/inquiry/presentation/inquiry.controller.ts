@@ -1,6 +1,5 @@
-// src/modules/inquiry/presentation/inquiry.controller.ts
 import { Request, Response } from "express";
-import { HttpStatusCodes } from "../../../constants/http_status_codes";
+import { HttpStatusCodes } from "../../../constants";
 import { buildHttpResponse } from "../../../utils";
 import { inquirySchema } from "../domain/inquiry.schema";
 import { inquiryService } from "./inquiry.service";

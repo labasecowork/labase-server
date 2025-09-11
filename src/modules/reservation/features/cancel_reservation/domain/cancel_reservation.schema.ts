@@ -1,4 +1,3 @@
-// src/modules/reservation/features/cancel_reservation/domain/cancel_reservation.schema.ts
 import { z } from "zod";
 
 export const CancelReservationParamsSchema = z.object({

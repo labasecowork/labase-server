@@ -1,4 +1,3 @@
-//src/modules/auth/features/registration/request_reqistration/data/request_registration.repository.ts
 import { User } from "../../../../domain/user.entity";
 import prisma from "../../../../../../config/prisma_client";
 import { RequestRegistrationDTO } from "../domain/request_registration.dto";
