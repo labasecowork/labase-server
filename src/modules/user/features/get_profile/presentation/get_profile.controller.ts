@@ -1,8 +1,7 @@
 import { Response } from "express";
 import { GetProfileService } from "./get_profile.service";
-import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
+import { getAuthenticatedUser, buildHttpResponse } from "../../../../../utils/";
 import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 
 export class GetProfileController {

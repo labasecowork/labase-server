@@ -39,20 +39,12 @@ export const CreateVisitorSchema = z
       .email("El formato del correo electrónico no es válido")
       .optional(),
 
-    host_user_id: z
+    user_id: z
       .string({
-        required_error: "El ID del anfitrión es obligatorio",
-        invalid_type_error: "El ID del anfitrión debe ser una cadena (UUID)",
+        required_error: "El ID del usuario es obligatorio",
+        invalid_type_error: "El ID del usuario debe ser una cadena (UUID)",
       })
-      .uuid("El ID del anfitrión debe ser un UUID válido"),
-
-    // ⬇️ nuevo: empresa opcional (si no llega, se tomará la del host si tiene)
-    company_id: z
-      .string({
-        invalid_type_error: "El ID de la empresa debe ser una cadena (UUID)",
-      })
-      .uuid("El ID de la empresa debe ser un UUID válido")
-      .optional(),
+      .uuid("El ID del usuario debe ser un UUID válido"),
 
     space_id: z
       .string({

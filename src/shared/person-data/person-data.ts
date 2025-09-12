@@ -1,5 +1,5 @@
 import { DECOLECTA_API_KEY, DECOLECTA_BASE_URL } from "../../config/env";
-import { AppError } from "../../utils/errors";
+import { AppError } from "../../types/";
 import { HttpStatusCodes } from "../../constants/http_status_codes";
 import { z } from "zod";
 
@@ -25,14 +25,14 @@ type SunatRucResponse = z.infer<typeof SunatRucResponseSchema>;
 export class DecolectaClient {
   private base = (DECOLECTA_BASE_URL ?? "https://api.decolecta.com").replace(
     /\/+$/,
-    "",
+    ""
   );
 
   private headers() {
     if (!DECOLECTA_API_KEY) {
       throw new AppError(
         "DECOLECTA_API_KEY not configured",
-        HttpStatusCodes.INTERNAL_SERVER_ERROR.code,
+        HttpStatusCodes.INTERNAL_SERVER_ERROR.code
       );
     }
     return {
@@ -49,8 +49,10 @@ export class DecolectaClient {
     if (!res.ok) {
       const text = await res.text().catch(() => "");
       throw new AppError(
-        `DeColecta RENIEC error: ${res.status} ${res.statusText}${text ? ` – ${text}` : ""}`,
-        HttpStatusCodes.BAD_GATEWAY.code,
+        `DeColecta RENIEC error: ${res.status} ${res.statusText}${
+          text ? ` – ${text}` : ""
+        }`,
+        HttpStatusCodes.BAD_GATEWAY.code
       );
     }
 
@@ -66,8 +68,10 @@ export class DecolectaClient {
     if (!res.ok) {
       const text = await res.text().catch(() => "");
       throw new AppError(
-        `DeColecta SUNAT error: ${res.status} ${res.statusText}${text ? ` – ${text}` : ""}`,
-        HttpStatusCodes.BAD_GATEWAY.code,
+        `DeColecta SUNAT error: ${res.status} ${res.statusText}${
+          text ? ` – ${text}` : ""
+        }`,
+        HttpStatusCodes.BAD_GATEWAY.code
       );
     }
 

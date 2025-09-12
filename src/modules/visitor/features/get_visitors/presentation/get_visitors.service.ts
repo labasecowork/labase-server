@@ -20,7 +20,7 @@ export class GetVisitorsService {
   }
 
   async getAll(query: z.infer<typeof GetVisitorsQuerySchema>) {
-    const { page, limit, search, host_user_id, space_id, date_from, date_to } =
+    const { page, limit, search, user_id, space_id, date_from, date_to } =
       query;
     const skip = (page - 1) * limit;
 
@@ -29,14 +29,14 @@ export class GetVisitorsService {
         skip,
         take: limit,
         search,
-        host_user_id,
+        user_id,
         space_id,
         date_from: date_from ? new Date(date_from) : undefined,
         date_to: date_to ? new Date(date_to) : undefined,
       }),
       this.repo.count({
         search,
-        host_user_id,
+        user_id,
         space_id,
         date_from: date_from ? new Date(date_from) : undefined,
         date_to: date_to ? new Date(date_to) : undefined,

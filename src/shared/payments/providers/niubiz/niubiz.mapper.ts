@@ -1,4 +1,3 @@
-// src/shared/payments/providers/niubiz/niubiz.mapper.ts
 import { NiubizTransactionResponse } from "./niubiz.types";
 import { Currency, TransactionResponse } from "../payment-provider.repository";
 

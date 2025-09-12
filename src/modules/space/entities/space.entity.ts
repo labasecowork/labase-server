@@ -1,4 +1,3 @@
-// src/modules/space/entities/space.entity.ts
 export interface SpaceEntity {
   id: string;
   name: string;
@@ -17,4 +16,3 @@ export interface BenefitEntity {
   name: string;
   description?: string;
 }
-

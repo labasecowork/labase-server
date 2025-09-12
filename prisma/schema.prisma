@@ -128,7 +128,6 @@ model users {
   gender             gender      @default(unspecified)
   status             user_status
   creation_timestamp DateTime    @default(now())
-
   admin_details        admin_details?
   employee_details     employee_details?
   user_details         user_details?
@@ -136,7 +135,7 @@ model users {
   payment_transactions payment_transaction[] @relation("user_payments")
   articles             articles[]            @relation("user_articles")
 
-  hosted_visitors visitors[] @relation("visitor_host")
+  visitors        visitors[]
 
   @@map("users")
 }
@@ -182,23 +181,18 @@ model companies {
 
   employees employee_details[]
 
-  visitors visitors[]
-
   @@map("companies")
 }
 
 model employee_details {
-  employee_id String @id
-  user        users  @relation(fields: [employee_id], references: [id])
-
+  employee_id  String       @id
   work_area_id String?
   company_id   String?
+  attendances  attendance[]
 
+  user      users       @relation(fields: [employee_id], references: [id])
   work_area work_areas? @relation(fields: [work_area_id], references: [id], onDelete: SetNull)
   company   companies?  @relation(fields: [company_id], references: [id], onDelete: SetNull)
-
-  attendances attendance[]
-  visitors    visitors[]
 
   @@index([work_area_id])
   @@index([company_id])
@@ -411,29 +405,23 @@ model product_brand {
 }
 
 model visitors {
-  id                           String    @id @default(uuid())
-  dni                          String?
-  ruc                          String?
-  first_name                   String
-  last_name                    String
-  phone                        String?
-  email                        String?
-  host_user_id                 String
-  company_id                   String?
-  space_id                     String
-  entry_time                   DateTime
-  exit_time                    DateTime?
-  created_at                   DateTime  @default(now())
-  employee_details_employee_id String?
+  id         String    @id @default(uuid())
+  dni        String?   @unique
+  ruc        String?   @unique
+  first_name String
+  last_name  String
+  phone      String?
+  email      String?
+  user_id    String
+  space_id   String
+  entry_time DateTime
+  exit_time  DateTime?
+  created_at DateTime  @default(now())
 
-  host users @relation("visitor_host", fields: [host_user_id], references: [id], onDelete: Cascade)
+  user  users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  space space  @relation(fields: [space_id], references: [id], onDelete: Cascade)
 
-  company          companies?        @relation(fields: [company_id], references: [id], onDelete: SetNull)
-  space            space             @relation(fields: [space_id], references: [id], onDelete: Cascade)
-  employee_details employee_details? @relation(fields: [employee_details_employee_id], references: [employee_id])
-
-  @@index([host_user_id, created_at])
+  @@index([user_id, created_at])
   @@index([space_id, created_at])
-  @@index([company_id])
   @@map("visitors")
 }

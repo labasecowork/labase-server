@@ -8,7 +8,6 @@ import { userRouter } from "./modules/user";
 import { inquiryRoutes } from "./modules/inquiry/presentation/inquiry.routes";
 import { bulkEmailRoutes } from "./modules/bulk-email/presentation/bulk-email.routes";
 import calendarRouter from "./modules/calendar/index";
-import testingRouter from "./modules/testing_aws";
 import { paymentRoutes } from "./modules/payment";
 import articleRoutes from "./modules/content/article/";
 import articleCategoryRouter from "./modules/content/category/";
@@ -39,7 +38,6 @@ router.use(`${API_VERSION}/newsletter`, newsletterRouter);
 router.use(`${API_VERSION}/bulk_email`, bulkEmailRoutes);
 router.use(`${API_VERSION}/calendar`, calendarRouter);
 router.use(`${API_VERSION}/form`, inquiryRoutes);
-router.use(`${API_VERSION}/`, testingRouter);
 router.use(`${API_VERSION}/payment`, paymentRoutes);
 
 router.use(`${API_VERSION}/`, attendanceRouter);

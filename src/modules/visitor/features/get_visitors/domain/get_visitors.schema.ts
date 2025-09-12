@@ -41,11 +41,11 @@ export const GetVisitorsQuerySchema = z
       .transform((s) => s?.trim() || "")
       .optional(),
 
-    host_user_id: z
+    user_id: z
       .string({
-        invalid_type_error: "El ID del anfitrión debe ser una cadena (UUID)",
+        invalid_type_error: "El ID del usuario debe ser una cadena (UUID)",
       })
-      .uuid("El ID del anfitrión debe ser un UUID válido")
+      .uuid("El ID del usuario debe ser un UUID válido")
       .optional(),
 
     space_id: z

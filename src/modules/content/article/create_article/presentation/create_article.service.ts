@@ -1,6 +1,5 @@
-//src/modules/content/article/create_article/presentation/create_article.service.ts
 import prisma from "../../../../../config/prisma_client";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants";
 import { uploadFile } from "../../../../../infrastructure/aws";
 import {

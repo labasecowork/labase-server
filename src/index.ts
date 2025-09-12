@@ -5,25 +5,15 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./docs/swagger";
 import routes from "./routes";
 import http from "http";
-// import https from "https";
 import { initSocket } from "./config/socket";
 import { redisClient } from "./config/redis";
 import { APP_URL, PORT } from "./config/env";
 import { displayWelcomeMessage } from "./utils";
 import { customMorganFormat } from "./utils/cli";
-import { multerErrorHandler } from "./middlewares/multer_error_handler/multer_error_handler";
 import { startWhatsAppBot } from "./modules/bot-whatsapp/application/bot/whatsapp.bot";
-import { globalErrorHandler } from "./middlewares/global_error_handler";
-import { buildHttpResponse } from "./utils/build_http_response";
+import { buildHttpResponse } from "./utils/";
 import { HttpStatusCodes } from "./constants/http_status_codes";
-/*import fs from "fs";
-import path from "path";
 
-const __dirname = getDirname(import.meta.url);
- const httpsOptions: https.ServerOptions = {
-  key: fs.readFileSync(path.join(__dirname, "./cert/192.168.1.6-key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "./cert/192.168.1.6.pem")),
-}; */
 const app = express();
 const server = http.createServer(app);
 
@@ -45,9 +35,6 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // API Routes
 app.use(routes);
 
-// Multer error handler
-app.use(multerErrorHandler as express.ErrorRequestHandler);
-
 // Test route
 app.get("/ping", (_, res) => res.send("pong"));
 
@@ -64,9 +51,6 @@ app.use((req, res) => {
     );
 });
 
-// Global Error Handler
-app.use(globalErrorHandler);
-
 // Start server
 const main = async () => {
   // Redis
@@ -77,6 +61,7 @@ const main = async () => {
   }
 
   // Whatsapp bot
+  /* 
   try {
     await startWhatsAppBot();
     console.log(
@@ -85,6 +70,7 @@ const main = async () => {
   } catch (e) {
     console.error("[WhatsApp] No inició:", e);
   }
+    */
 
   server.listen(PORT, () => {
     displayWelcomeMessage(appUrl);

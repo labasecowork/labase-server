@@ -16,7 +16,7 @@ visitorRouter.use("/", deleteVisitorRoutes);
  * POST /api/v1/visitors → Crear visitante manual
  * GET /api/v1/visitors/lookup?dni=12345678 → Lookup RENIEC
  * GET /api/v1/visitors/lookup?ruc=20123456789 → Lookup SUNAT
- * GET /api/v1/visitors → Listar visitantes (paginado + filtros)
+ * GET /api/v1/visitors → Listar visitantes (paginado + filtros por user_id, space_id, fechas)
  * GET /api/v1/visitors/:id → Detalle de visitante
  * PUT /api/v1/visitors/:id → Editar visitante (checkout / update)
  * DELETE /api/v1/visitors/:id → Eliminar visitante

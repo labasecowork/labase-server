@@ -1,4 +1,3 @@
-// src/modules/employee/features/update_employee/domain/update_employee.dto.ts
 import { z } from "zod";
 import {
   UpdateEmployeeParamsSchema,

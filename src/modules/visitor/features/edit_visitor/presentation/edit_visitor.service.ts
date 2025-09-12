@@ -38,23 +38,19 @@ export class EditVisitorService {
           HttpStatusCodes.BAD_REQUEST.code
         );
       }
-    }
-
-    if (body.host_user_id) {
-      const host = await this.repo.findHostByUserId(body.host_user_id);
-      if (!host) {
+      if (space.disabled) {
         throw new AppError(
-          MESSAGES.VISITOR.HOST_NOT_FOUND,
+          "El espacio seleccionado no está disponible",
           HttpStatusCodes.BAD_REQUEST.code
         );
       }
     }
 
-    if (body.company_id !== undefined && body.company_id !== null) {
-      const company = await this.repo.findCompanyById(body.company_id);
-      if (!company) {
+    if (body.user_id) {
+      const user = await this.repo.findUserById(body.user_id);
+      if (!user) {
         throw new AppError(
-          MESSAGES.VISITOR.COMPANY_NOT_FOUND,
+          MESSAGES.VISITOR.HOST_NOT_FOUND,
           HttpStatusCodes.BAD_REQUEST.code
         );
       }
@@ -88,11 +84,14 @@ export class EditVisitorService {
       email: body.email ?? undefined,
       entry_time: body.entry_time ? new Date(body.entry_time) : undefined,
       exit_time: body.exit_time ? new Date(body.exit_time) : undefined,
-      host_user_id: body.host_user_id ?? undefined,
-      company_id: body.company_id ?? undefined, // null = disconnect, uuid = connect
+      user_id: body.user_id ?? undefined,
       space_id: body.space_id ?? undefined,
     });
 
-    return { id: updated.id, message: MESSAGES.VISITOR.UPDATED_SUCCESS };
+    return {
+      id: updated.id,
+      message: MESSAGES.VISITOR.UPDATED_SUCCESS,
+      visitor: updated,
+    };
   }
 }

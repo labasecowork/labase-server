@@ -1,4 +1,3 @@
-// src/shared/payments/providers/niubiz/niubiz.provider.ts
 import axios from "axios";
 import {
   NIUBIZ_USER,
@@ -9,7 +8,7 @@ import {
   NIUBIZ_URL_AUTHORIZATION,
 } from "../../config/payments.config";
 
-import { AppError } from "../../../../utils/errors";
+import { AppError } from "../../../../types/";
 import { HttpStatusCodes } from "../../../../constants/http_status_codes";
 import {
   PaymentProviderRepository,

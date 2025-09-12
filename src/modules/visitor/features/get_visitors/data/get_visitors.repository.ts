@@ -5,7 +5,7 @@ export type FindParams = {
   skip: number;
   take: number;
   search?: string;
-  host_user_id?: string;
+  user_id?: string;
   space_id?: string;
   date_from?: Date;
   date_to?: Date;
@@ -24,10 +24,9 @@ function buildSearchWhere(
       { email: { contains: search, mode: insensitive } },
       { dni: { contains: search, mode: insensitive } },
       { ruc: { contains: search, mode: insensitive } },
-      { host: { is: { first_name: { contains: search, mode: insensitive } } } },
-      { host: { is: { last_name: { contains: search, mode: insensitive } } } },
-      { host: { is: { email: { contains: search, mode: insensitive } } } },
-      { company: { is: { name: { contains: search, mode: insensitive } } } },
+      { user: { is: { first_name: { contains: search, mode: insensitive } } } },
+      { user: { is: { last_name: { contains: search, mode: insensitive } } } },
+      { user: { is: { email: { contains: search, mode: insensitive } } } },
       { space: { is: { name: { contains: search, mode: insensitive } } } },
     ],
   };
@@ -38,21 +37,19 @@ export class GetVisitorsRepository {
     return prisma.visitors.findUnique({
       where: { id },
       include: {
-        host: {
+        user: {
           select: { id: true, first_name: true, last_name: true, email: true },
         },
-        company: { select: { id: true, name: true } },
         space: { select: { id: true, name: true } },
       },
     });
   }
 
   findMany(p: FindParams) {
-    const { skip, take, search, host_user_id, space_id, date_from, date_to } =
-      p;
+    const { skip, take, search, user_id, space_id, date_from, date_to } = p;
 
     const where: Prisma.visitorsWhereInput = {
-      ...(host_user_id ? { host_user_id } : {}),
+      ...(user_id ? { user_id } : {}),
       ...(space_id ? { space_id } : {}),
       ...(buildSearchWhere(search) ?? {}),
       ...(date_from || date_to
@@ -71,20 +68,19 @@ export class GetVisitorsRepository {
       where,
       orderBy: { entry_time: "desc" },
       include: {
-        host: {
+        user: {
           select: { id: true, first_name: true, last_name: true, email: true },
         },
-        company: { select: { id: true, name: true } },
         space: { select: { id: true, name: true } },
       },
     });
   }
 
   count(p: Omit<FindParams, "skip" | "take">) {
-    const { search, host_user_id, space_id, date_from, date_to } = p;
+    const { search, user_id, space_id, date_from, date_to } = p;
 
     const where: Prisma.visitorsWhereInput = {
-      ...(host_user_id ? { host_user_id } : {}),
+      ...(user_id ? { user_id } : {}),
       ...(space_id ? { space_id } : {}),
       ...(buildSearchWhere(search) ?? {}),
       ...(date_from || date_to

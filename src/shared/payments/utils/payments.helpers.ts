@@ -1,5 +1,3 @@
-// src/shared/payments/utils/payments.helpers.ts
-
 import { PaymentProviderRepository } from "../providers/payment-provider.repository";
 import { TransactionResponse } from "../providers/payment-provider.repository"; // ← importar el tipo
 import { NiubizProvider } from "../providers/niubiz/niubiz.provider";

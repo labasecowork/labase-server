@@ -8,6 +8,7 @@ pnpm-debug.log*
 
 # WhatsApp Web.js
 storage/
+.wp-auth/
 .wwebjs_auth/
 .wwebjs_cache/
 
@@ -42,3 +43,4 @@ dist/
 storage/
 .wp-auth/
 .wwebjs_cache/
+.wwebjs_auth

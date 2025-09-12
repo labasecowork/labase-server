@@ -28,8 +28,7 @@ const lookupCtrl = new LookupVisitorController();
  *               last_name:    { type: string, example: "DELGADO CUELLAR" }
  *               phone:        { type: string, example: "999888777" }
  *               email:        { type: string, example: "rdelgado@example.com" }
- *               host_user_id: { type: string, format: uuid, example: "22222222-2222-2222-2222-222222222222" }
- *               company_id:   { type: string, format: uuid, example: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", description: "Si no se envía, se usará la empresa del anfitrión (si tiene)" }
+ *               user_id: { type: string, format: uuid, example: "22222222-2222-2222-2222-222222222222" }
  *               space_id:     { type: string, format: uuid, example: "00000000-0000-0000-0000-00000000000b" }
  *               entry_time:   { type: string, format: date-time, example: "2025-08-28T15:30:00.000Z" }
  *               exit_time:    { type: string, format: date-time, example: "2025-08-28T18:00:00.000Z" }

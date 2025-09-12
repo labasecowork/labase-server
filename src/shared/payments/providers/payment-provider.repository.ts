@@ -1,4 +1,3 @@
-// src/shared/payments/providers/payment-provider.repository.ts
 export type TransactionToken = string;
 export type Currency = "PEN" | "USD";
 

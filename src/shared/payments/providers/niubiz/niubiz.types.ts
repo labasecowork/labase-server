@@ -1,5 +1,3 @@
-// src/shared/payments/providers/niubiz/niubiz.types.ts
-
 export interface NiubizSessionRequestBody {
   channel: "web";
   amount: number;

@@ -1,4 +1,3 @@
-//src/modules/content/article/create_article/presentation/create_article.routes.ts
 import { Router } from "express";
 import multer from "multer";
 import { authenticateToken } from "../../../../../middlewares/authenticate_token";

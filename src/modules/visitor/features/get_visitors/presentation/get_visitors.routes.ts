@@ -23,7 +23,7 @@ const controller = new GetVisitorsController();
  *         name: search
  *         schema: { type: string, example: "roxana" }
  *       - in: query
- *         name: host_user_id
+ *         name: user_id
  *         schema: { type: string, format: uuid }
  *       - in: query
  *         name: space_id

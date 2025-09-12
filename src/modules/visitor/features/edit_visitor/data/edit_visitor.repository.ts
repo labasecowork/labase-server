@@ -5,25 +5,35 @@ export class EditVisitorRepository {
     return prisma.visitors.findUnique({
       where: { id },
       include: {
-        host: {
+        user: {
           select: { id: true, first_name: true, last_name: true, email: true },
         },
-        company: { select: { id: true, name: true } },
         space: { select: { id: true, name: true } },
       },
     });
   }
 
   findSpaceById(space_id: string) {
-    return prisma.space.findUnique({ where: { id: space_id } });
+    return prisma.space.findUnique({
+      where: { id: space_id },
+      select: {
+        id: true,
+        name: true,
+        disabled: true,
+      },
+    });
   }
 
-  findHostByUserId(user_id: string) {
-    return prisma.users.findUnique({ where: { id: user_id } });
-  }
-
-  findCompanyById(company_id: string) {
-    return prisma.companies.findUnique({ where: { id: company_id } });
+  findUserById(user_id: string) {
+    return prisma.users.findUnique({
+      where: { id: user_id },
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+        email: true,
+      },
+    });
   }
 
   update(
@@ -37,8 +47,7 @@ export class EditVisitorRepository {
       email: string | null;
       entry_time: Date;
       exit_time: Date;
-      host_user_id: string;
-      company_id: string | null;
+      user_id: string;
       space_id: string;
     }>
   ) {
@@ -51,8 +60,7 @@ export class EditVisitorRepository {
       email,
       entry_time,
       exit_time,
-      host_user_id,
-      company_id,
+      user_id,
       space_id,
     } = data;
 
@@ -69,13 +77,16 @@ export class EditVisitorRepository {
         entry_time: entry_time ?? undefined,
         exit_time: exit_time ?? undefined,
 
-        ...(host_user_id ? { host: { connect: { id: host_user_id } } } : {}),
+        ...(user_id ? { user: { connect: { id: user_id } } } : {}),
         ...(space_id ? { space: { connect: { id: space_id } } } : {}),
-        ...(company_id === undefined
-          ? {}
-          : company_id === null
-          ? { company: { disconnect: true } }
-          : { company: { connect: { id: company_id } } }),
+      },
+      include: {
+        user: {
+          select: { id: true, first_name: true, last_name: true, email: true },
+        },
+        space: {
+          select: { id: true, name: true },
+        },
       },
     });
   }

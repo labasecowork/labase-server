@@ -2,10 +2,10 @@
 import { Request, Response } from "express";
 import { CreateArticleService } from "./create_article.service";
 import { CreateArticleSchema } from "../domain/dtos/create_article.schema";
-import { buildHttpResponse } from "../../../../../utils/build_http_response";
+import { buildHttpResponse } from "../../../../../utils/";
 import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants";
-import { AppError } from "../../../../../utils/errors";
+import { AppError } from "../../../../../types/";
 
 interface AuthReq extends Request {
   user?: { id: string };

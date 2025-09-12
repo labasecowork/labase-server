@@ -23,15 +23,10 @@ export const EditVisitorSchema = z
       .nullable(),
 
     // Relaciones
-    host_user_id: z
+    user_id: z
       .string()
-      .uuid("El ID del anfitrión debe ser un UUID válido")
+      .uuid("El ID del usuario debe ser un UUID válido")
       .optional(),
-    company_id: z
-      .string()
-      .uuid("El ID de la empresa debe ser un UUID válido")
-      .optional()
-      .nullable(),
     space_id: z
       .string()
       .uuid("El ID del espacio debe ser un UUID válido")

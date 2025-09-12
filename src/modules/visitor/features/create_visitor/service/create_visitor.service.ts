@@ -16,8 +16,8 @@ export class CreateVisitorService {
       );
     }
 
-    const host = await this.repo.findHostByUserId(dto.host_user_id);
-    if (!host) {
+    const hostUser = await this.repo.findUserById(dto.user_id);
+    if (!hostUser) {
       throw new AppError(
         MESSAGES.VISITOR.HOST_NOT_FOUND,
         HttpStatusCodes.BAD_REQUEST.code
@@ -32,19 +32,11 @@ export class CreateVisitorService {
       );
     }
 
-    let companyIdToUse: string | null | undefined = undefined;
-
-    if (dto.company_id !== undefined) {
-      const company = await this.repo.findCompanyById(dto.company_id);
-      if (!company) {
-        throw new AppError(
-          MESSAGES.VISITOR.COMPANY_NOT_FOUND,
-          HttpStatusCodes.BAD_REQUEST.code
-        );
-      }
-      companyIdToUse = dto.company_id;
-    } else {
-      companyIdToUse = host.employee_details?.company_id ?? null;
+    if (space.disabled) {
+      throw new AppError(
+        "El espacio seleccionado no está disponible",
+        HttpStatusCodes.BAD_REQUEST.code
+      );
     }
 
     const created = await this.repo.create({
@@ -54,13 +46,16 @@ export class CreateVisitorService {
       last_name: dto.last_name,
       phone: dto.phone ?? null,
       email: dto.email ?? null,
-      host_user_id: dto.host_user_id,
-      company_id: companyIdToUse ?? null,
+      user_id: dto.user_id,
       space_id: dto.space_id,
       entry_time: new Date(dto.entry_time),
       exit_time: dto.exit_time ? new Date(dto.exit_time) : null,
     });
 
-    return { id: created.id, message: MESSAGES.VISITOR.CREATED_SUCCESS };
+    return {
+      id: created.id,
+      message: MESSAGES.VISITOR.CREATED_SUCCESS,
+      visitor: created,
+    };
   }
 }
