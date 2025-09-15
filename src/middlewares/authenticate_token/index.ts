@@ -18,6 +18,7 @@ interface TokenPayload {
   email?: string;
 }
 
+// Verifica si el token es válido y si el usuario existe en la base de datos
 export function authenticateToken(
   req: AuthenticatedRequest,
   res: Response,

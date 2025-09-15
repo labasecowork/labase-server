@@ -52,7 +52,7 @@ const upload = multer({ storage: multer.memoryStorage() });
  *       404:
  *         description: Producto no encontrado
  */
-router.put(
+router.patch(
   "/:id",
   authenticateToken,
   upload.array("images", 1),

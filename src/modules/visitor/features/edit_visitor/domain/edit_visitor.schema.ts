@@ -23,7 +23,7 @@ export const EditVisitorSchema = z
       .nullable(),
 
     // Relaciones
-    user_id: z
+    client_id: z
       .string()
       .uuid("El ID del usuario debe ser un UUID válido")
       .optional(),

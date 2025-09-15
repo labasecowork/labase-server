@@ -1,8 +1,29 @@
 import prisma from "../../../../../config/prisma_client";
+import { GetArticleListQueryInput } from "../domain/get_article.schema";
 
 export class GetArticleRepository {
-  async findMany(skip: number, take: number) {
+  async findMany(
+    skip: number,
+    take: number,
+    filters?: { search?: string; categoryId?: string }
+  ) {
+    const whereClause: any = {};
+
+    // Filtro por categoría
+    if (filters?.categoryId) {
+      whereClause.category_id = filters.categoryId;
+    }
+
+    // Filtro por búsqueda (título o contenido)
+    if (filters?.search) {
+      whereClause.OR = [
+        { title: { contains: filters.search, mode: "insensitive" } },
+        { content: { contains: filters.search, mode: "insensitive" } },
+      ];
+    }
+
     return prisma.articles.findMany({
+      where: whereClause,
       skip,
       take,
       include: {
@@ -13,8 +34,23 @@ export class GetArticleRepository {
     });
   }
 
-  count() {
-    return prisma.articles.count();
+  count(filters?: { search?: string; categoryId?: string }) {
+    const whereClause: any = {};
+
+    // Filtro por categoría
+    if (filters?.categoryId) {
+      whereClause.category_id = filters.categoryId;
+    }
+
+    // Filtro por búsqueda (título o contenido)
+    if (filters?.search) {
+      whereClause.OR = [
+        { title: { contains: filters.search, mode: "insensitive" } },
+        { content: { contains: filters.search, mode: "insensitive" } },
+      ];
+    }
+
+    return prisma.articles.count({ where: whereClause });
   }
 
   findById(id: string) {

@@ -19,17 +19,17 @@ export class CreateArticleController {
     try {
       const r = req as AuthReq;
       if (!r.user)
-        throw new AppError("Unauthorized", HttpStatusCodes.UNAUTHORIZED.code);
+        throw new AppError("Acceso denegado", HttpStatusCodes.UNAUTHORIZED.code);
 
       const banner = r.files?.banner?.[0];
       const content = r.files?.content?.[0];
       if (!banner || !content) {
         throw new AppError(
-          "banner and content files are required",
+          "El banner y el contenido son requeridos, por favor complete los campos.",
           HttpStatusCodes.BAD_REQUEST.code
         );
       }
-
+      console.log(req.body);
       const dto = CreateArticleSchema.parse(req.body);
       const result = await this.service.execute(
         r.user.id,

@@ -41,8 +41,8 @@ export class GetProductsService {
     ]);
 
     return {
-      items,
-      meta: buildPaginationMeta(total, page, limit),
+      products: items,
+      pagination: buildPaginationMeta(total, page, limit),
     };
   }
 }

@@ -17,7 +17,7 @@ export class ListCompaniesService {
     if (user.role !== "admin") {
       throw new AppError(
         "Solo los administradores pueden acceder a esta información",
-        HttpStatusCodes.FORBIDDEN.code
+        HttpStatusCodes.FORBIDDEN.code // 403
       );
     }
 

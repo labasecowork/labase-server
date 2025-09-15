@@ -95,6 +95,7 @@ const controller = new ListCompaniesController();
 router.get(
   "/",
   authenticateToken,
+
   asyncHandler(controller.handle.bind(controller))
 );
 

@@ -39,7 +39,7 @@ export class CreateArticleService {
     const cleaned = stripHtmlTags(contentFile.buffer.toString("utf-8"));
     if (cleaned.length < 500) {
       throw new AppError(
-        "Content must exceed 500 chars",
+        "El contenido debe tener más de 500 caracteres",
         HttpStatusCodes.BAD_REQUEST.code
       );
     }
@@ -50,7 +50,7 @@ export class CreateArticleService {
     const article = await this.repo.create({
       authorId: userId,
       title: dto.title,
-      categoryId: dto.categoryId,
+      categoryId: dto.category_id,
       contentUrl: contentResp.url,
       bannerUrl: bannerResp.url,
       resume,

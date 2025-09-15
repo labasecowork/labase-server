@@ -5,7 +5,7 @@ export const CreateArticleSchema = z.object({
   title: z
     .string({ required_error: MESSAGES.ARTICLE.ARTICLE_ERROR_REQUIRED_TITLE })
     .min(1, MESSAGES.ARTICLE.ARTICLE_ERROR_REQUIRED_TITLE),
-  categoryId: z.string({
+  category_id: z.string({
     required_error: MESSAGES.ARTICLE.ARTICLE_ERROR_REQUIRED_CATEGORY,
   }),
 });

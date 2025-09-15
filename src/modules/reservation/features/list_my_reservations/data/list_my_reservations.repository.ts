@@ -15,11 +15,7 @@ export class ListMyReservationsRepository {
         space: {
           select: {
             name: true,
-            space_images: {
-              select: { id: true, url: true, alt: true, position: true },
-              orderBy: { position: "asc" },
-              take: 1,
-            },
+            space_images: true,
           },
         },
       },

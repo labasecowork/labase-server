@@ -1,4 +1,6 @@
 import prisma from "../../../../../config/prisma_client";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
+import { AppError } from "../../../../../types/error";
 
 export class CreateVisitorRepository {
   findUserById(user_id: string) {
@@ -43,16 +45,29 @@ export class CreateVisitorRepository {
     entry_time: Date;
     exit_time?: Date | null;
   }) {
-    return prisma.visitors.create({
-      data,
-      include: {
-        user: {
-          select: { id: true, first_name: true, last_name: true, email: true },
+    try {
+      return prisma.visitors.create({
+        data,
+        include: {
+          user: {
+            select: {
+              id: true,
+              first_name: true,
+              last_name: true,
+              email: true,
+            },
+          },
+          space: {
+            select: { id: true, name: true },
+          },
         },
-        space: {
-          select: { id: true, name: true },
-        },
-      },
-    });
+      });
+    } catch (error) {
+      console.error(error);
+      throw new AppError(
+        "Error al crear el visitante",
+        HttpStatusCodes.INTERNAL_SERVER_ERROR.code
+      );
+    }
   }
 }

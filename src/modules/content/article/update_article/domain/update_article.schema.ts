@@ -10,7 +10,7 @@ export const UpdateArticleBodySchema = z.object({
     .string()
     .min(1, MESSAGES.ARTICLE.ARTICLE_ERROR_REQUIRED_TITLE)
     .optional(),
-  categoryId: z
+  category_id: z
     .string({
       required_error: MESSAGES.ARTICLE.ARTICLE_ERROR_REQUIRED_CATEGORY,
     })

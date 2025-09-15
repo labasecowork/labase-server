@@ -46,22 +46,14 @@ export class EditVisitorService {
       }
     }
 
-    if (body.user_id) {
-      const user = await this.repo.findUserById(body.user_id);
+    if (body.client_id) {
+      const user = await this.repo.findUserById(body.client_id);
       if (!user) {
         throw new AppError(
           MESSAGES.VISITOR.HOST_NOT_FOUND,
           HttpStatusCodes.BAD_REQUEST.code
         );
       }
-    }
-
-    // Regla: no permitir sobreescribir exit_time si ya existe
-    if (existing.exit_time && body.exit_time) {
-      throw new AppError(
-        MESSAGES.VISITOR.ALREADY_CHECKED_OUT,
-        HttpStatusCodes.CONFLICT.code
-      );
     }
 
     // Coherencia si cambian entry_time y ya hay exit_time
@@ -84,7 +76,7 @@ export class EditVisitorService {
       email: body.email ?? undefined,
       entry_time: body.entry_time ? new Date(body.entry_time) : undefined,
       exit_time: body.exit_time ? new Date(body.exit_time) : undefined,
-      user_id: body.user_id ?? undefined,
+      user_id: body.client_id ?? undefined,
       space_id: body.space_id ?? undefined,
     });
 

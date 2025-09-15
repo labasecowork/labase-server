@@ -8,9 +8,21 @@ export class DeleteCategoryService {
   async execute(id: string) {
     const exists = await this.repo.findById(id);
     if (!exists) {
-      throw new AppError("Category not found", HttpStatusCodes.NOT_FOUND.code);
+      throw new AppError(
+        "Categoría no encontrada.",
+        HttpStatusCodes.NOT_FOUND.code
+      );
     }
+
+    const hasRelatedArticles = await this.repo.hasRelatedArticles(id);
+    if (hasRelatedArticles) {
+      throw new AppError(
+        "No se puede eliminar esta categoría porque está asociada a un artículo.",
+        HttpStatusCodes.CONFLICT.code
+      );
+    }
+
     await this.repo.delete(id);
-    return { success: true, message: "Category deleted successfully" };
+    return { success: true, message: "Categoría eliminada correctamente." };
   }
 }

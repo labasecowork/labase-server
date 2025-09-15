@@ -39,7 +39,7 @@ export const CreateVisitorSchema = z
       .email("El formato del correo electrónico no es válido")
       .optional(),
 
-    user_id: z
+    client_id: z
       .string({
         required_error: "El ID del usuario es obligatorio",
         invalid_type_error: "El ID del usuario debe ser una cadena (UUID)",

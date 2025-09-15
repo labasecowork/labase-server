@@ -16,7 +16,7 @@ export class CreateVisitorService {
       );
     }
 
-    const hostUser = await this.repo.findUserById(dto.user_id);
+    const hostUser = await this.repo.findUserById(dto.client_id);
     if (!hostUser) {
       throw new AppError(
         MESSAGES.VISITOR.HOST_NOT_FOUND,
@@ -46,7 +46,7 @@ export class CreateVisitorService {
       last_name: dto.last_name,
       phone: dto.phone ?? null,
       email: dto.email ?? null,
-      user_id: dto.user_id,
+      user_id: dto.client_id,
       space_id: dto.space_id,
       entry_time: new Date(dto.entry_time),
       exit_time: dto.exit_time ? new Date(dto.exit_time) : null,

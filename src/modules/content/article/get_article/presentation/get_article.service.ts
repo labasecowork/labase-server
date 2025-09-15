@@ -3,20 +3,28 @@ import { buildPaginationMeta, getPaginationParams } from "../../../../../utils";
 import { AppError } from "../../../../../types/";
 import { HttpStatusCodes } from "../../../../../constants";
 import { MESSAGES } from "../../../../../constants/messages";
+import { GetArticleListQueryInput } from "../domain/get_article.schema";
 
 export class GetArticleService {
   constructor(private readonly repo = new GetArticleRepository()) {}
 
-  async list(query: any) {
-    const { page, limit, skip } = getPaginationParams(query);
+  async list(query: GetArticleListQueryInput) {
+    const { page, limit, search, categoryId } = query;
+    const skip = (page - 1) * limit;
+
+    const filters = {
+      search,
+      categoryId,
+    };
+
     const [rows, total] = await Promise.all([
-      this.repo.findMany(skip, limit),
-      this.repo.count(),
+      this.repo.findMany(skip, limit, filters),
+      this.repo.count(filters),
     ]);
 
     return {
-      data: rows,
-      meta: buildPaginationMeta(total, page, limit),
+      articles: rows,
+      pagination: buildPaginationMeta(total, page, limit),
     };
   }
 

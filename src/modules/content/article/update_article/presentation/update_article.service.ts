@@ -18,7 +18,7 @@ export class UpdateArticleService {
   async execute(
     articleId: string,
     userId: string,
-    body: { title?: string; categoryId?: string },
+    body: { title?: string; category_id?: string },
     files?: { banner?: Express.Multer.File[]; content?: Express.Multer.File[] }
   ) {
     const current = await this.repo.findById(articleId);
@@ -60,7 +60,7 @@ export class UpdateArticleService {
 
     const updated = await this.repo.update(articleId, {
       title: body.title,
-      categoryId: body.categoryId,
+      categoryId: body.category_id,
       bannerUrl,
       contentUrl,
       resume,

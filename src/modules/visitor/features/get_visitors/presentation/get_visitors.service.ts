@@ -44,14 +44,14 @@ export class GetVisitorsService {
     ]);
 
     return {
-      items,
-      meta: {
+      visitors: items,
+      pagination: {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit) || 1,
-        hasNextPage: page * limit < total,
-        hasPrevPage: page > 1,
+        total_pages: Math.ceil(total / limit) || 1,
+        has_next_page: page * limit < total,
+        has_prev_page: page > 1,
       },
     };
   }

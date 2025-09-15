@@ -9,7 +9,11 @@ export class ListCompaniesController {
   constructor(private readonly service = new ListCompaniesService()) {}
 
   async handle(req: AuthenticatedRequest, res: Response) {
+    // Verificamos el query params
+    // req.query = {search: 134}
+    // Lanzamos un error de zod si el query params no es válido
     const filters = ListCompaniesSchema.parse(req.query);
+    // Verificamos el usuario autenticado
     const authUser = await getAuthenticatedUser(req);
 
     const user = {
@@ -17,10 +21,15 @@ export class ListCompaniesController {
       role: authUser.role as "admin" | "client" | "employee",
     };
 
-    const result = await this.service.execute(filters, user);
+    // Ejecutamos el servicio
+    const result = await this.service.execute(filters, user); // aquí estarian todos las compañias
 
     return res
-      .status(HttpStatusCodes.OK.code)
-      .json(buildHttpResponse(HttpStatusCodes.OK.code, "OK", req.path, result));
+      .status(
+        HttpStatusCodes.OK.code // 200
+      )
+      .json(
+        buildHttpResponse(HttpStatusCodes.OK.code, "OK", req.path, result)
+      );
   }
 }
