@@ -33,6 +33,16 @@ export class CreateReservationService {
       );
     }
 
+    if (dto.user_id) {
+      const user = await this.repo.findUserById(dto.user_id);
+      if (!user) {
+        throw new AppError(
+          RESERVATION_MESSAGES.USER_NOT_FOUND,
+          HttpStatusCodes.NOT_FOUND.code
+        );
+      }
+    }
+
     const space = await this.repo.findSpaceById(dto.space_id);
     if (!space || space.disabled) {
       throw new AppError(
@@ -137,9 +147,11 @@ export class CreateReservationService {
     const purchaseNumber = generatePurchaseNumber();
 
     const codeQr = generateQrCode();
+
+    const userId = dto.user_id ?? user.id;
     const created = await this.repo.create({
       space: { connect: { id: dto.space_id } },
-      user: { connect: { id: user.id } },
+      user: { connect: { id: userId } },
       start_time: dto.start_time,
       end_time: dto.end_time,
       people: dto.people,

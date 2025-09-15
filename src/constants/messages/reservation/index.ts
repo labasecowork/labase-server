@@ -1,5 +1,6 @@
 // src/constants/messages/reservation/index.ts
 export const RESERVATION_MESSAGES = {
+  USER_NOT_FOUND: "El usuario no existe",
   CREATED_SUCCESS: "La reserva se ha creado correctamente",
 
   SPACE_NOT_FOUND: "El espacio no existe o está inactivo",

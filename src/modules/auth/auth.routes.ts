@@ -4,6 +4,7 @@ import {
   requestRegistrationRouter,
   verifyCodeRegistrationRouter,
   resendRegistrationRouter,
+  directRegistrationRouter,
 } from "./features/registration";
 import {
   confirmPasswordResetRouter,
@@ -17,6 +18,7 @@ export const authRouter = Router();
 authRouter.use("/register", requestRegistrationRouter);
 authRouter.use("/register", verifyCodeRegistrationRouter);
 authRouter.use("/register", resendRegistrationRouter);
+authRouter.use("/register", directRegistrationRouter);
 
 // Login
 authRouter.use("/login", loginRouter);

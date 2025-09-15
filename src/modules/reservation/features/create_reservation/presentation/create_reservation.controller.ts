@@ -22,7 +22,7 @@ export class CreateReservationController {
         req.path,
         {
           reservation_id: result.reservation_id,
-          codeQr: result.code_qr,
+          code_qr: result.code_qr,
           price: result.price,
           status: result.status,
           user,

@@ -9,6 +9,12 @@ export class CreateReservationRepository {
     });
   }
 
+  findUserById(id: string) {
+    return prisma.users.findUnique({
+      where: { id },
+    });
+  }
+
   /** Hay solapamiento si (A.start < B.end) && (A.end > B.start) */
   findOverlaps(space_id: string, start: Date, end: Date) {
     return prisma.reservation.findFirst({

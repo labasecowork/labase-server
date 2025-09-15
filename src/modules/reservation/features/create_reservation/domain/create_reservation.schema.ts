@@ -2,6 +2,13 @@ import { z } from "zod";
 
 export const CreateReservationSchema = z
   .object({
+    user_id: z
+      .string({
+        required_error: "El ID del usuario es obligatorio",
+        invalid_type_error: "El ID del usuario debe ser una cadena (UUID)",
+      })
+      .optional(),
+
     space_id: z
       .string({
         required_error: "El ID del espacio es obligatorio",
