@@ -11,6 +11,7 @@ interface FindAttendancesParams {
   search?: string;
   work_area_id?: string;
   company_id?: string;
+  all?: boolean;
 }
 
 export class ListAllAttendanceRepository {
@@ -25,8 +26,10 @@ export class ListAllAttendanceRepository {
       search,
       work_area_id,
       company_id,
+      all,
     } = params;
-    const skip = (page - 1) * limit;
+    const skip = all ? undefined : (page - 1) * limit;
+    const take = all ? undefined : limit;
 
     const where: any = {
       ...(employee_id && { employee_id }),
@@ -69,7 +72,7 @@ export class ListAllAttendanceRepository {
       prisma.attendance.findMany({
         where,
         skip,
-        take: limit,
+        take,
         orderBy: [{ date: "desc" }, { check_time: "desc" }],
         include: {
           employee: {

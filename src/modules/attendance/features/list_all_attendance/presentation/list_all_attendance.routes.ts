@@ -19,7 +19,8 @@ const controller = new ListAllAttendanceController();
  *       - employee_id: Filtrar por empleado específico
  *       - start_date y end_date: Filtrar por rango de fechas
  *       - type: Filtrar por tipo (ENTRY o EXIT)
- *       - Paginación con page y limit
+ *       - all: Si es 'true', obtiene todas las asistencias sin límite de paginación
+ *       - Paginación con page y limit (ignorados si all=true)
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -62,6 +63,12 @@ const controller = new ListAllAttendanceController();
  *           type: string
  *           enum: [entry, exit]
  *         description: Tipo de asistencia para filtrar
+ *       - in: query
+ *         name: all
+ *         schema:
+ *           type: string
+ *           enum: ["true", "false"]
+ *         description: Si es 'true', obtiene todas las asistencias sin límite de paginación
  *     responses:
  *       200:
  *         description: Lista de asistencias obtenida correctamente

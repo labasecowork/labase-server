@@ -18,6 +18,7 @@ export class ListAllAttendanceService {
       search: dto.search,
       work_area_id: dto.work_area_id,
       company_id: dto.company_id,
+      all: dto.all,
     });
 
     const attendances = result.attendances.map((a) => {
@@ -46,10 +47,10 @@ export class ListAllAttendanceService {
     return {
       attendances,
       pagination: {
-        page: dto.page,
-        limit: dto.limit,
+        page: dto.all ? 1 : dto.page,
+        limit: dto.all ? result.total : dto.limit,
         total: result.total,
-        total_pages: Math.ceil(result.total / dto.limit),
+        total_pages: dto.all ? 1 : Math.ceil(result.total / dto.limit),
       },
     };
   }

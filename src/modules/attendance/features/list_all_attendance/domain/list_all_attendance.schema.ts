@@ -66,6 +66,17 @@ export const ListAllAttendanceSchema = z
       })
       .uuid("El ID de la empresa debe ser un UUID válido")
       .optional(),
+
+    all: z
+      .string()
+      .optional()
+      .transform((val) => val === "true")
+      .pipe(
+        z.boolean({
+          invalid_type_error: "El parámetro 'all' debe ser 'true' o 'false'",
+        })
+      )
+      .optional(),
   })
   .superRefine((data, ctx) => {
     if (data.start_date && data.end_date && data.end_date < data.start_date) {
