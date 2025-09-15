@@ -76,8 +76,8 @@ export class ListCalendarRepository {
       id: string;
       space: string;
       cliente: string;
-      startTime: string;
-      endTime: string;
+      start_time: string;
+      end_time: string;
       day: number;
     }> = [];
 
@@ -97,8 +97,8 @@ export class ListCalendarRepository {
           id: r.id,
           space: r.space.name,
           cliente: `${r.user.first_name} ${r.user.last_name}`,
-          startTime: sameStartDay ? start.format("HH:mm") : "09:00",
-          endTime: sameEndDay ? end.format("HH:mm") : "18:00",
+          start_time: sameStartDay ? start.format("HH:mm") : "09:00",
+          end_time: sameEndDay ? end.format("HH:mm") : "18:00",
           day: date.date(), // day() devuelve 0-6 (domingo-sábado)
         });
       }
