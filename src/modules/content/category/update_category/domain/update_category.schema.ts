@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const UpdateCategoryParamsSchema = z.object({
-  id: z.string().uuid("id must be a valid UUID"),
+  id: z.string(),
 });
 
 export const UpdateCategoryBodySchema = z
