@@ -45,14 +45,12 @@ export const GetVisitorsQuerySchema = z
       .string({
         invalid_type_error: "El ID del usuario debe ser una cadena (UUID)",
       })
-      .uuid("El ID del usuario debe ser un UUID válido")
       .optional(),
 
     space_id: z
       .string({
         invalid_type_error: "El ID del espacio debe ser una cadena (UUID)",
       })
-      .uuid("El ID del espacio debe ser un UUID válido")
       .optional(),
 
     date_from: isoDateString.optional(),
