@@ -1,7 +1,0 @@
-2025/09/06-18:31:57.242 20018 Reusing MANIFEST /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2025/09/06-18:31:57.243 20018 Recovering log #56
-2025/09/06-18:31:57.264 20018 Reusing old log /home/ubuntu/Documentos/Proyectos/labase-server/.wwebjs_auth/session-labase-bot/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000056.log 
-2025/09/06-18:31:58.765 2006e Level-0 table #61: started
-2025/09/06-18:31:58.769 2006e Level-0 table #61: 266663 bytes OK
-2025/09/06-18:31:58.770 2006e Delete type=0 #56
-2025/09/06-18:31:58.770 2006e Manual compaction at level-0 from '\x00\x1d\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x1e\x00\x00\x00' @ 0 : 0; will stop at (end)

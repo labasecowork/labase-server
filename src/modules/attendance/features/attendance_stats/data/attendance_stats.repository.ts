@@ -1,6 +1,17 @@
 // src/modules/attendance/features/attendance_stats/data/attendance_stats.repository.ts
 import prisma from "../../../../../config/prisma_client";
 
+function atStartOfDay(d: Date) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+function atEndOfDay(d: Date) {
+  const x = new Date(d);
+  x.setHours(23, 59, 59, 999);
+  return x;
+}
+
 interface FindAttendanceStatsParams {
   employee_id?: string;
   start_date?: Date;
@@ -11,48 +22,40 @@ export class AttendanceStatsRepository {
   async findAttendanceData(params: FindAttendanceStatsParams) {
     const { employee_id, start_date, end_date } = params;
 
-    const where = {
+    const where: any = {
       ...(employee_id && { employee_id }),
       ...((start_date || end_date) && {
         date: {
-          ...(start_date && { gte: start_date }),
-          ...(end_date && { lte: end_date }),
+          ...(start_date && { gte: atStartOfDay(start_date) }),
+          ...(end_date && { lte: atEndOfDay(end_date) }),
         },
       }),
     };
 
-    // Obtener todos los registros de asistencia
-    const attendances = await prisma.attendance.findMany({
+    const attendances = await prisma.attendance_points.findMany({
       where,
-      orderBy: [{ date: "asc" }, { check_time: "asc" }],
+      orderBy: [{ date: "asc" }, { mark_time: "asc" }],
       select: {
         date: true,
-        check_time: true,
-        type: true,
+        mark_time: true,
+        mark_type: true,
         employee_id: true,
       },
     });
 
-    // Obtener días únicos registrados
-    const uniqueDays = await prisma.attendance.findMany({
+    const uniqueDays = await prisma.attendance_points.findMany({
       where,
       distinct: ["date"],
-      select: {
-        date: true,
-      },
+      select: { date: true },
     });
 
-    // Obtener empleados únicos
-    const uniqueEmployees = await prisma.attendance.findMany({
+    const uniqueEmployees = await prisma.attendance_points.findMany({
       where,
       distinct: ["employee_id"],
-      select: {
-        employee_id: true,
-      },
+      select: { employee_id: true },
     });
 
-    // Contar total de registros
-    const totalRecords = await prisma.attendance.count({ where });
+    const totalRecords = await prisma.attendance_points.count({ where });
 
     return {
       attendances,

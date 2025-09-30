@@ -1,124 +1,62 @@
-// src/modules/attendance/features/mark_attendance/presentation/mark_attendance.service.ts
-import { MarkAttendanceDTO } from "../domain/mark_attendance.dto";
+//src/modules/attendance/features/mark_attendance/presentation/mark_attendance.service.ts
+import { MarkAttendanceDTO } from "../domain/mark_attendance.schema";
 import { MarkAttendanceRepository } from "../data/mark_attendance.repository";
 import { AppError } from "../../../../../utils/errors";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { isAfter, isSameDay, format } from "date-fns";
-import type { CurrentUser } from "../../../../../utils/authenticated_user";
-import { formatInTimeZone } from "date-fns-tz";
-import { TIMEZONE } from "../../../../../config/env";
+import { MESSAGES } from "../../../../../constants/messages";
+import { getWeekday, getNextMarkType, evaluateMarkFlags, today, toLocalDateOnly } from "../../../shared/attendance.utils";
+import { MarkType } from "../../../shared/attendance.constants";
 
 export class MarkAttendanceService {
   constructor(private readonly repo = new MarkAttendanceRepository()) {}
 
-  async execute(
-    dto: MarkAttendanceDTO,
-    user: Pick<CurrentUser, "id" | "role">
-  ) {
-    // 🔐 Política: solo empleados pueden marcar asistencia
-    if (user.role !== "employee") {
-      throw new AppError(
-        "Solo los empleados pueden marcar asistencia",
-        HttpStatusCodes.FORBIDDEN.code
-      );
+  async execute(dto: MarkAttendanceDTO & { requester_employee_id: string }) {
+    const employee_id = dto.employee_id ?? dto.requester_employee_id;
+    const baseDate = toLocalDateOnly(today());
+    const weekday = getWeekday(baseDate);
+
+    const policy = await this.repo.getPolicy(employee_id);
+    if (!policy) throw new AppError(MESSAGES.ATTENDANCE.POLICY_NOT_FOUND, HttpStatusCodes.BAD_REQUEST.code);
+
+    const schedule = await this.repo.getScheduleForWeekday(employee_id, weekday);
+    if (!schedule) throw new AppError(MESSAGES.ATTENDANCE.SCHEDULE_NOT_FOUND, HttpStatusCodes.BAD_REQUEST.code);
+
+    const expected_points = schedule.expected_points === 4 ? 4 : 2;
+
+    const pointsToday = await this.repo.getPointsForDate(employee_id, baseDate);
+    const already: MarkType[] = pointsToday.map(p => p.mark_type as MarkType);
+
+    const next = getNextMarkType(already, expected_points);
+    if (!next) {
+      return { message: MESSAGES.ATTENDANCE.DAY_COMPLETE, next_mark: null, recorded: null };
     }
 
-    // Verificar que exista el registro de empleado vinculado al usuario
-    const employee = await this.repo.findEmployeeByUserId(user.id);
-    if (!employee) {
-      throw new AppError(
-        "Solo los empleados pueden marcar asistencia",
-        HttpStatusCodes.FORBIDDEN.code
-      );
-    }
-
-    // Última asistencia
-    const lastAttendance = await this.repo.getLastAttendanceForEmployee(
-      employee.employee_id
+    const flags = evaluateMarkFlags(
+      new Date(), next, dto.request_mode, schedule as any, policy as any, baseDate
     );
 
-    const now = new Date();
-    const currentDate = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    );
-    const currentTime = now;
-
-    if (lastAttendance) {
-      if (isSameDay(lastAttendance.date, currentDate)) {
-        if (lastAttendance.type === "entry" && dto.type === "entry") {
-          throw new AppError(
-            "No puedes marcar entrada después de entrada. Primero debes marcar salida.",
-            HttpStatusCodes.BAD_REQUEST.code
-          );
-        }
-        if (lastAttendance.type === "exit" && dto.type === "exit") {
-          throw new AppError(
-            "No puedes marcar salida después de salida. Primero debes marcar entrada.",
-            HttpStatusCodes.BAD_REQUEST.code
-          );
-        }
-        if (lastAttendance.type === "exit" && dto.type === "entry") {
-          const lastCheckDateTime = new Date(
-            lastAttendance.date.getFullYear(),
-            lastAttendance.date.getMonth(),
-            lastAttendance.date.getDate(),
-            lastAttendance.check_time.getHours(),
-            lastAttendance.check_time.getMinutes(),
-            lastAttendance.check_time.getSeconds()
-          );
-          if (!isAfter(currentTime, lastCheckDateTime)) {
-            throw new AppError(
-              "La nueva entrada debe ser posterior a la última salida",
-              HttpStatusCodes.BAD_REQUEST.code
-            );
-          }
-        }
-      } else {
-        if (lastAttendance.type === "entry" && dto.type === "entry") {
-          throw new AppError(
-            `Tienes una entrada pendiente del ${format(
-              lastAttendance.date,
-              "dd/MM/yyyy"
-            )}. Debes marcar salida primero.`,
-            HttpStatusCodes.BAD_REQUEST.code
-          );
-        }
-        if (lastAttendance.type === "exit" && dto.type === "exit") {
-          throw new AppError(
-            `Ya marcaste salida el ${format(
-              lastAttendance.date,
-              "dd/MM/yyyy"
-            )}. Debes marcar entrada primero.`,
-            HttpStatusCodes.BAD_REQUEST.code
-          );
-        }
-      }
-    } else {
-      if (dto.type === "exit") {
-        throw new AppError(
-          "Tu primera marca de asistencia debe ser una entrada",
-          HttpStatusCodes.BAD_REQUEST.code
-        );
-      }
-    }
-
-    const attendance = await this.repo.create({
-      employee_id: employee.employee_id,
-      type: dto.type,
-      date: currentDate,
-      check_time: currentTime,
+    const created = await this.repo.createPoint({
+      employee_id,
+      date: baseDate,
+      mark_type: next,
+      mark_time: new Date(),
+      in_schedule: flags.in_schedule,
+      is_late: flags.is_late,
+      is_early: flags.is_early,
+      is_remote: flags.is_remote,
+      note: dto.note,
     });
 
     return {
-      message: `Asistencia marcada exitosamente: ${
-        dto.type === "entry" ? "Entrada" : "Salida"
-      }`,
-      attendance_id: attendance.id,
-      type: attendance.type,
-      date: formatInTimeZone(attendance.date, TIMEZONE, "yyyy-MM-dd"),
-      check_time: formatInTimeZone(attendance.check_time, TIMEZONE, "HH:mm:ss"),
+      message: MESSAGES.ATTENDANCE.MARKED_SUCCESS,
+      next_mark: next,
+      recorded: {
+        id: created.id,
+        date: created.date,
+        mark_type: created.mark_type,
+        mark_time: created.mark_time,
+        flags,
+      },
     };
   }
 }

@@ -2,6 +2,17 @@
 import { attendance_type } from "@prisma/client";
 import prisma from "../../../../../config/prisma_client";
 
+function atStartOfDay(d: Date) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+function atEndOfDay(d: Date) {
+  const x = new Date(d);
+  x.setHours(23, 59, 59, 999);
+  return x;
+}
+
 interface FindAttendancesParams {
   page: number;
   limit: number;
@@ -27,29 +38,23 @@ export class ListAllAttendanceRepository {
       work_area_id,
       company_id,
     } = params;
+
     const skip = (page - 1) * limit;
 
     const where: any = {
       ...(employee_id && { employee_id }),
-      ...(type && { type }),
+      ...(type && { mark_type: type }),
       ...((start_date || end_date) && {
         date: {
-          ...(start_date && { gte: start_date }),
-          ...(end_date && { lte: end_date }),
+          ...(start_date && { gte: atStartOfDay(start_date) }),
+          ...(end_date && { lte: atEndOfDay(end_date) }),
         },
       }),
     };
 
-    // Construir filtros del empleado
     const employeeFilters: any = {};
-
-    if (work_area_id) {
-      employeeFilters.work_area_id = work_area_id;
-    }
-
-    if (company_id) {
-      employeeFilters.company_id = company_id;
-    }
+    if (work_area_id) employeeFilters.work_area_id = work_area_id;
+    if (company_id) employeeFilters.company_id = company_id;
 
     if (search) {
       employeeFilters.user = {
@@ -60,18 +65,16 @@ export class ListAllAttendanceRepository {
         ],
       };
     }
-
-    // Solo agregar filtros de empleado si hay alguno
     if (Object.keys(employeeFilters).length > 0) {
       where.employee = employeeFilters;
     }
 
     const [attendances, total] = await Promise.all([
-      prisma.attendance.findMany({
+      prisma.attendance_points.findMany({
         where,
         skip,
         take: limit,
-        orderBy: [{ date: "desc" }, { check_time: "desc" }],
+        orderBy: [{ date: "desc" }, { mark_time: "desc" }],
         include: {
           employee: {
             include: {
@@ -87,12 +90,9 @@ export class ListAllAttendanceRepository {
           },
         },
       }),
-      prisma.attendance.count({ where }),
+      prisma.attendance_points.count({ where }),
     ]);
 
-    return {
-      attendances,
-      total,
-    };
+    return { attendances, total };
   }
 }

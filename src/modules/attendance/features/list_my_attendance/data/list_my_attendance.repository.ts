@@ -1,57 +1,44 @@
-// src/modules/attendance/features/list_my_attendance/data/list_my_attendance.repository.ts
 import prisma from "../../../../../config/prisma_client";
-import { attendance_type } from "@prisma/client";
 
-interface FindMyAttendancesParams {
-  employee_id: string;
-  page: number;
-  limit: number;
-  start_date?: Date;
-  end_date?: Date;
-  type?: attendance_type;
+function atStartOfDay(d: Date) {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  return x;
+}
+
+function atEndOfDay(d: Date) {
+  const x = new Date(d);
+  x.setHours(23, 59, 59, 999);
+  return x;
 }
 
 export class ListMyAttendanceRepository {
-  async findEmployeeByUserId(userId: string) {
-    return await prisma.employee_details.findUnique({
-      where: { employee_id: userId },
+  async findPoints(employee_id: string, from?: Date, to?: Date) {
+    const where = {
+      employee_id,
+      ...(from || to
+        ? {
+            date: {
+              ...(from && { gte: atStartOfDay(from) }),
+              ...(to && { lte: atEndOfDay(to) }),
+            },
+          }
+        : {}),
+    };
+
+    return prisma.attendance_points.findMany({
+      where,
+      orderBy: [{ date: "asc" }, { mark_time: "asc" }],
     });
   }
 
-  async findMyAttendances(params: FindMyAttendancesParams) {
-    const { employee_id, page, limit, start_date, end_date, type } = params;
-    const skip = (page - 1) * limit;
-
-    const where = {
-      employee_id,
-      ...(type && { type }),
-      ...((start_date || end_date) && {
-        date: {
-          ...(start_date && { gte: start_date }),
-          ...(end_date && { lte: end_date }),
-        },
-      }),
-    };
-
-    const [attendances, total] = await Promise.all([
-      prisma.attendance.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: [{ date: "desc" }, { check_time: "desc" }],
-        select: {
-          id: true,
-          type: true,
-          date: true,
-          check_time: true,
-        },
-      }),
-      prisma.attendance.count({ where }),
-    ]);
-
-    return {
-      attendances,
-      total,
-    };
+  async getScheduleMap(employee_id: string) {
+    const rows = await prisma.employee_schedules.findMany({
+      where: { employee_id },
+    });
+    // weekday -> expected_points
+    return Object.fromEntries(
+      rows.map((r) => [r.weekday, r.expected_points])
+    ) as Record<number, number>;
   }
 }

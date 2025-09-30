@@ -15,7 +15,7 @@ export class ListAllAttendanceService {
       employee_id: dto.employee_id,
       start_date: dto.start_date,
       end_date: dto.end_date,
-      type: dto.type as attendance_type,
+      type: dto.type as attendance_type | undefined,
       search: dto.search,
       work_area_id: dto.work_area_id,
       company_id: dto.company_id,
@@ -23,15 +23,16 @@ export class ListAllAttendanceService {
 
     const attendances = result.attendances.map((a) => {
       const onlyDate = a.date.toISOString().slice(0, 10);
-      const checkTime = a.check_time.toISOString().slice(11, 19);
-      const combinedUtc = new Date(`${onlyDate}T${checkTime}Z`);
+      const markTime = a.mark_time.toISOString().slice(11, 19);
+      const combinedUtc = new Date(`${onlyDate}T${markTime}Z`);
       const date = formatInTimeZone(combinedUtc, TIMEZONE, "yyyy-MM-dd");
       const time = formatInTimeZone(combinedUtc, TIMEZONE, "HH:mm:ss");
+
       return {
         id: a.id,
         employee_id: a.employee_id,
-        type: a.type as attendance_type,
-        date: date,
+        type: a.mark_type as attendance_type,
+        date,
         check_time: time,
         employee: {
           employee_id: a.employee.employee_id,

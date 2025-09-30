@@ -100,10 +100,6 @@ enum reaction_target {
   reply // Reacción a una respuesta
 }
 
-enum attendance_type {
-  entry // Entrada
-  exit // Salida
-}
 
 enum unit_of_measure {
   unit // unidad
@@ -123,30 +119,51 @@ enum gender {
   unspecified // Sin especificar
 }
 
-model users {
-  id                 String      @id @default(uuid()) // Identificador único del usuario
-  first_name         String // Nombre del usuario
-  last_name          String // Apellido del usuario
-  email              String      @unique // Correo electrónico único
-  password           String // Contraseña hasheada
-  user_type          user_type? // Tipo de usuario (admin o client)
-  profile_image      String? // Imagen de perfil del usuario
-  phone              String? // Número telefónico del usuario
-  birth_date         DateTime?   @db.Date // Fecha de nacimiento
-  gender             gender      @default(unspecified) // Género del usuario
-  status             user_status // Estado actual del usuario
-  creation_timestamp DateTime    @default(now()) // Fecha de creación del registro
+// tipo de colaborador
+enum employee_kind {
+  intern        // practicante
+  contractor    // contratado
+  payroll       // planilla
+}
 
-  admin_details        admin_details? // Relación uno a uno si es admin
+//tipo de punto (A–D)
+enum attendance_type {
+  entry        // A
+  lunch_out    // B
+  lunch_in     // C
+  exit         // D
+}
+
+//modalidad de asistencia por día
+enum work_mode {
+  onsite
+  remote
+}
+
+model users {
+  id                 String   @id @default(uuid())
+  first_name         String
+  last_name          String
+  email              String   @unique
+  password           String
+  user_type          user_type?
+  profile_image      String?
+  phone              String?
+  birth_date         DateTime? @db.Date
+  gender             gender    @default(unspecified)
+  status             user_status
+  creation_timestamp DateTime  @default(now())
+
+  admin_details        admin_details?
   employee_details     employee_details?
-  user_details         user_details? // Relación uno a uno para detalles generales
-  reservations         reservation[]         @relation("user_reservations") // Reservas realizadas por el usuario
+  user_details         user_details?
+  reservations         reservation[]         @relation("user_reservations")
   payment_transactions payment_transaction[] @relation("user_payments")
   articles             articles[]            @relation("user_articles")
 
   hosted_visitors visitors[] @relation("visitor_host")
 
-  @@map("users") // (opcional; ya está en snake_case)
+  @@map("users")
 }
 
 model admin_details {
@@ -202,27 +219,96 @@ model employee_details {
   work_area_id String?
   company_id   String?
 
+  kind        employee_kind?         // intern/contractor/payroll
+  is_active   Boolean                @default(true)
+
   work_area work_areas? @relation(fields: [work_area_id], references: [id], onDelete: SetNull)
   company   companies?  @relation(fields: [company_id], references: [id], onDelete: SetNull)
 
-  attendances attendance[]
-  visitors    visitors[]
+  attendance_points attendance_points[]
+  schedules         employee_schedules[]
+  policy            employee_attendance_policies?
+
+  visitors visitors[]
 
   @@index([work_area_id])
   @@index([company_id])
   @@map("employee_details")
 }
 
-model attendance {
-  id          String          @id @default(uuid())
-  employee_id String
-  type        attendance_type
-  date        DateTime        @db.Date
-  check_time  DateTime        @db.Time
+/// Política por empleado
+model employee_attendance_policies {
+  id                    String  @id @default(uuid())
+  employee_id           String  @unique
+  grace_entry_minutes   Int     @default(5)    // tolerancia de ingreso
+  early_before_minutes  Int     @default(15)   // permitir marcar hasta 15' antes
+  exit_late_minutes     Int     @default(10)   // tolerancia para marcar salida
+  require_four_points   Boolean @default(false) // 2 puntos (false) o 4 puntos (true)
+  min_daily_hours       Int     @default(8)    // interns pueden tener 4 (editable)
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
 
   employee employee_details @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
 
-  @@map("attendances")
+  @@map("employee_attendance_policies")
+}
+
+/// Horario por día con modalidad y ventanas de almuerzo
+model employee_schedules {
+  id               String    @id @default(uuid())
+  employee_id      String
+  weekday          Int       // 1=Lunes ... 7=Domingo
+  mode             work_mode // onsite/remote por día
+  expected_points  Int       @default(2) // validar en app: 2 o 4
+  entry_time       DateTime? @db.Time   // A
+  lunch_out_time   DateTime? @db.Time   // B
+  lunch_in_time    DateTime? @db.Time   // C
+  exit_time        DateTime? @db.Time   // D
+  min_lunch_minutes Int?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  employee employee_details @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@unique([employee_id, weekday])
+  @@index([employee_id, weekday])
+  @@map("employee_schedules")
+}
+
+/// marcaciones por punto para un día
+model attendance_points {
+  id           String          @id @default(uuid())
+  employee_id  String
+  date         DateTime        @db.Date
+  mark_type    attendance_type
+  mark_time    DateTime        @db.Time
+
+  // Flags de validación
+  in_schedule  Boolean         @default(true)
+  is_late      Boolean         @default(false)
+  is_early     Boolean         @default(false)
+  is_remote    Boolean         @default(false)
+
+  // Auditoría / ediciones
+  is_manual            Boolean   @default(false)
+  edited_by_admin_id   String?   
+  edited_at            DateTime?
+  edit_reason          String?
+
+  // Observaciones del propio punto
+  note String @default("")
+
+
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  // Relaciones
+  employee  employee_details @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@unique([employee_id, date, mark_type])
+  @@index([employee_id, date])
+  @@index([date])
+  @@map("attendance_points")
 }
 
 model space {

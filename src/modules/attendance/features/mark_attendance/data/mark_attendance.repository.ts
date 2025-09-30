@@ -1,53 +1,24 @@
-// src/modules/attendance/features/mark_attendance/data/mark_attendance.repository.ts
+//src/modules/attendance/features/mark_attendance/data/mark_attendance.repository.ts
 import prisma from "../../../../../config/prisma_client";
-import { attendance_type } from "@prisma/client";
+import { MarkType } from "../../../shared/attendance.constants";
 
 export class MarkAttendanceRepository {
-  async findEmployeeByUserId(userId: string) {
-    return await prisma.employee_details.findUnique({
-      where: { employee_id: userId },
-      include: {
-        user: {
-          select: {
-            id: true,
-            first_name: true,
-            last_name: true,
-            email: true,
-          },
-        },
-      },
+  async getPolicy(employee_id: string) {
+    return prisma.employee_attendance_policies.findUnique({ where: { employee_id } });
+  }
+  async getScheduleForWeekday(employee_id: string, weekday: number) {
+    return prisma.employee_schedules.findUnique({ where: { employee_id_weekday: { employee_id, weekday } } });
+  }
+  async getPointsForDate(employee_id: string, date: Date) {
+    return prisma.attendance_points.findMany({
+      where: { employee_id, date },
+      orderBy: [{ mark_time: "asc" }],
     });
   }
-
-  async getLastAttendanceForEmployee(employeeId: string) {
-    return await prisma.attendance.findFirst({
-      where: { employee_id: employeeId },
-      orderBy: [{ date: "desc" }, { check_time: "desc" }],
-    });
-  }
-
-  async create(data: {
-    employee_id: string;
-    type: attendance_type;
-    date: Date;
-    check_time: Date;
+  async createPoint(params: {
+    employee_id: string; date: Date; mark_type: MarkType; mark_time: Date;
+    in_schedule: boolean; is_late: boolean; is_early: boolean; is_remote: boolean; note?: string;
   }) {
-    return await prisma.attendance.create({
-      data,
-      include: {
-        employee: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                first_name: true,
-                last_name: true,
-                email: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    return prisma.attendance_points.create({ data: params });
   }
 }

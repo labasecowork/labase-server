@@ -1,56 +1,59 @@
-// src/modules/attendance/features/list_my_attendance/presentation/list_my_attendance.service.ts
-
-import { ListMyAttendanceDTO } from "../domain/list_my_attendance.dto";
+import { ListMyAttendanceDTO } from "../domain/list_my_attendance.schema";
 import { ListMyAttendanceRepository } from "../data/list_my_attendance.repository";
-import { AppError } from "../../../../../utils/errors";
-import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
-import { format, formatInTimeZone, toZonedTime } from "date-fns-tz";
-import { TIMEZONE } from "../../../../../config/env";
+import {
+  mapPointToDTO,
+  buildWorkedLabel,
+} from "../../../shared/attendance.mappers";
+import { getWeekday } from "../../../shared/attendance.utils";
+import { MarkType } from "../../../shared/attendance.constants";
 
 export class ListMyAttendanceService {
   constructor(private readonly repo = new ListMyAttendanceRepository()) {}
 
-  async execute(dto: ListMyAttendanceDTO, userId: string) {
-    // Verificar que el usuario sea un empleado
-    const employee = await this.repo.findEmployeeByUserId(userId);
-    if (!employee) {
-      throw new AppError(
-        "Solo los empleados pueden consultar sus asistencias",
-        HttpStatusCodes.FORBIDDEN.code
-      );
+  async execute(employee_id: string, dto: ListMyAttendanceDTO) {
+    const points = await this.repo.findPoints(employee_id, dto.from, dto.to);
+    const scheduleMap = await this.repo.getScheduleMap(employee_id);
+
+    const byDate = new Map<string, (typeof points)[number][]>();
+    for (const p of points) {
+      const key = p.date.toISOString().slice(0, 10);
+      const arr = byDate.get(key) ?? [];
+      arr.push(p);
+      byDate.set(key, arr);
     }
 
-    const result = await this.repo.findMyAttendances({
-      employee_id: employee.employee_id,
-      page: dto.page,
-      limit: dto.limit,
-      start_date: dto.start_date,
-      end_date: dto.end_date,
-      type: dto.type,
-    });
+    const days: Array<{
+      date: string;
+      expected_points: 2 | 4;
+      complete: boolean;
+      worked: string;
+      points: ReturnType<typeof mapPointToDTO>[];
+    }> = [];
 
-    const totalPages = Math.ceil(result.total / dto.limit);
+    for (const [date, arr] of byDate.entries()) {
 
-    return {
-      attendances: result.attendances.map((attendance) => {
-        const onlyDate = attendance.date.toISOString().slice(0, 10);
-        const checkTime = attendance.check_time.toISOString().slice(11, 19);
-        const combinedUtc = new Date(`${onlyDate}T${checkTime}Z`);
-        const date = formatInTimeZone(combinedUtc, TIMEZONE, "yyyy-MM-dd");
-        const time = formatInTimeZone(combinedUtc, TIMEZONE, "HH:mm:ss");
-        return {
-          id: attendance.id,
-          type: attendance.type,
-          date: date,
-          check_time: time,
-        };
-      }),
-      pagination: {
-        page: dto.page,
-        limit: dto.limit,
-        total: result.total,
-        total_pages: totalPages,
-      },
-    };
+      const weekday1_7 = getWeekday(new Date(`${date}T00:00:00Z`));
+      const expected =
+        scheduleMap[weekday1_7] === 4 ? (4 as const) : (2 as const);
+
+      const dtoPoints = arr.map(mapPointToDTO);
+      const workedLabel = buildWorkedLabel(
+        arr.map((p) => ({
+          mark_type: p.mark_type as MarkType,
+          mark_time: p.mark_time,
+        }))
+      );
+      const complete = dtoPoints.length >= (expected === 4 ? 4 : 2);
+
+      days.push({
+        date,
+        expected_points: expected,
+        complete,
+        worked: workedLabel,
+        points: dtoPoints,
+      });
+    }
+
+    return { days: days.sort((a, b) => a.date.localeCompare(b.date)) };
   }
 }

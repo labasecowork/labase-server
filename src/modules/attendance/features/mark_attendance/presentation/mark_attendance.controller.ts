@@ -1,39 +1,52 @@
-// src/modules/attendance/features/mark_attendance/presentation/mark_attendance.controller.ts
-import { Response } from "express";
-import { MarkAttendanceService } from "./mark_attendance.service";
+import { Response, Request } from "express";
 import { MarkAttendanceSchema } from "../domain/mark_attendance.schema";
+import { MarkAttendanceService } from "./mark_attendance.service";
 import { buildHttpResponse } from "../../../../../utils/build_http_response";
 import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
 import { getAuthenticatedUser } from "../../../../../utils/authenticated_user";
-import { AuthenticatedRequest } from "../../../../../middlewares/authenticate_token";
+import {
+  canMarkForEmployee,
+  isEmployee,
+} from "../../../../../utils/permissions";
+import { AppError } from "../../../../../utils/errors";
+import { MESSAGES } from "../../../../../constants/messages";
 
 export class MarkAttendanceController {
-  constructor(private readonly service = new MarkAttendanceService()) {}
+  constructor(private readonly svc = new MarkAttendanceService()) {}
 
-  async handle(req: AuthenticatedRequest, res: Response) {
+  async handle(req: Request, res: Response) {
+    const user = await getAuthenticatedUser(req);
+    if (!isEmployee(user)) {
+      throw new AppError(
+        MESSAGES.ATTENDANCE.NOT_ALLOWED,
+        HttpStatusCodes.FORBIDDEN.code
+      );
+    }
+
     const dto = MarkAttendanceSchema.parse(req.body);
-    const authUser = await getAuthenticatedUser(req);
+    const employee_id = dto.employee_id ?? user.id;
 
-    const user = {
-      id: authUser.id,
-      role: authUser.role,
-    };
+    if (!canMarkForEmployee(user, employee_id)) {
+      throw new AppError(
+        MESSAGES.ATTENDANCE.NOT_ALLOWED,
+        HttpStatusCodes.FORBIDDEN.code
+      );
+    }
 
-    const result = await this.service.execute(dto, user);
+    const result = await this.svc.execute({
+      ...dto,
+      requester_employee_id: user.id,
+    });
 
-    return res.status(HttpStatusCodes.CREATED.code).json(
-      buildHttpResponse(
-        HttpStatusCodes.CREATED.code,
-        result.message,
-        req.path,
-        {
-          attendance_id: result.attendance_id,
-          type: result.type,
-          date: result.date,
-          check_time: result.check_time,
-          user: authUser,
-        },
-      ),
-    );
+    return res
+      .status(HttpStatusCodes.OK.code)
+      .json(
+        buildHttpResponse(
+          HttpStatusCodes.OK.code,
+          HttpStatusCodes.OK.message,
+          req.path,
+          result
+        )
+      );
   }
 }

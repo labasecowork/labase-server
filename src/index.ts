@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./docs/swagger";
+import { mountSwagger } from "./docs/swagger";
 import routes from "./routes";
 import http from "http";
 // import https from "https";
@@ -40,7 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Swagger
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(mountSwagger));
 
 // API Routes
 app.use(routes);
@@ -77,14 +77,14 @@ const main = async () => {
   }
 
   // Whatsapp bot
-  try {
-    await startWhatsAppBot();
-    console.log(
-      "[WhatsApp] Bot inicializado (si es primera vez, revisa el QR en logs)"
-    );
-  } catch (e) {
-    console.error("[WhatsApp] No inició:", e);
-  }
+  // try {
+  //   await startWhatsAppBot();
+  //   console.log(
+  //     "[WhatsApp] Bot inicializado (si es primera vez, revisa el QR en logs)"
+  //   );
+  // } catch (e) {
+  //   console.error("[WhatsApp] No inició:", e);
+  // }
 
   server.listen(PORT, () => {
     displayWelcomeMessage(appUrl);

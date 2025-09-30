@@ -8,6 +8,10 @@ import { updateEmployeeRoutes } from "./features/update_employee";
 import { deactivateEmployeeRoutes } from "./features/deactivate_employee";
 import { activateEmployeeRoutes } from "./features/activate_employee";
 
+import { createEmployeeConfigRoutes } from "./features/create_config";
+import { updateEmployeeConfigRoutes } from "./features/update_config";
+import { getEmployeeConfigRoutes } from "./features/get_config";
+
 export const employeeRouter = Router();
 
 employeeRouter.use("/employee", listEmployeesRoutes);
@@ -17,6 +21,10 @@ employeeRouter.use("/employee", updateEmployeeRoutes);
 employeeRouter.use("/employee", deactivateEmployeeRoutes);
 employeeRouter.use("/employee", activateEmployeeRoutes);
 
+employeeRouter.use("/employee-config", createEmployeeConfigRoutes);
+employeeRouter.use("/employee-config", updateEmployeeConfigRoutes);
+employeeRouter.use("/employee-config", getEmployeeConfigRoutes);
+
 /**
  * MATCHES:
  *  GET    /api/v1/employee                    → listar todos los empleados (solo admin)
@@ -25,5 +33,9 @@ employeeRouter.use("/employee", activateEmployeeRoutes);
  *  PATCH  /api/v1/employee/:id                → actualizar empleado (solo admin)
  *  DELETE /api/v1/employee/:id                → desactivar empleado (solo admin)
  *  PATCH  /api/v1/employee/:id/activate       → activar empleado (solo admin)
+ *
+ *  POST /api/v1/employee-config                → crear configuración de asistencia (solo admin)
+ *  PATCH /api/v1/employee-config/:employee_id  → actualizar parcial (solo admin)
+ *  GET   /api/v1/employee-config/:employee_id  → ver configuración (admin o dueño)
  */
 export default employeeRouter;

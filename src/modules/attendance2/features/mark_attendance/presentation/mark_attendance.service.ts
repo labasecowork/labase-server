@@ -1,0 +1,124 @@
+// src/modules/attendance/features/mark_attendance/presentation/mark_attendance.service.ts
+import { MarkAttendanceDTO } from "../domain/mark_attendance.dto";
+import { MarkAttendanceRepository } from "../data/mark_attendance.repository";
+import { AppError } from "../../../../../utils/errors";
+import { HttpStatusCodes } from "../../../../../constants/http_status_codes";
+import { isAfter, isSameDay, format } from "date-fns";
+import type { CurrentUser } from "../../../../../utils/authenticated_user";
+import { formatInTimeZone } from "date-fns-tz";
+import { TIMEZONE } from "../../../../../config/env";
+
+export class MarkAttendanceService {
+  constructor(private readonly repo = new MarkAttendanceRepository()) {}
+
+  async execute(
+    dto: MarkAttendanceDTO,
+    user: Pick<CurrentUser, "id" | "role">
+  ) {
+    // 🔐 Política: solo empleados pueden marcar asistencia
+    if (user.role !== "employee") {
+      throw new AppError(
+        "Solo los empleados pueden marcar asistencia",
+        HttpStatusCodes.FORBIDDEN.code
+      );
+    }
+
+    // Verificar que exista el registro de empleado vinculado al usuario
+    const employee = await this.repo.findEmployeeByUserId(user.id);
+    if (!employee) {
+      throw new AppError(
+        "Solo los empleados pueden marcar asistencia",
+        HttpStatusCodes.FORBIDDEN.code
+      );
+    }
+
+    // Última asistencia
+    const lastAttendance = await this.repo.getLastAttendanceForEmployee(
+      employee.employee_id
+    );
+
+    const now = new Date();
+    const currentDate = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    const currentTime = now;
+
+    if (lastAttendance) {
+      if (isSameDay(lastAttendance.date, currentDate)) {
+        if (lastAttendance.type === "entry" && dto.type === "entry") {
+          throw new AppError(
+            "No puedes marcar entrada después de entrada. Primero debes marcar salida.",
+            HttpStatusCodes.BAD_REQUEST.code
+          );
+        }
+        if (lastAttendance.type === "exit" && dto.type === "exit") {
+          throw new AppError(
+            "No puedes marcar salida después de salida. Primero debes marcar entrada.",
+            HttpStatusCodes.BAD_REQUEST.code
+          );
+        }
+        if (lastAttendance.type === "exit" && dto.type === "entry") {
+          const lastCheckDateTime = new Date(
+            lastAttendance.date.getFullYear(),
+            lastAttendance.date.getMonth(),
+            lastAttendance.date.getDate(),
+            lastAttendance.check_time.getHours(),
+            lastAttendance.check_time.getMinutes(),
+            lastAttendance.check_time.getSeconds()
+          );
+          if (!isAfter(currentTime, lastCheckDateTime)) {
+            throw new AppError(
+              "La nueva entrada debe ser posterior a la última salida",
+              HttpStatusCodes.BAD_REQUEST.code
+            );
+          }
+        }
+      } else {
+        if (lastAttendance.type === "entry" && dto.type === "entry") {
+          throw new AppError(
+            `Tienes una entrada pendiente del ${format(
+              lastAttendance.date,
+              "dd/MM/yyyy"
+            )}. Debes marcar salida primero.`,
+            HttpStatusCodes.BAD_REQUEST.code
+          );
+        }
+        if (lastAttendance.type === "exit" && dto.type === "exit") {
+          throw new AppError(
+            `Ya marcaste salida el ${format(
+              lastAttendance.date,
+              "dd/MM/yyyy"
+            )}. Debes marcar entrada primero.`,
+            HttpStatusCodes.BAD_REQUEST.code
+          );
+        }
+      }
+    } else {
+      if (dto.type === "exit") {
+        throw new AppError(
+          "Tu primera marca de asistencia debe ser una entrada",
+          HttpStatusCodes.BAD_REQUEST.code
+        );
+      }
+    }
+
+    const attendance = await this.repo.create({
+      employee_id: employee.employee_id,
+      type: dto.type,
+      date: currentDate,
+      check_time: currentTime,
+    });
+
+    return {
+      message: `Asistencia marcada exitosamente: ${
+        dto.type === "entry" ? "Entrada" : "Salida"
+      }`,
+      attendance_id: attendance.id,
+      type: attendance.type,
+      date: formatInTimeZone(attendance.date, TIMEZONE, "yyyy-MM-dd"),
+      check_time: formatInTimeZone(attendance.check_time, TIMEZONE, "HH:mm:ss"),
+    };
+  }
+}

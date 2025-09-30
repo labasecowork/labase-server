@@ -25,6 +25,8 @@ The system includes integration with WhatsApp Business using whatsapp-web.js and
 
 - **JWT (jsonwebtoken)** - Authentication tokens
 - **Bcrypt** - Password hashing
+- **helmet** - middleware de seguridad para Express, aplica headers (CSP, HSTS, etc.).
+- **express-basic-auth** - agrega autenticación básica (usuario/contraseña) para rutas como /docs.
 
 ### External Services
 
