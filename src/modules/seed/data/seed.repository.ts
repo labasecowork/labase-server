@@ -7,6 +7,7 @@ import {
   price_mode,
   space_type,
   unit_of_measure,
+  reminder_frequency,
 } from "@prisma/client";
 import {
   employeesData,
@@ -20,6 +21,7 @@ import {
   fakeVisitorsData,
   brandList,
   productList,
+  fakeRemindersData,
 } from "../constants";
 import {
   getWorkDays,
@@ -54,6 +56,7 @@ export class SeedRepository {
     await this.createAttendanceRecords();
     const brands = await this.createFakeBrands();
     await this.createFakeProducts(brands);
+    await this.createRemindersFake();
 
     return { message: "Database seeded successfully for development" };
   }
@@ -355,6 +358,22 @@ export class SeedRepository {
 
     console.log(`Total productos creados: ${createdProducts.length}`);
     return createdProducts;
+  }
+
+  async createRemindersFake(): Promise<void> {
+    for (const reminderData of fakeRemindersData) {
+      await prisma.reminders.create({
+        data: {
+          name: reminderData.name,
+          phone_number: reminderData.phone_number,
+          message: reminderData.message,
+          send_date: reminderData.send_date,
+          frequency: reminderData.frequency as reminder_frequency,
+          is_active: reminderData.is_active,
+        },
+      });
+    }
+    console.log("Recordatorios falsos creados");
   }
 
   async createAttendanceRecords(): Promise<void> {

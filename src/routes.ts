@@ -19,6 +19,7 @@ import { workareaRouter } from "./modules/workarea";
 import { companyRouter } from "./modules/company";
 import chatbotwhatsapp from "./modules/bot-whatsapp/presentation/routes/bot.routes";
 import visitorRouter from "./modules/visitor";
+import reminderRouter from "./modules/reminders/features";
 
 const router = Router();
 const API_VERSION = "/api/v1";
@@ -49,5 +50,5 @@ router.use(`${API_VERSION}/`, workareaRouter);
 router.use(`${API_VERSION}/`, companyRouter);
 
 router.use(`${API_VERSION}/visitors`, visitorRouter);
-
+router.use(`${API_VERSION}/reminders`, reminderRouter);
 export default router;

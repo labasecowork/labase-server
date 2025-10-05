@@ -28,7 +28,7 @@ export class GetReminderController {
           HttpStatusCodes.OK.code,
           result.message,
           req.path,
-          result
+          result.reminder
         )
       );
   }

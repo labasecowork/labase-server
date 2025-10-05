@@ -19,12 +19,10 @@ export class ListRemindersService {
       data: {
         reminders,
         pagination: {
-          currentPage: query.page,
-          totalPages,
-          totalItems: total,
-          itemsPerPage: query.limit,
-          hasNext: query.page < totalPages,
-          hasPrev: query.page > 1,
+          page: query.page,
+          total_pages: totalPages,
+          total: total,
+          limit: query.limit,
         },
       },
     };

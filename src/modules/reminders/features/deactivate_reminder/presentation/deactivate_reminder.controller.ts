@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { ListRemindersService } from "./list_reminders.service";
-import { ListRemindersQuerySchema } from "../domain/list_reminders.schema";
+import { DeactivateReminderService } from "./deactivate_reminder.service";
+import { DeactivateReminderParamsSchema } from "../domain/deactivate_reminder.schema";
 import { buildHttpResponse } from "../../../../../utils/";
+import { handleServerError } from "../../../../../utils/error_handler";
 import { HttpStatusCodes } from "../../../../../constants";
 import { AppError } from "../../../../../types/";
 
@@ -9,8 +10,8 @@ interface AuthReq extends Request {
   user?: { id: string };
 }
 
-export class ListRemindersController {
-  constructor(private readonly service = new ListRemindersService()) {}
+export class DeactivateReminderController {
+  constructor(private readonly service = new DeactivateReminderService()) {}
 
   async handle(req: Request, res: Response) {
     const r = req as AuthReq;
@@ -18,8 +19,8 @@ export class ListRemindersController {
       throw new AppError("Acceso denegado", HttpStatusCodes.UNAUTHORIZED.code);
     }
 
-    const query = ListRemindersQuerySchema.parse(req.query);
-    const result = await this.service.execute(query);
+    const params = DeactivateReminderParamsSchema.parse(req.params);
+    const result = await this.service.execute(params);
 
     return res
       .status(HttpStatusCodes.OK.code)
@@ -28,7 +29,7 @@ export class ListRemindersController {
           HttpStatusCodes.OK.code,
           result.message,
           req.path,
-          result.data
+          null
         )
       );
   }

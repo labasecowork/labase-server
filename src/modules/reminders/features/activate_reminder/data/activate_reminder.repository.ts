@@ -1,7 +1,7 @@
 import prisma from "../../../../../config/prisma_client";
 import { Reminder } from "../../../entities/reminder.entity";
 
-export class GetReminderRepository {
+export class ActivateReminderRepository {
   async findById(id: string): Promise<Reminder | null> {
     const reminder = await prisma.reminders.findUnique({
       where: { id },
@@ -20,5 +20,12 @@ export class GetReminderRepository {
       created_at: reminder.created_at,
       updated_at: reminder.updated_at,
     };
+  }
+
+  async activate(id: string): Promise<void> {
+    await prisma.reminders.update({
+      where: { id },
+      data: { is_active: true },
+    });
   }
 }

@@ -3,11 +3,11 @@ import { reminder_frequency } from "@prisma/client";
 export interface Reminder {
   id: string;
   name: string;
-  phoneNumber: string;
+  phone_number: string;
   message: string;
-  sendDate: Date;
+  send_date: Date;
   frequency: reminder_frequency;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  is_active: boolean;
+  created_at: Date;
+  updated_at: Date;
 }

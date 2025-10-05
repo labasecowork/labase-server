@@ -1707,3 +1707,276 @@ export const productList = [
     quantity: 25,
   },
 ];
+
+export const fakeRemindersData = [
+  {
+    name: "Reunión de equipo",
+    phone_number: "987654321",
+    message:
+      "Recordatorio: Reunión de equipo mañana a las 10:00 AM en la Base de Mando",
+    send_date: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    frequency: "daily",
+    is_active: true,
+  },
+  {
+    name: "Pago de membresía",
+    phone_number: "987654322",
+    message:
+      "Tu membresía vence en 3 días. Por favor realiza el pago para continuar disfrutando de nuestros servicios",
+    send_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Evento de networking",
+    phone_number: "987654323",
+    message:
+      "No te pierdas nuestro evento de networking este viernes a las 6:00 PM. ¡Trae tu tarjeta de presentación!",
+    send_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+    frequency: "weekly",
+    is_active: true,
+  },
+  {
+    name: "Mantenimiento de espacios",
+    phone_number: "987654324",
+    message:
+      "Recordatorio: Este sábado realizaremos mantenimiento preventivo en todos los espacios. Horario reducido de 9:00 AM a 1:00 PM",
+    send_date: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+    frequency: "yearly",
+    is_active: true,
+  },
+  {
+    name: "Capacitación de nuevos features",
+    phone_number: "987654325",
+    message:
+      "Invitación a capacitación sobre las nuevas funcionalidades de la plataforma. Miércoles 3:00 PM en el Hangar",
+    send_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: false,
+  },
+  {
+    name: "Renovación anual",
+    phone_number: "987654326",
+    message:
+      "Tu membresía anual está próxima a vencer. Renueva ahora y obtén 10% de descuento",
+    send_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    frequency: "yearly",
+    is_active: true,
+  },
+  {
+    name: "Taller de productividad",
+    phone_number: "987654327",
+    message:
+      "Únete a nuestro taller gratuito de productividad y gestión del tiempo. Jueves 4:00 PM",
+    send_date: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Limpieza de lockers",
+    phone_number: "987654328",
+    message:
+      "Recordatorio: Por favor vacía tu locker antes del viernes. Realizaremos limpieza general",
+    send_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Happy Hour",
+    phone_number: "987654329",
+    message:
+      "¡Es viernes! Únete a nuestro Happy Hour de 6:00 PM a 8:00 PM en el área común",
+    send_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+    frequency: "weekly",
+    is_active: true,
+  },
+  {
+    name: "Actualización de datos",
+    phone_number: "987654330",
+    message:
+      "Por favor actualiza tus datos de contacto en tu perfil. Es importante mantener tu información al día",
+    send_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    frequency: "yearly",
+    is_active: true,
+  },
+  {
+    name: "Sesión de yoga",
+    phone_number: "987654331",
+    message:
+      "Clase de yoga todos los martes a las 7:00 AM. ¡Comienza tu día con energía!",
+    send_date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    frequency: "weekly",
+    is_active: true,
+  },
+  {
+    name: "Vencimiento de reserva",
+    phone_number: "987654332",
+    message:
+      "Tu reserva de sala de reuniones vence en 2 horas. No olvides confirmar tu asistencia",
+    send_date: new Date(Date.now() + 2 * 60 * 60 * 1000),
+    frequency: "daily",
+    is_active: true,
+  },
+  {
+    name: "Pitch Night",
+    phone_number: "987654333",
+    message:
+      "Pitch Night este jueves. Presenta tu startup y conecta con inversionistas. Inscripciones abiertas",
+    send_date: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Corte de internet programado",
+    phone_number: "987654334",
+    message:
+      "Mantenimiento de red programado para mañana de 2:00 AM a 4:00 AM. Disculpa las molestias",
+    send_date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Encuesta de satisfacción",
+    phone_number: "987654335",
+    message:
+      "Tu opinión es importante. Completa nuestra encuesta de satisfacción y ayúdanos a mejorar",
+    send_date: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Desayuno de bienvenida",
+    phone_number: "987654336",
+    message:
+      "Desayuno de bienvenida para nuevos miembros. Mañana 9:00 AM en el área de cocina",
+    send_date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    frequency: "weekly",
+    is_active: true,
+  },
+  {
+    name: "Recordatorio de pago pendiente",
+    phone_number: "987654337",
+    message:
+      "Tienes un pago pendiente de S/. 350. Por favor regulariza tu situación para evitar suspensión",
+    send_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+    frequency: "weekly",
+    is_active: true,
+  },
+  {
+    name: "Webinar de marketing digital",
+    phone_number: "987654338",
+    message:
+      "Webinar gratuito: Estrategias de marketing digital para startups. Viernes 5:00 PM",
+    send_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Cierre por feriado",
+    phone_number: "987654339",
+    message:
+      "Recordatorio: Estaremos cerrados el próximo lunes por feriado nacional",
+    send_date: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000),
+    frequency: "yearly",
+    is_active: true,
+  },
+  {
+    name: "Torneo de ping pong",
+    phone_number: "987654340",
+    message:
+      "¡Inscríbete al torneo de ping pong! Premios para los ganadores. Sábado 3:00 PM",
+    send_date: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Actualización de seguridad",
+    phone_number: "987654341",
+    message:
+      "Nueva política de seguridad implementada. Por favor lee el documento adjunto en tu email",
+    send_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+    frequency: "yearly",
+    is_active: true,
+  },
+  {
+    name: "Sesión de mentoring",
+    phone_number: "987654342",
+    message:
+      "Tu sesión de mentoring con Juan Pérez está programada para mañana a las 3:00 PM",
+    send_date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    frequency: "weekly",
+    is_active: true,
+  },
+  {
+    name: "Café y conversación",
+    phone_number: "987654343",
+    message:
+      "Café gratis todos los miércoles de 8:00 AM a 10:00 AM. ¡Ven y conoce a otros miembros!",
+    send_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+    frequency: "weekly",
+    is_active: true,
+  },
+  {
+    name: "Recordatorio de check-out",
+    phone_number: "987654344",
+    message:
+      "No olvides hacer check-out al salir. Ayúdanos a mantener el control de aforo",
+    send_date: new Date(Date.now() + 0.5 * 24 * 60 * 60 * 1000),
+    frequency: "daily",
+    is_active: true,
+  },
+  {
+    name: "Aniversario del coworking",
+    phone_number: "987654345",
+    message:
+      "¡Celebramos 5 años! Fiesta de aniversario el próximo mes. Detalles próximamente",
+    send_date: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000),
+    frequency: "yearly",
+    is_active: true,
+  },
+  {
+    name: "Cambio de horario temporal",
+    phone_number: "987654346",
+    message:
+      "Horario especial esta semana: Abrimos de 9:00 AM a 7:00 PM por trabajos de remodelación",
+    send_date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    frequency: "weekly",
+    is_active: true,
+  },
+  {
+    name: "Recordatorio de vacunación",
+    phone_number: "987654347",
+    message:
+      "Campaña de vacunación gratuita en el coworking. Jueves y viernes de 10:00 AM a 4:00 PM",
+    send_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+    frequency: "yearly",
+    is_active: false,
+  },
+  {
+    name: "Demo Day",
+    phone_number: "987654348",
+    message:
+      "Demo Day de startups residentes. Ven a conocer los proyectos innovadores. Viernes 6:00 PM",
+    send_date: new Date(Date.now() + 9 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Recordatorio de estacionamiento",
+    phone_number: "987654349",
+    message:
+      "Tu espacio de estacionamiento vence mañana. Renueva en recepción para mantener tu lugar",
+    send_date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+  {
+    name: "Sesión de fotos profesional",
+    phone_number: "987654350",
+    message:
+      "Fotógrafo profesional disponible mañana. Agenda tu sesión gratuita para actualizar tu perfil",
+    send_date: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+    frequency: "monthly",
+    is_active: true,
+  },
+];

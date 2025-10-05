@@ -115,19 +115,26 @@ enum gender {
   unspecified
 }
 
+enum reminder_frequency {
+  daily
+  weekly
+  monthly
+  yearly
+}
+
 model users {
-  id                 String      @id @default(uuid())
-  first_name         String
-  last_name          String
-  email              String      @unique
-  password           String
-  user_type          user_type?
-  profile_image      String?
-  phone              String?
-  birth_date         DateTime?   @db.Date
-  gender             gender      @default(unspecified)
-  status             user_status
-  creation_timestamp DateTime    @default(now())
+  id                   String                @id @default(uuid())
+  first_name           String
+  last_name            String
+  email                String                @unique
+  password             String
+  user_type            user_type?
+  profile_image        String?
+  phone                String?
+  birth_date           DateTime?             @db.Date
+  gender               gender                @default(unspecified)
+  status               user_status
+  creation_timestamp   DateTime              @default(now())
   admin_details        admin_details?
   employee_details     employee_details?
   user_details         user_details?
@@ -135,7 +142,7 @@ model users {
   payment_transactions payment_transaction[] @relation("user_payments")
   articles             articles[]            @relation("user_articles")
 
-  visitors        visitors[]
+  visitors visitors[]
 
   @@map("users")
 }
@@ -418,10 +425,24 @@ model visitors {
   exit_time  DateTime?
   created_at DateTime  @default(now())
 
-  user  users  @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  space space  @relation(fields: [space_id], references: [id], onDelete: Cascade)
+  user  users @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  space space @relation(fields: [space_id], references: [id], onDelete: Cascade)
 
   @@index([user_id, created_at])
   @@index([space_id, created_at])
   @@map("visitors")
+}
+
+model reminders {
+  id           String             @id @default(uuid())
+  name         String
+  phone_number String
+  message      String
+  send_date    DateTime
+  frequency    reminder_frequency
+  is_active    Boolean            @default(true)
+  created_at   DateTime           @default(now())
+  updated_at   DateTime           @updatedAt
+
+  @@map("reminders")
 }

@@ -42,13 +42,13 @@ export class ListRemindersRepository {
       reminders: reminders.map((reminder) => ({
         id: reminder.id,
         name: reminder.name,
-        phoneNumber: reminder.phone_number,
+        phone_number: reminder.phone_number,
         message: reminder.message,
-        sendDate: reminder.send_date,
+        send_date: reminder.send_date,
         frequency: reminder.frequency,
-        isActive: reminder.is_active,
-        createdAt: reminder.created_at,
-        updatedAt: reminder.updated_at,
+        is_active: reminder.is_active,
+        created_at: reminder.created_at,
+        updated_at: reminder.updated_at,
       })),
       total,
     };
