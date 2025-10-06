@@ -1980,3 +1980,440 @@ export const fakeRemindersData = [
     is_active: true,
   },
 ];
+
+export const fakeChatMessages = [
+  {
+    user_id: "carlos_87",
+    message: "Buenos días equipo, ¿cómo va el avance del módulo de productos?",
+    created_at: "2025-10-03T09:05:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message:
+      "Buenos días, ya terminé el endpoint de creación, solo me falta probarlo.",
+    created_at: "2025-10-03T09:06:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Perfecto, yo estoy ajustando el modelo en la base de datos.",
+    created_at: "2025-10-03T09:08:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message:
+      "Yo ya subí el diseño final de la interfaz, por si queréis revisarlo.",
+    created_at: "2025-10-03T09:12:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Genial, Sofía. Lo vi anoche, está bastante limpio y coherente.",
+    created_at: "2025-10-03T09:14:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message:
+      "Laura, ¿tu endpoint ya guarda el producto completo o solo datos básicos?",
+    created_at: "2025-10-03T10:20:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Por ahora solo básicos, luego agrego las validaciones.",
+    created_at: "2025-10-03T10:23:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Podemos usar Zod para eso, es rápido y limpio.",
+    created_at: "2025-10-03T10:25:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Sí, además ayuda con los mensajes de error para el front.",
+    created_at: "2025-10-03T10:27:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Me gusta esa idea, así todo queda tipado.",
+    created_at: "2025-10-03T10:29:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Perfecto. Entonces Laura, implementa con Zod, ¿vale?",
+    created_at: "2025-10-03T10:31:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Hecho, lo tengo listo en una hora.",
+    created_at: "2025-10-03T10:33:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Yo mientras creo los seeds para pruebas.",
+    created_at: "2025-10-03T10:40:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "¿Queréis que monte un pequeño formulario para probar el flujo?",
+    created_at: "2025-10-03T10:43:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Sí, eso ayudaría a detectar fallos rápido.",
+    created_at: "2025-10-03T10:45:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message:
+      "Chicos, no olvidéis revisar los logs en producción, están duplicando requests.",
+    created_at: "2025-10-03T11:10:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Eso puede ser por el interceptor de Axios, ya lo vi una vez.",
+    created_at: "2025-10-03T11:13:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message:
+      "Cierto, yo también tuve ese bug, se soluciona limpiando interceptores antes de añadir nuevos.",
+    created_at: "2025-10-03T11:15:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Vale, revisaré eso cuando termine las validaciones.",
+    created_at: "2025-10-03T11:16:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Yo documentaré los pasos en Notion, así queda claro.",
+    created_at: "2025-10-03T11:18:00.000Z",
+  },
+
+  {
+    user_id: "carlos_87",
+    message: "Gracias Andrea, eso siempre nos salva.",
+    created_at: "2025-10-04T09:05:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message:
+      "Chicos, una duda: ¿permitimos stock negativo o bloqueamos la creación?",
+    created_at: "2025-10-04T09:07:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Bloqueamos. Stock no puede ser menor que cero.",
+    created_at: "2025-10-04T09:08:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Confirmo, si no el front se rompe con los cálculos.",
+    created_at: "2025-10-04T09:09:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Entonces Laura, pon un esquema que limite a min(0).",
+    created_at: "2025-10-04T09:10:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Hecho, gracias por la aclaración.",
+    created_at: "2025-10-04T09:12:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Perfecto equipo, ¿cómo vamos de tiempos?",
+    created_at: "2025-10-04T09:15:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Yo termino el prototipo en una hora.",
+    created_at: "2025-10-04T09:16:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "El seed ya está generando bien los datos de prueba.",
+    created_at: "2025-10-04T09:17:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Ya puse la estructura del README.",
+    created_at: "2025-10-04T09:18:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Buen ritmo, seguimos así.",
+    created_at: "2025-10-04T09:20:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "¿Queréis que haga también el endpoint de actualización?",
+    created_at: "2025-10-04T09:25:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Sí, así completamos el CRUD entero.",
+    created_at: "2025-10-04T09:26:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Yo después puedo conectar los botones del front.",
+    created_at: "2025-10-04T09:27:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Oye, deberíamos definir un mensaje de éxito estándar.",
+    created_at: "2025-10-04T09:29:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message:
+      "Sí, tipo { success: true, message: 'Producto creado correctamente' }.",
+    created_at: "2025-10-04T09:30:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Perfecto, uso ese formato entonces.",
+    created_at: "2025-10-04T09:31:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "He actualizado el modelo con una descripción opcional.",
+    created_at: "2025-10-04T09:33:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Ah, genial, así puedo mostrar tooltips en el front.",
+    created_at: "2025-10-04T09:34:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Buena mejora, lo anoto en el changelog.",
+    created_at: "2025-10-04T09:35:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Por cierto, el cliente pidió incluir el campo 'categoría'.",
+    created_at: "2025-10-04T11:00:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Vale, lo agrego al modelo y al endpoint.",
+    created_at: "2025-10-04T11:02:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Y también al seed, así mantenemos consistencia.",
+    created_at: "2025-10-04T11:04:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "¿Queréis que añada un selector de categorías?",
+    created_at: "2025-10-04T11:06:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Sí, y que tenga validación visual si está vacío.",
+    created_at: "2025-10-04T11:07:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Equipo, excelente coordinación. Da gusto ver esto así.",
+    created_at: "2025-10-04T11:10:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Gracias, Carlos, da gusto trabajar con orden.",
+    created_at: "2025-10-04T11:12:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Y sin bugs graves, lo cual es milagroso.",
+    created_at: "2025-10-04T11:14:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "No lo digas muy alto, Diego 😆",
+    created_at: "2025-10-04T11:15:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Jajaja, toco madera.",
+    created_at: "2025-10-04T11:16:00.000Z",
+  },
+
+  {
+    user_id: "carlos_87",
+    message: "Vale, ahora enfoquémonos en test unitarios.",
+    created_at: "2025-10-05T09:00:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Yo puedo hacer los tests de creación y actualización.",
+    created_at: "2025-10-05T09:02:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Yo me encargo de los de base de datos.",
+    created_at: "2025-10-05T09:04:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Y yo del flujo del front con mocks.",
+    created_at: "2025-10-05T09:06:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Yo reviso los resultados y documento errores.",
+    created_at: "2025-10-05T09:08:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Perfecto. Reunión final hoy a las 17:00.",
+    created_at: "2025-10-05T09:09:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Confirmado.",
+    created_at: "2025-10-05T09:10:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Estaré puntual.",
+    created_at: "2025-10-05T09:12:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Igualmente, nos vemos a esa hora.",
+    created_at: "2025-10-05T09:14:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Genial, así cerramos el sprint.",
+    created_at: "2025-10-05T09:15:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Laura, ¿pudiste ya probar el PUT /products?",
+    created_at: "2025-10-05T13:00:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Sí, todo bien. Devuelve correctamente el JSON.",
+    created_at: "2025-10-05T13:02:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Yo lo probé con Postman y funciona perfecto.",
+    created_at: "2025-10-05T13:04:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "El front ya recibe la respuesta sin error.",
+    created_at: "2025-10-05T13:05:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Todo fluye como debe, buen trabajo.",
+    created_at: "2025-10-05T13:07:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Chicos, ¿qué tal si mañana hacemos un pequeño retro?",
+    created_at: "2025-10-05T13:08:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Sí, así afinamos los próximos pasos.",
+    created_at: "2025-10-05T13:09:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Y revisamos los tiempos reales vs estimados.",
+    created_at: "2025-10-05T13:11:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "También quiero proponer mejoras de UX.",
+    created_at: "2025-10-05T13:12:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Perfecto, hago la agenda de temas.",
+    created_at: "2025-10-05T13:13:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Excelente, así seguimos creciendo como equipo.",
+    created_at: "2025-10-05T13:14:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Por cierto, el endpoint de borrado también ya está listo.",
+    created_at: "2025-10-05T13:16:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Entonces ya tenemos CRUD completo.",
+    created_at: "2025-10-05T13:18:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Genial, puedo conectar el botón de eliminar.",
+    created_at: "2025-10-05T13:19:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Voy actualizando la documentación.",
+    created_at: "2025-10-05T13:21:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Buen trabajo, de verdad. Está quedando sólido.",
+    created_at: "2025-10-05T13:22:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "Gracias, da gusto cuando todo encaja.",
+    created_at: "2025-10-05T13:23:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Confirmo, así da gusto programar.",
+    created_at: "2025-10-05T13:25:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Voy a hacer push final del front.",
+    created_at: "2025-10-05T13:26:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Y cierro el ticket del sprint actual.",
+    created_at: "2025-10-05T13:27:00.000Z",
+  },
+  {
+    user_id: "carlos_87",
+    message: "Perfecto. Sprint completado 🎯",
+    created_at: "2025-10-05T17:30:00.000Z",
+  },
+  {
+    user_id: "laura_mz",
+    message: "¡Buen trabajo equipo!",
+    created_at: "2025-10-05T17:31:00.000Z",
+  },
+  {
+    user_id: "diego_r",
+    message: "Nos lo merecemos 😄",
+    created_at: "2025-10-05T17:32:00.000Z",
+  },
+  {
+    user_id: "sofia_v",
+    message: "Brutal cierre, chicos 💪",
+    created_at: "2025-10-05T17:33:00.000Z",
+  },
+  {
+    user_id: "andrea_k",
+    message: "Ya tengo todo documentado y el resumen final listo.",
+    created_at: "2025-10-05T17:35:00.000Z",
+  },
+];

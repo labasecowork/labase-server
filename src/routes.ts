@@ -20,6 +20,7 @@ import { companyRouter } from "./modules/company";
 import chatbotwhatsapp from "./modules/bot-whatsapp/presentation/routes/bot.routes";
 import visitorRouter from "./modules/visitor";
 import reminderRouter from "./modules/reminders/features";
+import communicationRouter from "./modules/communication";
 
 const router = Router();
 const API_VERSION = "/api/v1";
@@ -51,4 +52,6 @@ router.use(`${API_VERSION}/`, companyRouter);
 
 router.use(`${API_VERSION}/visitors`, visitorRouter);
 router.use(`${API_VERSION}/reminders`, reminderRouter);
+router.use(`${API_VERSION}/communication`, communicationRouter);
+
 export default router;

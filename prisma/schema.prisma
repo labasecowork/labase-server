@@ -141,6 +141,7 @@ model users {
   reservations         reservation[]         @relation("user_reservations")
   payment_transactions payment_transaction[] @relation("user_payments")
   articles             articles[]            @relation("user_articles")
+  chat_messages        chat_messages[]       @relation("user_chat_messages")
 
   visitors visitors[]
 
@@ -445,4 +446,16 @@ model reminders {
   updated_at   DateTime           @updatedAt
 
   @@map("reminders")
+}
+
+model chat_messages {
+  id         String   @id @default(uuid())
+  user_id    String
+  message    String
+  created_at DateTime @default(now())
+
+  user users @relation("user_chat_messages", fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([created_at])
+  @@map("chat_messages")
 }

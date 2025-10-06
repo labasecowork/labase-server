@@ -22,6 +22,7 @@ import {
   brandList,
   productList,
   fakeRemindersData,
+  fakeChatMessages,
 } from "../constants";
 import {
   getWorkDays,
@@ -57,6 +58,7 @@ export class SeedRepository {
     const brands = await this.createFakeBrands();
     await this.createFakeProducts(brands);
     await this.createRemindersFake();
+    await this.createFakeChatMessages();
 
     return { message: "Database seeded successfully for development" };
   }
@@ -513,5 +515,38 @@ export class SeedRepository {
       console.error("Error al crear registros de asistencia:", error);
       throw error;
     }
+  }
+
+  async createFakeChatMessages(): Promise<void> {
+    const employees = await prisma.employee_details.findMany({
+      select: { employee_id: true },
+    });
+    const employeeOne = employees[0].employee_id;
+    const employeeTwo = employees[1].employee_id;
+    const employeeThree = employees[2].employee_id;
+    const employeeFour = employees[3].employee_id;
+    const employeeFive = employees[4].employee_id;
+
+    for (const chatMessageData of fakeChatMessages) {
+      await prisma.chat_messages.create({
+        data: {
+          ...chatMessageData,
+          user_id:
+            chatMessageData.user_id === "carlos_87"
+              ? employeeOne
+              : chatMessageData.user_id === "laura_mz"
+              ? employeeTwo
+              : chatMessageData.user_id === "diego_r"
+              ? employeeThree
+              : chatMessageData.user_id === "sofia_v"
+              ? employeeFour
+              : chatMessageData.user_id === "andrea_k"
+              ? employeeFive
+              : employeeOne,
+        },
+      });
+    }
+
+    console.log("Mensajes de chat falsos creados");
   }
 }
