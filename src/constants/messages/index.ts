@@ -8,6 +8,7 @@ import { PRODUCT_MESSAGES } from "./product";
 import { PAYMENT_MESSAGES } from "./payment";
 import { BRAND_MESSAGES } from "./brand";
 import { VISITOR_MESSAGES } from "./visitor";
+import { ATTENDANCE_MESSAGES } from "./attendance";
 
 export const MESSAGES = {
   ARTICLE: ARTICLE_MESSAGES,
@@ -19,4 +20,5 @@ export const MESSAGES = {
   PRODUCT: PRODUCT_MESSAGES,
   BRAND: BRAND_MESSAGES,
   VISITOR: VISITOR_MESSAGES,
+  ATTENDANCE: ATTENDANCE_MESSAGES,
 };

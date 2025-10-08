@@ -20,7 +20,7 @@ POST /api/v1/auth/register/direct-registration
 }
 ```
 
-## Respuesta Exitosa (201)
+## Respuesta exitosa (201)
 
 ```json
 {

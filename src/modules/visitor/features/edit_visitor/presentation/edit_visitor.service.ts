@@ -58,8 +58,8 @@ export class EditVisitorService {
 
     // Coherencia si cambian entry_time y ya hay exit_time
     if (body.entry_time && existing.exit_time) {
-      const newEntry = new Date(body.entry_time);
-      if (newEntry.getTime() > new Date(existing.exit_time).getTime()) {
+      const newentry = new Date(body.entry_time);
+      if (newentry.getTime() > new Date(existing.exit_time).getTime()) {
         throw new AppError(
           "La nueva hora de ingreso no puede ser mayor que la hora de salida ya registrada",
           HttpStatusCodes.BAD_REQUEST.code

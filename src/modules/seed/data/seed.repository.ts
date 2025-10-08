@@ -437,9 +437,9 @@ export class SeedRepository {
         const dailyRecords: AttendanceRecord[] = [];
         const isSplitShift = Math.random() < 0.3;
 
-        const firstEntryTime = new Date(day);
+        const firstentryTime = new Date(day);
         const entryHour = 8 + Math.random();
-        firstEntryTime.setHours(
+        firstentryTime.setHours(
           Math.floor(entryHour),
           Math.floor(Math.random() * 60)
         );
@@ -448,42 +448,42 @@ export class SeedRepository {
           employee_id: employee.employee_id,
           type: attendance_type.entry,
           date: day,
-          check_time: firstEntryTime,
+          check_time: firstentryTime,
         });
 
-        let lastCheckTime = firstEntryTime;
+        let lastCheckTime = firstentryTime;
 
         if (isSplitShift) {
-          const firstExitTime = new Date(lastCheckTime);
+          const firstexitTime = new Date(lastCheckTime);
           const firstWorkHours = 3 + Math.random() * 2;
-          firstExitTime.setHours(firstExitTime.getHours() + firstWorkHours);
+          firstexitTime.setHours(firstexitTime.getHours() + firstWorkHours);
           dailyRecords.push({
             employee_id: employee.employee_id,
             type: attendance_type.exit,
             date: day,
-            check_time: firstExitTime,
+            check_time: firstexitTime,
           });
-          lastCheckTime = firstExitTime;
+          lastCheckTime = firstexitTime;
 
-          const secondEntryTime = new Date(lastCheckTime);
+          const secondentryTime = new Date(lastCheckTime);
           const breakHours = 1 + Math.random();
-          secondEntryTime.setHours(secondEntryTime.getHours() + breakHours);
+          secondentryTime.setHours(secondentryTime.getHours() + breakHours);
           dailyRecords.push({
             employee_id: employee.employee_id,
             type: attendance_type.entry,
             date: day,
-            check_time: secondEntryTime,
+            check_time: secondentryTime,
           });
-          lastCheckTime = secondEntryTime;
+          lastCheckTime = secondentryTime;
 
-          const secondExitTime = new Date(lastCheckTime);
+          const secondexitTime = new Date(lastCheckTime);
           const secondWorkHours = 4 + Math.random() * 2;
-          secondExitTime.setHours(secondExitTime.getHours() + secondWorkHours);
+          secondexitTime.setHours(secondexitTime.getHours() + secondWorkHours);
           dailyRecords.push({
             employee_id: employee.employee_id,
             type: attendance_type.exit,
             date: day,
-            check_time: secondExitTime,
+            check_time: secondexitTime,
           });
         } else {
           const exitTime = new Date(lastCheckTime);
