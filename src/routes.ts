@@ -42,7 +42,7 @@ router.use(`${API_VERSION}/calendar`, calendarRouter);
 router.use(`${API_VERSION}/form`, inquiryRoutes);
 router.use(`${API_VERSION}/payment`, paymentRoutes);
 
-router.use(`${API_VERSION}/`, attendanceRouter);
+router.use(`${API_VERSION}/attendance`, attendanceRouter);
 router.use(`${API_VERSION}/`, employeeRouter);
 
 router.use(`${API_VERSION}/inventory`, productRouter);

@@ -201,7 +201,7 @@ src/
 ├── shared/            # Shared code
 ├── utils/             # General utilities
 ├── docs/              # Swagger documentation
-├── index.ts           # Entry point
+├── index.ts           # entry point
 └── routes.ts          # Main route configuration
 ```
 

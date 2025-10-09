@@ -92,11 +92,6 @@ enum reaction_target {
   reply
 }
 
-enum attendance_type {
-  entry
-  exit
-}
-
 enum unit_of_measure {
   unit
   kilogram
@@ -122,6 +117,25 @@ enum reminder_frequency {
   yearly
 }
 
+
+enum employee_kind {
+  intern      
+  contractor  
+  payroll 
+}
+
+enum attendance_type {
+  entry      
+  lunch_out   
+  lunch_in     
+  exit       
+}
+
+enum work_mode {
+  onsite
+  remote
+}
+
 model users {
   id                   String                @id @default(uuid())
   first_name           String
@@ -135,6 +149,7 @@ model users {
   gender               gender                @default(unspecified)
   status               user_status
   creation_timestamp   DateTime              @default(now())
+
   admin_details        admin_details?
   employee_details     employee_details?
   user_details         user_details?
@@ -201,6 +216,10 @@ model employee_details {
   user      users       @relation(fields: [employee_id], references: [id])
   work_area work_areas? @relation(fields: [work_area_id], references: [id], onDelete: SetNull)
   company   companies?  @relation(fields: [company_id], references: [id], onDelete: SetNull)
+
+  attendance_points attendance_points[]
+  schedules         employee_schedules[]
+  policy            employee_attendance_policies?
 
   @@index([work_area_id])
   @@index([company_id])
@@ -458,4 +477,91 @@ model chat_messages {
 
   @@index([created_at])
   @@map("chat_messages")
+}
+
+model attendance_policy_templates {
+  id                    String   @id @default(uuid())
+  name                  String   @unique
+  grace_entry_minutes    Int      @default(5)
+  early_before_minutes   Int      @default(15)
+  exit_late_minutes      Int      @default(10)
+  require_four_points    Boolean  @default(false)
+  min_daily_hours        Int      @default(8)
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  employee_policies employee_attendance_policies[]
+
+  @@map("attendance_policy_templates")
+}
+
+// 📄 models/employee_attendance_policies
+model employee_attendance_policies {
+  id                    String   @id @default(uuid())
+  employee_id           String   @unique
+  template_id           String?
+  grace_entry_minutes    Int      @default(5)
+  early_before_minutes   Int      @default(15)
+  exit_late_minutes      Int      @default(10)
+  require_four_points    Boolean  @default(false)
+  min_daily_hours        Int      @default(8)
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  employee  employee_details              @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+  template  attendance_policy_templates?  @relation(fields: [template_id], references: [id], onDelete: SetNull)
+
+  @@map("employee_attendance_policies")
+}
+
+model employee_schedules {
+  id               String    @id @default(uuid())
+  employee_id      String
+  weekday          Int 
+  mode             work_mode 
+  expected_points  Int       @default(2) 
+  entry_time       DateTime? @db.Time   
+  lunch_out_time   DateTime? @db.Time  
+  lunch_in_time    DateTime? @db.Time   
+  exit_time        DateTime? @db.Time  
+  min_lunch_minutes Int?
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  employee employee_details @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@unique([employee_id, weekday])
+  @@index([employee_id, weekday])
+  @@map("employee_schedules")
+}
+
+model attendance_points {
+  id           String          @id @default(uuid())
+  employee_id  String
+  date         DateTime        @db.Date
+  mark_type    attendance_type
+  mark_time    DateTime        @db.Time
+
+  in_schedule  Boolean         @default(true)
+  is_late      Boolean         @default(false)
+  is_early     Boolean         @default(false)
+  is_remote    Boolean         @default(false)
+
+  is_manual            Boolean   @default(false)
+  edited_by_admin_id   String?   
+  edited_at            DateTime?
+  edit_reason          String?
+
+  note String @default("")
+
+
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  employee  employee_details @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade)
+
+  @@unique([employee_id, date, mark_type])
+  @@index([employee_id, date])
+  @@index([date])
+  @@map("attendance_points")
 }

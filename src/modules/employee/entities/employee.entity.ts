@@ -1,3 +1,4 @@
+// src/modules/employee/entities/employee.entity.ts
 export interface EmployeeEntity {
   employee_id: string;
   user: {
