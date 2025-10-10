@@ -1,17 +1,17 @@
-//src/modules/attendance/features/attendance/mark_attendance/presentation/mark_attendance.service.ts
+// src/modules/attendance/features/attendance/mark_attendance/presentation/mark_attendance.service.ts
 import { MarkAttendanceDTO } from "../domain/mark_attendance.schema";
 import { MarkAttendanceRepository } from "../data/mark_attendance.repository";
 import { AppError } from "../../../../../../types";
 import { HttpStatusCodes } from "../../../../../../constants/http_status_codes";
 import { MESSAGES } from "../../../../../../constants/messages";
-import {
-  getWeekday,
-  evaluateMarkFlags,
-} from "../../../../shared/attendance.utils";
 import { MarkType } from "../../../../shared/attendance.constants";
 
-const COOLDOWN_SECONDS = 30;
 const LIMA_OFFSET_MIN = 5 * 60;
+
+const COOLDOWN_SECONDS = 30;
+
+const SEQ_2: MarkType[] = ["entry", "exit"];
+const SEQ_4: MarkType[] = ["entry", "lunch_out", "lunch_in", "exit"];
 
 const parseClientNow = (dto: unknown): Date | undefined => {
   const iso = (dto as any)?.client_now_iso as string | undefined;
@@ -20,7 +20,7 @@ const parseClientNow = (dto: unknown): Date | undefined => {
   return Number.isNaN(d.getTime()) ? undefined : d;
 };
 
-function toLimaDateOnly(instant: Date): Date {
+function toLimaDateOnlyUTC(instant: Date): Date {
   const utcMs = instant.getTime();
   const limaMs = utcMs - LIMA_OFFSET_MIN * 60_000;
   const lima = new Date(limaMs);
@@ -29,25 +29,108 @@ function toLimaDateOnly(instant: Date): Date {
   );
 }
 
-function nowLimaOrClient(dto: unknown) {
-  const client = parseClientNow(dto);
-  const serverNow = new Date();
-
-  const nowUsed = client ?? serverNow;
-  const time_source = client ? ("client" as const) : ("server_lima" as const);
-
-  const clock_drift_seconds = client
-    ? Math.round((client.getTime() - serverNow.getTime()) / 1000)
-    : 0;
-
-  const baseDate = toLimaDateOnly(nowUsed);
-  const weekday = getWeekday(baseDate);
-
-  return { nowUsed, baseDate, weekday, time_source, clock_drift_seconds };
+function getWeekday1to7(dateUTC: Date): number {
+  const dow = dateUTC.getUTCDay();
+  return dow === 0 ? 7 : dow;
 }
 
-const SEQ_2: MarkType[] = ["entry", "exit"];
-const SEQ_4: MarkType[] = ["entry", "lunch_out", "lunch_in", "exit"];
+function minutesSinceMidnightLima(d: Date): number {
+  const limaMs = d.getTime() - LIMA_OFFSET_MIN * 60 * 1000;
+  const lima = new Date(limaMs);
+  return lima.getUTCHours() * 60 + lima.getUTCMinutes();
+}
+
+function timeFieldToMinutes(
+  field: string | Date | null | undefined
+): number | null {
+  if (!field) return null;
+  if (typeof field === "string") {
+    const m = /^(\d{2}):(\d{2})$/.exec(field);
+    if (!m) return null;
+    const hh = Number(m[1]),
+      mm = Number(m[2]);
+    return hh * 60 + mm;
+  }
+  if (field instanceof Date) {
+    return field.getUTCHours() * 60 + field.getUTCMinutes();
+  }
+  return null;
+}
+
+type DayMode = "onsite" | "remote";
+
+function evaluateMarkFlagsSafe(params: {
+  nowUsed: Date;
+  action: MarkType;
+  dayMode: DayMode;
+  schedule: {
+    entry_time: string | Date | null;
+    lunch_out_time?: string | Date | null;
+    lunch_in_time?: string | Date | null;
+    exit_time: string | Date | null;
+    min_lunch_minutes?: number | null;
+  };
+  policy: {
+    early_before_minutes: number;
+    grace_entry_minutes: number;
+    exit_late_minutes: number;
+  };
+}) {
+  const { nowUsed, action, dayMode, schedule, policy } = params;
+
+  const nowMin = minutesSinceMidnightLima(nowUsed);
+
+  const entryMin = timeFieldToMinutes(schedule.entry_time);
+  const exitMin = timeFieldToMinutes(schedule.exit_time);
+  const loutMin = timeFieldToMinutes(schedule.lunch_out_time ?? null);
+  const linMin = timeFieldToMinutes(schedule.lunch_in_time ?? null);
+  const minLunch = schedule.min_lunch_minutes ?? 0;
+
+  const earlyBefore = Math.max(0, policy.early_before_minutes ?? 0);
+  const graceEntry = Math.max(0, policy.grace_entry_minutes ?? 0);
+  const exitLate = Math.max(0, policy.exit_late_minutes ?? 0);
+
+  let in_schedule = false;
+  let is_early = false;
+  let is_late = false;
+
+  if (action === "entry" && entryMin != null) {
+    in_schedule =
+      nowMin >= entryMin - earlyBefore && nowMin <= entryMin + graceEntry;
+    is_early = nowMin < entryMin;
+    is_late = nowMin > entryMin + graceEntry;
+  }
+
+  if (action === "exit" && exitMin != null) {
+    in_schedule = nowMin >= exitMin - exitLate && nowMin <= exitMin + exitLate;
+    is_early = nowMin < exitMin - exitLate;
+    is_late = nowMin > exitMin + exitLate;
+  }
+
+  if (action === "lunch_out" && loutMin != null) {
+    in_schedule = Math.abs(nowMin - loutMin) <= 15;
+    is_early = nowMin < loutMin - 15;
+    is_late = nowMin > loutMin + 15;
+  }
+
+  if (action === "lunch_in" && linMin != null) {
+    const okWindow = Math.abs(nowMin - linMin) <= 30;
+    let okMinLunch = true;
+    if (loutMin != null && minLunch > 0) {
+      okMinLunch = nowMin - loutMin >= minLunch;
+    }
+    in_schedule = okWindow && okMinLunch;
+    is_early = !okMinLunch && nowMin < linMin;
+    is_late = nowMin > linMin + 30;
+  }
+
+  return {
+    in_schedule,
+    is_early,
+    is_late,
+    is_remote: dayMode === "remote",
+  };
+}
 
 function nextExpected(
   sequence: MarkType[],
@@ -65,12 +148,23 @@ export class MarkAttendanceService {
       requester_employee_id: string;
       requester_is_admin: boolean;
       effective_employee_id: string;
+      client_now_iso?: string;
     }
   ) {
     const employee_id = dto.effective_employee_id;
 
-    const { nowUsed, baseDate, weekday, time_source, clock_drift_seconds } =
-      nowLimaOrClient(dto);
+    const client = parseClientNow(dto);
+    const serverNow = new Date();
+    const nowUsed = client ?? serverNow;
+
+    const baseDate = toLimaDateOnlyUTC(nowUsed);
+
+    const weekday = getWeekday1to7(baseDate);
+
+    const time_source = client ? ("client" as const) : ("server_lima" as const);
+    const clock_drift_seconds = client
+      ? Math.round((client.getTime() - serverNow.getTime()) / 1000)
+      : 0;
 
     const policy = await this.repo.getPolicy(employee_id);
     if (!policy) {
@@ -91,7 +185,8 @@ export class MarkAttendanceService {
       );
     }
 
-    const dayMode = schedule.mode as unknown as "onsite" | "remote";
+    const dayMode: DayMode =
+      (schedule.mode as any) === "remote" ? "remote" : "onsite";
     const expected_points: 2 | 4 = schedule.expected_points === 4 ? 4 : 2;
     const sequence = expected_points === 4 ? SEQ_4 : SEQ_2;
 
@@ -164,7 +259,6 @@ export class MarkAttendanceService {
     }
 
     const expectedNext = nextExpected(sequence, already);
-
     if (
       !expectedNext &&
       !(dto.admin_override?.force_exit && dto.requester_is_admin)
@@ -224,14 +318,23 @@ export class MarkAttendanceService {
       }
     }
 
-    const flags = evaluateMarkFlags(
+    const flags = evaluateMarkFlagsSafe({
       nowUsed,
-      dto.action as MarkType,
+      action: dto.action as MarkType,
       dayMode,
-      schedule as any,
-      policy as any,
-      baseDate
-    );
+      schedule: {
+        entry_time: (schedule as any).entry_time,
+        lunch_out_time: (schedule as any).lunch_out_time,
+        lunch_in_time: (schedule as any).lunch_in_time,
+        exit_time: (schedule as any).exit_time,
+        min_lunch_minutes: (schedule as any).min_lunch_minutes ?? null,
+      },
+      policy: {
+        early_before_minutes: (policy as any).early_before_minutes ?? 0,
+        grace_entry_minutes: (policy as any).grace_entry_minutes ?? 0,
+        exit_late_minutes: (policy as any).exit_late_minutes ?? 0,
+      },
+    });
 
     if (dto.action === "entry" && flags.is_late && !dto.requester_is_admin) {
       throw new AppError(
@@ -239,7 +342,6 @@ export class MarkAttendanceService {
         HttpStatusCodes.FORBIDDEN.code
       );
     }
-
     if (
       dto.action === "exit" &&
       flags.is_early &&

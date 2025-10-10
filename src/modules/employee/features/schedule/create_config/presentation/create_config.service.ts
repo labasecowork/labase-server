@@ -13,10 +13,9 @@ import {
 function hhmmToDate(hhmm?: string): Date | null {
   if (!hhmm) return null;
   const [h, m] = hhmm.split(":").map(Number);
-  const d = new Date();
-  d.setHours(h, m, 0, 0);
-  return d;
+  return new Date(Date.UTC(1970, 0, 1, h, m, 0, 0));
 }
+
 
 export class CreateEmployeeConfigService {
   constructor(private readonly repo = new CreateEmployeeConfigRepository()) {}

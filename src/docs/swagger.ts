@@ -25,7 +25,7 @@ const swaggerDefinition: OAS3Definition = {
   ],
   components: {
     securitySchemes: {
-      bearerAuth: {
+      bearerAuth: { 
         type: "http",
         scheme: "bearer",
         bearerFormat: "JWT",
